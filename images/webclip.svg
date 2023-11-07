@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 256 256" style="enable-background:new 0 0 256 256;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#397234;}
+	.st1{opacity:0.377;fill:url(#Rectangle_2258_00000059998691684289862700000007256356675402883468_);enable-background:new    ;}
+	.st2{fill:#FFFFFF;}
+</style>
+<g id="Layer_2_1_">
+</g>
+<rect y="0" class="st0" width="256" height="256"/>
+<linearGradient id="Rectangle_2258_00000093857738406105680580000008392508143232711860_" gradientUnits="userSpaceOnUse" x1="-166.6549" y1="0.3912" x2="-166.6549" y2="0.6592" gradientTransform="matrix(375 0 0 772 62623.5977 -252.906)">
+	<stop  offset="0" style="stop-color:#000000;stop-opacity:0"/>
+	<stop  offset="1" style="stop-color:#000000"/>
+</linearGradient>
+<rect id="Rectangle_2258_00000067920421733088523120000010775597748679600513_" y="49.1" style="opacity:0.377;fill:url(#Rectangle_2258_00000093857738406105680580000008392508143232711860_);enable-background:new    ;" width="256" height="206.9"/>
+<path class="st2" d="M190.4,125.6h-60.1v-60v-4.5h-4.5H61.1l0,0v4.5v59.9v4.5v60.3v4.5l0,0h4.5l0,0h124.7l0,0h4.5l0,0v-4.5V130v-4.5
+	L190.4,125.6L190.4,125.6z M65.6,65.6h60.1v59.9H65.6V65.6z M65.6,130.1h60.1v60.3H65.6V130.1z M190.4,190.4h-60.1v-60.3h60.1V190.4
+	z"/>
+</svg>
