@@ -721,7 +721,9 @@ window.onload = async () => {
           {
             //playVoice();
           } 
-          setTimeout(sound.play(), 5000);
+          setTimeout( () =>{
+            sound.play()
+          }, 5000);
           //Conditions
           roundType();
         }
