@@ -715,12 +715,13 @@ window.onload = async () => {
       let clickNum = 0;
 
       playButton.addEventListener("click", function () {
-        
+        sound.play()
         if (clickNum < 1) {
           if(voiceValue !== "off")
-          {sound.play()
+          {
             //playVoice();
           } 
+          setTimeout(sound.play(), 5000);
           //Conditions
           roundType();
         }
