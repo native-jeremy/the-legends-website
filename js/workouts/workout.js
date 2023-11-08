@@ -155,8 +155,11 @@ window.onload = async () => {
     roundSelected = roundRes.data[parseInt(roundParam)].Round_Selection;
   });
 
-  Wized.request.await("Load Finished Audio", (response) => {    
-    sirenSrc.src = response.data[0].Audio[0].url;
+  Wized.request.await("Load Audio", (response) => {    
+    console.log("Audio Response", response);
+
+    audioRes = response;
+    console.log("Audio Response", audioRes);
   })
 
   Wized.request.await("Load Round Info", (response) => {
@@ -636,11 +639,6 @@ window.onload = async () => {
 
       audioSrc.src = mainResponse.data[parseInt(roundParam)].Audio_Source_Linked_Exercises[parseInt(exercisesParam)].url;
 
-      let sound = new Howl({
-        src: [`${mainResponse.data[parseInt(roundParam)].Audio_Source_Linked_Exercises[parseInt(exercisesParam)].url}`],
-        html5: true
-      });
-
       let clearStates = setTimeout(() => {
         enableActiveStates();
         clearTimeout(clearStates);
@@ -715,15 +713,12 @@ window.onload = async () => {
       let clickNum = 0;
 
       playButton.addEventListener("click", function () {
-        sound.play()
         if (clickNum < 1) {
+
           if(voiceValue !== "off")
           {
-            //playVoice();
+            playVoice();
           } 
-          setTimeout( () =>{
-            sound.play()
-          }, 5000);
           //Conditions
           roundType();
         }
@@ -884,14 +879,14 @@ window.onload = async () => {
   function sirenEnableClick() {
     if (sirenText.innerHTML === "Off") {
       localStorage.setItem("siren", "on");
-      sirenSrc.play();
+      voiceSrc.play();
       sirenText.innerHTML = "On";
       sirenToggleOn.classList.add("on");
     } 
     else if (sirenText.innerHTML === "On") {
       localStorage.setItem("siren", "off");
-      sirenSrc.pause();
-      sirenSrc.currentTime = "0";
+      voiceSrc.pause();
+      voiceSrc.currentTime = "0";
       sirenText.innerHTML = "Off";
       sirenToggleOn.classList.remove("on");
     }
