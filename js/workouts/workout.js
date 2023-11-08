@@ -104,6 +104,8 @@ window.onload = async () => {
   const sirenCookieInt = await Wized.data.get("c.sirenmute");
   const voiceCookieInt = await Wized.data.get("c.voicemute");
   const recoveryID = await Wized.data.get("c.recoveryid");
+  const sirenValue = localStorage.getItem("siren");
+  const voiceValue = localStorage.getItem("voice");
 
   let params = window.location.href;
   let url = new URL(params);
@@ -120,7 +122,7 @@ window.onload = async () => {
     roundText.style.display = "flex";
     RoundNumberText.innerHTML = "Redirecting..";
     enableDisabledStates();
-    window.location.href = "/workout-overview?workout=" + workoutParam;
+    window.location.href = "/workout-overview.html?workout=" + workoutParam;
   } else if (
     window.location.href == "https://the-legends-web-app.webflow.io/workout"
   ) {
@@ -140,7 +142,7 @@ window.onload = async () => {
     returnMessage.click();
     roundPopup.style.display = "flex";
     roundText.style.display = "flex";
-    recoveryLink.href = `/recovery?recovery=${recoveryID}&exercises=0`
+    recoveryLink.href = `/recovery.html?recovery=${recoveryID}&exercises=0`
   }
 
   Wized.request.await("Load Round Info", (response) => {
@@ -157,6 +159,7 @@ window.onload = async () => {
     console.log("Audio Response", response);
 
     audioRes = response;
+    console.log("Audio Response", audioRes);
   })
 
   Wized.request.await("Load Round Info", (response) => {
@@ -711,7 +714,19 @@ window.onload = async () => {
 
       playButton.addEventListener("click", function () {
         if (clickNum < 1) {
-          playVoice();
+          //playVoice();
+
+          if(voiceValue !== "off")
+          {
+            let promise = document.querySelector('#voiceSrc').play();
+            if (promise !== undefined) {
+                promise.then(_ => {
+                voiceSrc.play();
+                }).catch(error => {
+                  voiceSrc.play();
+              });
+            }
+          } 
           //Conditions
           roundType();
         }
@@ -871,75 +886,71 @@ window.onload = async () => {
 
   function sirenEnableClick() {
     if (sirenText.innerHTML === "Off") {
-      Wized.data.setCookie("sirenmute", "on");
+      localStorage.setItem("siren", "on");
+      voiceSrc.play();
       sirenText.innerHTML = "On";
-      sirenToggleOn.classList.toggle("on");
-    } else if (sirenText.innerHTML === "On") {
-      Wized.data.setCookie("sirenmute", "muted");
+      sirenToggleOn.classList.add("on");
+    } 
+    else if (sirenText.innerHTML === "On") {
+      localStorage.setItem("siren", "off");
+      voiceSrc.pause();
+      voiceSrc.currentTime = "0";
       sirenText.innerHTML = "Off";
-      sirenToggleOn.classList.toggle("on");
+      sirenToggleOn.classList.remove("on");
     }
-
-    // Development Purposes (DEBUGGING)
-    let sirenUpdatedCookie = Wized.data.get("c.sirenmute");
-    /*console.log("---------------------------------------");
-    console.log("mute cookie changed to: ", sirenUpdatedCookie);
-    console.log("---------------------------------------");*/
   }
 
   function voiceEnableClick() {
     if (voiceText.innerHTML === "Off") {
-      Wized.data.setCookie("voicemute", "on");
+      localStorage.setItem("voice", "on");
+      voiceSrc.play();
       voiceText.innerHTML = "On";
-      voiceToggleOn.classList.toggle("on");
-    } else if (voiceText.innerHTML === "On") {
-      Wized.data.setCookie("voicemute", "muted");
+      voiceToggleOn.classList.add("on");
+    } 
+    else if (voiceText.innerHTML === "On") {
+      localStorage.setItem("voice", "off");
+      voiceSrc.pause();
+      voiceSrc.currentTime = "0";
       voiceText.innerHTML = "Off";
-      voiceToggleOn.classList.toggle("on");
+      voiceToggleOn.classList.remove("on");
     }
-
-    // Development Purposes (DEBUGGING)
-    const voiceUpdatedCookie = Wized.data.get("c.voicemute");
-    /*console.log("---------------------------------------");
-    console.log("mute cookie changed to: ", voiceUpdatedCookie);
-    console.log("---------------------------------------");*/
   }
 
   function sirenEnableLoad() {
-    // Siren Cookie Intialising On
-    if (sirenCookieInt === "undefined" || sirenCookieInt === undefined) {
-      Wized.data.setCookie("sirenmute", "on");
+    // Siren Intialising On
+    if (sirenValue === undefined || sirenValue === null) {
+      localStorage.setItem("siren", "on");
       sirenText.innerHTML = "On";
-      sirenToggleOn.classList.toggle("on");
+      sirenToggleOn.classList.add("on");
     }
-    // Siren Cookie On
-    else if (sirenCookieInt === "on") {
+    // Siren On
+    else if (sirenValue === "on") {
       sirenText.innerHTML = "On";
-      sirenToggleOn.classList.toggle("on");
+      sirenToggleOn.classList.add("on");
     }
-    // Siren Cookie Off
-    else if (sirenCookieInt === "off") {
+    // Siren Off
+    else if (sirenValue === "off") {
       sirenText.innerHTML = "Off";
-      sirenToggleOn.classList.toggle("on");
+      sirenToggleOn.classList.remove("on");
     }
   }
 
   function voiceEnableLoad() {
-    // Voice Cookie Intialising On
-    if (voiceCookieInt === "undefined" || voiceCookieInt === undefined) {
-      Wized.data.setCookie("voicemute", "on");
+    // Voice Intialising On
+    if (voiceValue == undefined || voiceValue == null) {
+      localStorage.setItem("voice", "on");
       voiceText.innerHTML = "On";
-      voiceToggleOn.classList.toggle("on");
+      voiceToggleOn.classList.add("on");
     }
-    // Voice Cookie On
-    else if (voiceCookieInt === "on") {
+    // Voice On
+    else if (voiceValue == "on") {
       voiceText.innerHTML = "On";
-      voiceToggleOn.classList.toggle("on");
+      voiceToggleOn.classList.add("on");
     }
-    // Voice Cookie Off
-    else if (voiceCookieInt === "off") {
+    // Voice Off
+    else if (voiceValue == "off") {
       voiceText.innerHTML = "Off";
-      voiceToggleOn.classList.toggle("on");
+      voiceToggleOn.classList.remove("on");
     }
   }
 

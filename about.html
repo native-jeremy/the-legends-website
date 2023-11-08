@@ -60,6 +60,7 @@
 	}
 }
 </style>
+  <link rel="manifest" href="manifest.json" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 <body>
@@ -351,125 +352,7 @@
   </footer>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=6474932b31758d71131214b7" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="js/the-legends-web-app.js" type="text/javascript"></script>
-  <script>
-//document.body.setAttribute("oncontextmenu", "return false")
-if(document.body.contains(document.querySelector('.top-level')))
-{
-	let backBtn = document.querySelectorAll('.top-level')
-  backBtn.forEach((btn, index) => { 
-      btn.addEventListener("click", () => {
-      history.back();
-      });
-  });
-}
-</script>
-  <script>
-    setTimeout(removeBadge, 400);
-    function removeBadge ()
-    {
-    	let findLink = document.querySelectorAll('a');
-      for (let i = 0; i < findLink.length; i++)
-      { 
-      	if (findLink[i].href === "https://wized.com/?utm_campaign=badge")
-      		{
-            findLink[i].remove();
-          }
-      }
-    }
-    setTimeout(addBadge, 2000);
-    function addBadge ()
-    {
-    	let badge = document.createElement("div");
-      badge.innerHTML = `<div class="the-legends-dev-banner"><img src="https://assets.website-files.com/6474932b31758d71131214b7/6474932b31758d71131214a3_the_legends-logo-green.svg" loading="lazy" alt="" class="img_full"></div>`
-    	document.body.append(badge)
-    }
-</script>
-  <!-- <script src="https://cdn.jsdelivr.net/gh/native-jeremy/the-legends-config/js/non-member/about-u2.js" type="text/javascript"></script> -->
-  <script>
-//----------------------------------------------------------------
-//  HOME PAGE REQUEST | FROM WIZED
-//----------------------------------------------------------------
-  Wized.request.await("Load About Page", (response) => {
-    const snapshot = response.data;
-    console.log(snapshot);
-//----------------------------------------------------------------
-//  VUE JS CONFIGURATION
-//----------------------------------------------------------------
-    const { createApp } = Vue
-    createApp({
-        data() {
-        return {
-            HeroImage: snapshot.Hero_Image[0].url,
-            IntroHeading: snapshot.Intro_Heading,
-            IntroDescription: snapshot.Intro_Description,
-            S1Description: snapshot.S_1_Description,
-            S1Image: snapshot.S_1_Image[0].url,
-            S2Description: snapshot.S_2_Description,
-            S2DisplayHeading: snapshot.S_2_Display_Heading,
-            TrainerSectionHeading: snapshot.Trainer_Section_Heading,
-            TrainerSectionSubHeading: snapshot.Trainer_Section_Sub_Heading,
-            TrainerImage: snapshot.Trainer_Image[0].url,
-            TrainerName: snapshot.Trainer_Name,
-            TrainerRole: snapshot.Trainer_Role,
-            TrainerDescription: snapshot.Trainer_Description,
-            TrainerImage2: snapshot.Trainer_Image_2[0].url,
-            TrainerName2: snapshot.Trainer_Name_2,
-            TrainerRole2: snapshot.Trainer_Role_2,
-            TrainerDescription2: snapshot.Trainer_Description_2,
-            S2Heading: snapshot.S_2_Heading,
-            S2SubHeading: snapshot.S_2_Sub_Heading,
-            S3Heading: snapshot.S_3_Heading,
-            S3SubHeading: snapshot.S_3_Sub_Heading,
-            S4Heading: snapshot.S_4_Heading,
-            S4SubHeading: snapshot.S_4_Sub_Heading,
-            /*
-            CTAHeading1: snapshot.CTA_Heading[0],
-            CTASubHeading1: snapshot.CTA_Sub_Heading[0],
-            CTAButtonLink1: snapshot.CTA_Button_Link[0],
-            CTAButtonText1: snapshot.CTA_Button_Text[0],
-            CTAHeading2: snapshot.CTA_Heading_2[0],
-            CTASubHeading2: snapshot.CTA_Sub_Heading_2[0],
-            CTAButtonLink2: snapshot.CTA_Button_Link_2[0],
-            CTAButtonText2: snapshot.CTA_Button_Text_2[0],
-            */
-        }
-        },
-            mounted(){
-            console.log("interaction loaded");
-            window.Webflow && window.Webflow.destroy();
-            window.Webflow && window.Webflow.ready();
-            window.Webflow && window.Webflow.require("ix2").init();
-            document.dispatchEvent(new Event("readystatechange"));
-          function delayedSelection() {
-            const scrollBtnNext = document.querySelectorAll(".show_next_toggle")
-            const scrollBtnPrev = document.querySelectorAll(".show_prev_toggle")
-            const scrollContent = document.querySelectorAll(".card_scroll_content")
-            const demoCard = document.getElementById("demoCard")
-            let distance = demoCard.offsetWidth + 25;
-            if(distance > 1)
-            {
-              demoCard.remove();
-            }
-             scrollContent.forEach((scroll, index) => {
-              scroll.style.scrollBehavior = "smooth"
-              scrollBtnNext[index].addEventListener("click", function (event) {
-              scroll.scrollBy(distance, 0);
-             });
-             scrollBtnPrev[index].addEventListener("click", function (event) {
-              scroll.scrollBy(-distance, 0);
-             });
-             console.log("Offset Width", distance)
-            });
-            }
-            setTimeout(delayedSelection, 3000);
-        }
-    }).mount('#app')
-//----------------------------------------------------------------
-//  END VUE JS CONFIGURATION
-//----------------------------------------------------------------
-//  HOME PAGE REQUEST END | FROM WIZED
-//----------------------------------------------------------------
- });
-</script>
+  <script src="js/other/misc.js" type="text/javascript"></script>
+  <script src="js/other/about.js" type="text/javascript"></script>
 </body>
 </html>
