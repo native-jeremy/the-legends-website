@@ -155,10 +155,11 @@ window.onload = async () => {
     roundSelected = roundRes.data[parseInt(roundParam)].Round_Selection;
   });
 
-  Wized.request.await("Load Audio", (response) => {    
+  Wized.request.await("Load Finished Audio", (response) => {    
     console.log("Audio Response", response);
 
     audioRes = response;
+    sirenSrc.src = audioRes.data[0].Audio[0].url
     console.log("Audio Response", audioRes);
   })
 
@@ -239,12 +240,12 @@ window.onload = async () => {
 
     exerciseData = mainResponse.data[parseInt(exercisesParam)];
 
-    /*console.log("---------------------------------------");
+    console.log("---------------------------------------");
     console.log("All Rounds:", mainResponse);
     console.log("---------------------------------------");
     console.log("Current Round:", mainResponse.data[parseInt(roundParam)]);
     console.log("---------------------------------------");
-    console.log("Current Exercise Amount:", mainResponse.data[parseInt(roundParam)].Amounts_Name_Linked_Exercises[parseInt(exercisesParam)]);*/
+    console.log("Current Exercise Amount:", mainResponse.data[parseInt(roundParam)].Amounts_Name_Linked_Exercises[parseInt(exercisesParam)]);
 
     let audioSrc = document.getElementById("voiceSrc");
     let audioIndex = parseInt(exerciseParam);
@@ -879,14 +880,14 @@ window.onload = async () => {
   function sirenEnableClick() {
     if (sirenText.innerHTML === "Off") {
       localStorage.setItem("siren", "on");
-      voiceSrc.play();
+      sirenSrc.play();
       sirenText.innerHTML = "On";
       sirenToggleOn.classList.add("on");
     } 
     else if (sirenText.innerHTML === "On") {
       localStorage.setItem("siren", "off");
-      voiceSrc.pause();
-      voiceSrc.currentTime = "0";
+      sirenSrc.pause();
+      sirenSrc.currentTime = "0";
       sirenText.innerHTML = "Off";
       sirenToggleOn.classList.remove("on");
     }
