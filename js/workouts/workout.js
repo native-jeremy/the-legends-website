@@ -636,6 +636,11 @@ window.onload = async () => {
 
       audioSrc.src = mainResponse.data[parseInt(roundParam)].Audio_Source_Linked_Exercises[parseInt(exercisesParam)].url;
 
+      let sound = new Howl({
+        src: [`${mainResponse.data[parseInt(roundParam)].Audio_Source_Linked_Exercises[parseInt(exercisesParam)].url}`],
+        html5: true
+      });
+
       let clearStates = setTimeout(() => {
         enableActiveStates();
         clearTimeout(clearStates);
@@ -710,19 +715,11 @@ window.onload = async () => {
       let clickNum = 0;
 
       playButton.addEventListener("click", function () {
+        
         if (clickNum < 1) {
-          //playVoice();
-
           if(voiceValue !== "off")
-          {
-            let promise = document.querySelector('#voiceSrc').play();
-            if (promise !== undefined) {
-                promise.then(_ => {
-                voiceSrc.play();
-                }).catch(error => {
-                  voiceSrc.play();
-              });
-            }
+          {sound.play()
+            //playVoice();
           } 
           //Conditions
           roundType();
