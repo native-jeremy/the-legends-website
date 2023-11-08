@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--  Last Published: Tue Nov 07 2023 02:33:37 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="652de2d2a39d12c64b3d891d" data-wf-site="6474932b31758d71131214b7" lang="en">
 
 <head>
@@ -107,20 +106,19 @@
     }
   </style>
   <link rel="manifest" href="manifest.json" />
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 
 <body>
-  <div id="app" w-el="load_app" class="app">
+  <div id="app" w-el="load_app" wized-cloak-custom="Load Round Info, Load Users, Load Exercise Diff" class="app">
     <div w-el="exercise_page" class="app-main app-base">
       <div class="app-head current-workout">
         <div class="app-block viewer">
           <div class="banner top-bar"></div>
           <div class="banner bottom-bar"></div>
           <div id="videoContainer" w-el="workout_video" class="app-fullscreen-video video-embed w-embed">
-            <video ref="video" loop preload="auto" src="" muted webkit-playsinline playsinline class="app-fullscreen-video"
-              style="background-color: #c2c2c2">
-              <!--<source src="" type="video/mp4" />-->
+            <video loop preload="auto" muted webkit-playsinline playsinline class="app-fullscreen-video"
+              style="background-color: #c2c2c2" id="video">
+              <source src="" type="video/mp4" />
             </video>
           </div>
           <div id="exerciseHeader" style="display: none; opacity: 0" class="header-current animated">
@@ -134,9 +132,10 @@
               </a>
             </div>
           </div>
-          <!--<article id="loader" class="loading-workout">
+          <article id="loader" class="loading-workout">
             <div class="workout-loader w-embed">
               <?xml version="1.0" encoding="utf-8"?>
+              <!--  Generator: Adobe Illustrator 27.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)   -->
               <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 51 51"
                 style="enable-background: new 0 0 51 51" xml:space="preserve">
@@ -209,7 +208,7 @@
               </svg>
             </div>
             <div id="Trigger" data-w-id="88c3a08d-4e41-ae0e-b174-11915f51768a" class="loading-trigger"></div>
-          </article>-->
+          </article>
           <div class="app-block-content viewer">
             <div class="info-block-header workout">
               <div id="exerciseTitle" style="display: none; opacity: 0" class="title-text">
@@ -248,7 +247,7 @@
                         <circle r="100" cx="124" cy="124" class="progressWheel"></circle>
                       </svg>
                     </div>
-                    <div id="playButton" v-on:click="PlayExercise(this.$refs.video, this.$refs.siren)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
+                    <div id="playButton" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
                     <div id="playButtonDisabled" class="play-icon disabled"></div>
                   </div>
                   <a id="nextButton" w-el="next_exercise" href="#" class="player-control-button w-inline-block">
@@ -299,10 +298,10 @@
                         </div>
                       </div>
                     </div>
-                    <div id="siren" v-on:click="SirenEnableClick(this.$refs.sirenText, this.$refs.sirenToggle)" class="toggle-button-trigger">
-                      <div id="sirenText" ref="sirenText" class="toggle-button-text">Off</div>
+                    <div id="siren" w-el="siren_toggle" class="toggle-button-trigger">
+                      <div id="sirenText" class="toggle-button-text">Off</div>
                       <div class="toggle-button">
-                        <div id="sirenToggleOn" ref="sirenToggle" class="toggle-button-image"></div>
+                        <div id="sirenToggleOn" class="toggle-button-image"></div>
                       </div>
                     </div>
                   </div>
@@ -324,10 +323,10 @@
                         </div>
                       </div>
                     </div>
-                    <div id="voice" v-on:click="VoiceEnableClick(this.$refs.voiceText, this.$refs.voiceToggle)" class="toggle-button-trigger">
-                      <div id="voiceText" ref="voiceText" class="toggle-button-text">Off</div>
+                    <div id="voice" w-el="voice_toggle" class="toggle-button-trigger">
+                      <div id="voiceText" class="toggle-button-text">Off</div>
                       <div class="toggle-button">
-                        <div id="voiceToggleOn" ref="voiceToggle" class="toggle-button-image"></div>
+                        <div id="voiceToggleOn" class="toggle-button-image"></div>
                       </div>
                     </div>
                   </div>
@@ -388,10 +387,14 @@
       </div>
     </div>
     <div class="audio">
-        <audio id="voiceSrc" ref="voice" src="">
+      <div id="voiceAudio" class="voice-audio w-embed">
+        <audio id="voiceSrc" preload="auto" src="">
         </audio>
-        <audio id="sirenSrc" ref="siren" v-bind:src="`${workout.finishAudio}`">
+      </div>
+      <div id="sirenAudio" class="siren-audio w-embed">
+        <audio id="sirenSrc" src="" preload="auto">
         </audio>
+      </div>
     </div>
   </div>
   <div w-el="execise_notice_modal" class="modal style-2">

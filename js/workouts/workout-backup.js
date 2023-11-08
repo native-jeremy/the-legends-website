@@ -1,158 +1,3 @@
-const { createApp } = Vue
-
-createApp({
-  data() {
-    return {
-      message: 'Hello Vue!',
-      workout: {
-        finishAudio: "",
-        round: 0,
-        exercises: 0,
-        exercise: 0,
-        roundAmount: 0,
-        exercisesAmount: 0,
-      },
-      roundData: [],
-      exerciseData: [],
-    }
-  },
-  methods: {
-
-    // Intial Request Data Applied To Data Object
-    intialRequest()
-    {
-      Wized.request.await("Load Round Info", (response) => {
-        //console.log('Round Request', response)
-        roundRes = response;
-        roundInfo = roundRes.data[this.workout.round];
-    
-        roundDiffLevel = roundInfo.Default_Diff_Level.split(", ");
-        roundSelected = roundRes.data[this.workout.round].Round_Selection;
-
-        this.roundData = roundRes.data
-        this.workout.roundAmount = roundRes.data.length
-
-        console.log('Current Round', roundSelected)
-        console.log('Round Request', this.roundData)
-        console.log('Round Length', this.workout.roundAmount)
-      });
-      
-      Wized.request.await("Load Finished Audio", (response) => {    
-        this.workout.finishAudio = response.data[0].Audio[0].url
-        console.log("Audio Response", response);
-      })
-    },
-
-    // Play Exercise By Click
-    PlayExercise(video, voice)
-    {
-      //video.play();
-      voice.play();
-      console.log('method is working', voice);
-    },
-
-    // Siren & Voice Enabled
-    LoadedAudioEnabled(SirenText, SirenToggle, VoiceText, VoiceToggle) {
-
-      // Local Storage Audio Values
-      const sirenValue = localStorage.getItem("siren");
-      const voiceValue = localStorage.getItem("voice");
-      
-      // Siren Intialising On
-      if (sirenValue === undefined || sirenValue === null) {
-        localStorage.setItem("siren", "on");
-        SirenText.textContent = "On";
-        sirenToggleOn.classList.add("on");
-      }
-      // Siren On
-      else if (sirenValue === "on") {
-        SirenText.textContent = "On";
-        SirenToggle.classList.add("on");
-      }
-      // Siren Off
-      else if (sirenValue === "off") {
-        sirenText.innerHTML = "Off";
-        SirenToggle.classList.remove("on");
-      }
-      // Voice Intialising On
-      if (voiceValue == undefined || voiceValue == null) {
-        localStorage.setItem("voice", "on");
-        VoiceText.textContent = "On";
-        VoiceToggle.classList.add("on");
-      }
-      // Voice On
-      else if (voiceValue == "on") {
-        VoiceText.textContent = "On";
-        VoiceToggle.classList.add("on");
-      }
-      // Voice Off
-      else if (voiceValue == "off") {
-        VoiceText.textContent = "Off";
-        VoiceToggle.classList.remove("on");
-      }
-    },
-
-    // Siren Enabled By Click
-    SirenEnableClick(text, toggle) {
-
-      if (text.innerHTML === "Off") {
-        localStorage.setItem("siren", "on");
-        sirenSrc.play();
-        text.textContent = "On";
-        toggle.classList.add("on");
-      } 
-      else if (text.textContent === "On") {
-        localStorage.setItem("siren", "off");
-        sirenSrc.pause();
-        sirenSrc.currentTime = "0";
-        text.textContent = "Off";
-        toggle.classList.remove("on");
-      }
-    },
-  
-    // Voice Enabled By Click
-    VoiceEnableClick(text, toggle) {
-      console.log(text, toggle)
-      if (text.textContent === "Off") {
-        localStorage.setItem("voice", "on");
-        voiceSrc.play();
-        text.textContent = "On";
-        toggle.classList.add("on");
-      } 
-      else if (voiceText.innerHTML === "On") {
-        localStorage.setItem("voice", "off");
-        voiceSrc.pause();
-        voiceSrc.currentTime = "0";
-        text.textContent = "Off";
-        toggle.classList.remove("on");
-      }
-    },
-
-    // Webflow Animations Reset
-    WebflowAnimations() {
-      console.log("interaction loaded");
-      window.Webflow && window.Webflow.destroy();
-      window.Webflow && window.Webflow.ready();
-      window.Webflow && window.Webflow.require("ix2").init();
-      document.dispatchEvent(new Event("readystatechange"));
-    }
-  },
-  created()
-  {
-    this.intialRequest()
-  },
-  mounted() {
-    //console.log("mounted element", this.$refs.siren);
-
-    // Audio Enabled Method Called
-    this.LoadedAudioEnabled(this.$refs.sirenText, this.$refs.sirenToggle, this.$refs.voiceText, this.$refs.voiceToggle)
-
-    // Webflow Animations Reset Called
-    this.WebflowAnimations()
-  }
-}).mount('#app')
-
-
 //Element Triggers
 const videoContainer = document.getElementById("videoContainer");
 const loaderTrigger = document.getElementById("Trigger");
@@ -163,6 +8,8 @@ const roundTitle = document.getElementById("roundTitle");
 const roundNumHeader = document.getElementById("headerNumText");
 const roundText = document.getElementById("roundText");
 const videoChange = document.getElementById("videoChange");
+const paramTest = document.getElementById("paramTest");
+const paramTestBase = document.getElementById("paramTestBase");
 
 // Element Declarations
 const repText = document.getElementById("repText");
@@ -214,10 +61,24 @@ let seconds;
 
 const workoutExitButton = document.getElementById("workoutExit");
 
+const siren = document.getElementById("siren");
+const sirenText = document.getElementById("sirenText");
+const sirenAudio = document.getElementById("sirenAudio");
+const sirenToggleOn = document.getElementById("sirenToggleOn");
+
+const voice = document.getElementById("voice");
+const voiceText = document.getElementById("voiceText");
+const voiceAudio = document.getElementById("voiceAudio");
+const voiceToggleOn = document.getElementById("voiceToggleOn");
+
 const playButton = document.getElementById("playButton");
 const nextButton = document.getElementById("nextButton");
 const prevButton = document.getElementById("prevButton");
 const backButton = document.getElementById("backButton");
+
+const playButtonDisabled = document.getElementById("playButtonDisabled");
+const nextButtonDisabled = document.getElementById("nextButtonDisabled");
+const prevButtonDisabled = document.getElementById("prevButtonDisabled");
 
 const minusBtn = document.getElementById("minusBtn");
 const currentNum = document.getElementById("currentNum");
@@ -230,19 +91,21 @@ currentNum.innerHTML = amount;
 
 let refreshNum = 0;
 window.onload = async () => {
-  
-  /*function commenttedOut(){
-  
+  const cookieIndex = await Wized.data.get("c.cookieindex");
+  const dataIndex = await Wized.data.get("v.dataindex");
+  const statusNum = await Wized.data.get("v.statusnum");
   const roundLengthCookie = await Wized.data.get("c.roundlength");
+  const exerciseIndex = await Wized.data.get("c.exerciseindex");
+  const typeParam = await Wized.data.get("n.parameter.type");
   const exerciseParam = await Wized.data.get("n.parameter.exercise");
   const exercisesParam = await Wized.data.get("n.parameter.exercises");
   const roundParam = await Wized.data.get("n.parameter.round");
   const workoutParam = await Wized.data.get("n.parameter.workout");
+  const sirenCookieInt = await Wized.data.get("c.sirenmute");
+  const voiceCookieInt = await Wized.data.get("c.voicemute");
   const recoveryID = await Wized.data.get("c.recoveryid");
-  const sirenValue = localStorage.getItem("siren");
-  const voiceValue = localStorage.getItem("voice");
 
-    let params = window.location.href;
+  let params = window.location.href;
   let url = new URL(params);
   let checkurl = url.searchParams;
 
@@ -250,14 +113,14 @@ window.onload = async () => {
 
   window.history.replaceState(null, null, url.toString());
 
-  //enableDisabledStates();
+  enableDisabledStates();
 
   if (parseInt(roundParam) < 0 && parseInt(exercisesParam) === 0) {
     roundPopup.style.display = "flex";
     roundText.style.display = "flex";
     RoundNumberText.innerHTML = "Redirecting..";
     enableDisabledStates();
-    window.location.href = "/workout-overview.html?workout=" + workoutParam;
+    window.location.href = "/workout-overview?workout=" + workoutParam;
   } else if (
     window.location.href == "https://the-legends-web-app.webflow.io/workout"
   ) {
@@ -277,20 +140,24 @@ window.onload = async () => {
     returnMessage.click();
     roundPopup.style.display = "flex";
     roundText.style.display = "flex";
-    recoveryLink.href = `/recovery.html?recovery=${recoveryID}&exercises=0`
+    recoveryLink.href = `/recovery?recovery=${recoveryID}&exercises=0`
   }
-  }*/
 
-  // Vue Variables
+  Wized.request.await("Load Round Info", (response) => {
+    
+    roundRes = response;
+    roundInfo = roundRes.data[parseInt(roundParam)];
 
-  // Index Variables
-  let round = 0
-  let exercises = 0
-  let exercise = 0
+    roundDiffLevel = roundInfo.Default_Diff_Level.split(", ");
 
-  // Length Variables
-  let roundAmount = 0
-  let exercisesAmount = 0
+    roundSelected = roundRes.data[parseInt(roundParam)].Round_Selection;
+  });
+
+  Wized.request.await("Load Audio", (response) => {    
+    console.log("Audio Response", response);
+
+    audioRes = response;
+  })
 
   Wized.request.await("Load Round Info", (response) => {
     //setTimeout(() => {console.clear();}, 2000);
@@ -367,24 +234,24 @@ window.onload = async () => {
 
       //----------------------------------------------------------------
 
-    exerciseData = mainResponse.data[exercises];
+    exerciseData = mainResponse.data[parseInt(exercisesParam)];
 
-    console.log("---------------------------------------");
+    /*console.log("---------------------------------------");
     console.log("All Rounds:", mainResponse);
     console.log("---------------------------------------");
-    console.log("Current Round:", mainResponse.data[round]);
+    console.log("Current Round:", mainResponse.data[parseInt(roundParam)]);
     console.log("---------------------------------------");
-    console.log("Current Exercise Amount:", mainResponse.data[round].Amounts_Name_Linked_Exercises[exercises]);
+    console.log("Current Exercise Amount:", mainResponse.data[parseInt(roundParam)].Amounts_Name_Linked_Exercises[parseInt(exercisesParam)]);*/
 
     let audioSrc = document.getElementById("voiceSrc");
-    let audioIndex = exercise;
+    let audioIndex = parseInt(exerciseParam);
     let vidSrc = document.getElementById("video");
-    let videoIndex = exercise;
+    let videoIndex = parseInt(exerciseParam);
 
     //if (exerciseData !== undefined) {
-      repAmount = mainResponse.data[round].Amounts_Name_Linked_Exercises[exercises];
-      repType = mainResponse.data[round].Rep_Type_Linked_Exercises[exercises]
-      amrapBool = mainResponse.data[round].Amrap_Linked_Exercises[exercises];
+      repAmount = mainResponse.data[parseInt(roundParam)].Amounts_Name_Linked_Exercises[parseInt(exercisesParam)];
+      repType = mainResponse.data[parseInt(roundParam)].Rep_Type_Linked_Exercises[parseInt(exercisesParam)]
+      amrapBool = mainResponse.data[parseInt(roundParam)].Amrap_Linked_Exercises[parseInt(exercisesParam)];
  
       timerConversion(repAmount)
 
@@ -844,11 +711,7 @@ window.onload = async () => {
 
       playButton.addEventListener("click", function () {
         if (clickNum < 1) {
-
-          if(voiceValue !== "off")
-          {
-            playVoice();
-          } 
+          playVoice();
           //Conditions
           roundType();
         }
@@ -947,6 +810,19 @@ window.onload = async () => {
         }
     }
   });
+  
+  //roundEnableLoad();
+  //setTimeout(nextPage, 2000);
+  sirenEnableLoad();
+  voiceEnableLoad();
+
+  siren.addEventListener("click", function () {
+    sirenEnableClick();
+  });
+
+  voice.addEventListener("click", function () {
+    voiceEnableClick();
+  });
 
   function enableDisabledStates() {
     playButton.style.display = "none";
@@ -991,6 +867,80 @@ window.onload = async () => {
       prevButtonDisabled.style.display = "flex";
     }
     refreshNum = refreshNum + 1;
+  }
+
+  function sirenEnableClick() {
+    if (sirenText.innerHTML === "Off") {
+      Wized.data.setCookie("sirenmute", "on");
+      sirenText.innerHTML = "On";
+      sirenToggleOn.classList.toggle("on");
+    } else if (sirenText.innerHTML === "On") {
+      Wized.data.setCookie("sirenmute", "muted");
+      sirenText.innerHTML = "Off";
+      sirenToggleOn.classList.toggle("on");
+    }
+
+    // Development Purposes (DEBUGGING)
+    let sirenUpdatedCookie = Wized.data.get("c.sirenmute");
+    /*console.log("---------------------------------------");
+    console.log("mute cookie changed to: ", sirenUpdatedCookie);
+    console.log("---------------------------------------");*/
+  }
+
+  function voiceEnableClick() {
+    if (voiceText.innerHTML === "Off") {
+      Wized.data.setCookie("voicemute", "on");
+      voiceText.innerHTML = "On";
+      voiceToggleOn.classList.toggle("on");
+    } else if (voiceText.innerHTML === "On") {
+      Wized.data.setCookie("voicemute", "muted");
+      voiceText.innerHTML = "Off";
+      voiceToggleOn.classList.toggle("on");
+    }
+
+    // Development Purposes (DEBUGGING)
+    const voiceUpdatedCookie = Wized.data.get("c.voicemute");
+    /*console.log("---------------------------------------");
+    console.log("mute cookie changed to: ", voiceUpdatedCookie);
+    console.log("---------------------------------------");*/
+  }
+
+  function sirenEnableLoad() {
+    // Siren Cookie Intialising On
+    if (sirenCookieInt === "undefined" || sirenCookieInt === undefined) {
+      Wized.data.setCookie("sirenmute", "on");
+      sirenText.innerHTML = "On";
+      sirenToggleOn.classList.toggle("on");
+    }
+    // Siren Cookie On
+    else if (sirenCookieInt === "on") {
+      sirenText.innerHTML = "On";
+      sirenToggleOn.classList.toggle("on");
+    }
+    // Siren Cookie Off
+    else if (sirenCookieInt === "off") {
+      sirenText.innerHTML = "Off";
+      sirenToggleOn.classList.toggle("on");
+    }
+  }
+
+  function voiceEnableLoad() {
+    // Voice Cookie Intialising On
+    if (voiceCookieInt === "undefined" || voiceCookieInt === undefined) {
+      Wized.data.setCookie("voicemute", "on");
+      voiceText.innerHTML = "On";
+      voiceToggleOn.classList.toggle("on");
+    }
+    // Voice Cookie On
+    else if (voiceCookieInt === "on") {
+      voiceText.innerHTML = "On";
+      voiceToggleOn.classList.toggle("on");
+    }
+    // Voice Cookie Off
+    else if (voiceCookieInt === "off") {
+      voiceText.innerHTML = "Off";
+      voiceToggleOn.classList.toggle("on");
+    }
   }
 
   $(document).ready(function () {
