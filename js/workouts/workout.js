@@ -155,11 +155,8 @@ window.onload = async () => {
     roundSelected = roundRes.data[parseInt(roundParam)].Round_Selection;
   });
 
-  Wized.request.await("Load Audio", (response) => {    
-    console.log("Audio Response", response);
-
-    audioRes = response;
-    console.log("Audio Response", audioRes);
+  Wized.request.await("Load Finished Audio", (response) => {    
+    sirenSrc.src = response.data[0].Audio[0].url;
   })
 
   Wized.request.await("Load Round Info", (response) => {
@@ -887,14 +884,14 @@ window.onload = async () => {
   function sirenEnableClick() {
     if (sirenText.innerHTML === "Off") {
       localStorage.setItem("siren", "on");
-      voiceSrc.play();
+      sirenSrc.play();
       sirenText.innerHTML = "On";
       sirenToggleOn.classList.add("on");
     } 
     else if (sirenText.innerHTML === "On") {
       localStorage.setItem("siren", "off");
-      voiceSrc.pause();
-      voiceSrc.currentTime = "0";
+      sirenSrc.pause();
+      sirenSrc.currentTime = "0";
       sirenText.innerHTML = "Off";
       sirenToggleOn.classList.remove("on");
     }

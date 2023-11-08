@@ -57,7 +57,6 @@ window.onload = async () => {
     } 
     else if (sirenText.innerHTML === "On") {
       localStorage.setItem("siren", "off");
-      voiceSrc.currentTime = "0";
       sirenText.innerHTML = "Off";
       sirenToggleOn.classList.remove("on");
     }
@@ -71,7 +70,6 @@ window.onload = async () => {
     } 
     else if (voiceText.innerHTML === "On") {
       localStorage.setItem("voice", "off");
-      voiceSrc.currentTime = "0";
       voiceText.innerHTML = "Off";
       voiceToggleOn.classList.remove("on");
     }

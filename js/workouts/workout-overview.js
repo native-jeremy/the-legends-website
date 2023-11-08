@@ -39,82 +39,82 @@ window.onload = async () => {
     console.log("Workout Res", snapshot);
   });
 
-  // Siren & Voice Functionailty Setup
-  const sirenValue = localStorage.getItem("siren");
-  const voiceValue = localStorage.getItem("voice");
-
-  sirenEnableLoad();
-  voiceEnableLoad();
-
-  siren.addEventListener("click", sirenEnableClick);
-  voice.addEventListener("click", voiceEnableClick);
-
-  function sirenEnableClick() {
-    if (sirenText.innerHTML === "Off") {
-      localStorage.setItem("siren", "on");
-      sirenText.innerHTML = "On";
-      sirenToggleOn.classList.add("on");
-    } 
-    else if (sirenText.innerHTML === "On") {
-      localStorage.setItem("siren", "off");
-      voiceSrc.currentTime = "0";
-      sirenText.innerHTML = "Off";
-      sirenToggleOn.classList.remove("on");
-    }
-  }
-
-  function voiceEnableClick() {
-    if (voiceText.innerHTML === "Off") {
-      localStorage.setItem("voice", "on");
-      voiceText.innerHTML = "On";
-      voiceToggleOn.classList.add("on");
-    } 
-    else if (voiceText.innerHTML === "On") {
-      localStorage.setItem("voice", "off");
-      voiceSrc.currentTime = "0";
-      voiceText.innerHTML = "Off";
-      voiceToggleOn.classList.remove("on");
-    }
-  }
-
-  function sirenEnableLoad() {
-    // Siren Intialising On
-    if (sirenValue === undefined || sirenValue === null) {
-      localStorage.setItem("siren", "on");
-      sirenText.innerHTML = "On";
-      sirenToggleOn.classList.add("on");
-    }
-    // Siren On
-    else if (sirenValue === "on") {
-      sirenText.innerHTML = "On";
-      sirenToggleOn.classList.add("on");
-    }
-    // Siren Off
-    else if (sirenValue === "off") {
-      sirenText.innerHTML = "Off";
-      sirenToggleOn.classList.remove("on");
-    }
-  }
-
-  function voiceEnableLoad() {
-    // Voice Intialising On
-    if (voiceValue == undefined || voiceValue == null) {
-      localStorage.setItem("voice", "on");
-      voiceText.innerHTML = "On";
-      voiceToggleOn.classList.add("on");
-    }
-    // Voice On
-    else if (voiceValue == "on") {
-      voiceText.innerHTML = "On";
-      voiceToggleOn.classList.add("on");
-    }
-    // Voice Off
-    else if (voiceValue == "off") {
-      voiceText.innerHTML = "Off";
-      voiceToggleOn.classList.remove("on");
-    }
-  }
-};
+   // Siren & Voice Functionailty Setup
+   const sirenValue = localStorage.getItem("siren");
+   const voiceValue = localStorage.getItem("voice");
+ 
+   sirenEnableLoad();
+   voiceEnableLoad();
+ 
+   siren.addEventListener("click", sirenEnableClick);
+   voice.addEventListener("click", voiceEnableClick);
+ 
+   function sirenEnableClick() {
+     if (sirenText.innerHTML === "Off") {
+       localStorage.setItem("siren", "on");
+       sirenText.innerHTML = "On";
+       sirenToggleOn.classList.add("on");
+     } 
+     else if (sirenText.innerHTML === "On") {
+       localStorage.setItem("siren", "off");
+       voiceSrc.currentTime = "0";
+       sirenText.innerHTML = "Off";
+       sirenToggleOn.classList.remove("on");
+     }
+   }
+ 
+   function voiceEnableClick() {
+     if (voiceText.innerHTML === "Off") {
+       localStorage.setItem("voice", "on");
+       voiceText.innerHTML = "On";
+       voiceToggleOn.classList.add("on");
+     } 
+     else if (voiceText.innerHTML === "On") {
+       localStorage.setItem("voice", "off");
+       voiceSrc.currentTime = "0";
+       voiceText.innerHTML = "Off";
+       voiceToggleOn.classList.remove("on");
+     }
+   }
+ 
+   function sirenEnableLoad() {
+     // Siren Intialising On
+     if (sirenValue === undefined || sirenValue === null) {
+       localStorage.setItem("siren", "on");
+       sirenText.innerHTML = "On";
+       sirenToggleOn.classList.add("on");
+     }
+     // Siren On
+     else if (sirenValue === "on") {
+       sirenText.innerHTML = "On";
+       sirenToggleOn.classList.add("on");
+     }
+     // Siren Off
+     else if (sirenValue === "off") {
+       sirenText.innerHTML = "Off";
+       sirenToggleOn.classList.remove("on");
+     }
+   }
+ 
+   function voiceEnableLoad() {
+     // Voice Intialising On
+     if (voiceValue == undefined || voiceValue == null) {
+       localStorage.setItem("voice", "on");
+       voiceText.innerHTML = "On";
+       voiceToggleOn.classList.add("on");
+     }
+     // Voice On
+     else if (voiceValue == "on") {
+       voiceText.innerHTML = "On";
+       voiceToggleOn.classList.add("on");
+     }
+     // Voice Off
+     else if (voiceValue == "off") {
+       voiceText.innerHTML = "Off";
+       voiceToggleOn.classList.remove("on");
+     }
+   }
+ };
 
 setTimeout(() => {
    const timeConvert = document.querySelectorAll('.convert_time');
