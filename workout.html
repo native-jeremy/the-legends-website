@@ -129,8 +129,8 @@
             </video>
           <div id="exerciseHeader" style="display: none; opacity: 0" class="header-current animated">
             <div class="workout-navigation">
-              <div id="repText" class="generic-text-style-2">Time</div>
-              <div id="safeTimerDisplay" w-el="timer" class="generic-text-style-3">
+              <div id="repText" ref="type" class="generic-text-style-2">Time</div>
+              <div id="safeTimerDisplay" ref="amount" class="generic-text-style-3">
                 Loading...
               </div>
               <a href="#scroll" class="nav-workout-button panel-button w-inline-block">
@@ -239,7 +239,7 @@
                   <div class="player-control-button speaker-icon"></div>
                 </a>
                 <div class="player-block main-player-block">
-                  <div v-on:click="PrevExercise(this.$refs.video, this.$refs.voice)" class="player-control-button w-inline-block">
+                  <div v-on:click="PrevExercise(this.$refs.amount, this.$refs.play, this.$refs.video, this.$refs.voice, this.$refs.siren)" class="player-control-button w-inline-block">
                     <div class="play-left-icon"></div>
                   </div>
                   <div id="playEnabled" class="player-control-button play-button">
@@ -249,9 +249,9 @@
                         <circle r="100" cx="124" cy="124" class="progressWheel"></circle>
                       </svg>
                     </div>
-                    <div ref="play" v-on:click="PlayExercise(this.$refs.play, this.$refs.video, this.$refs.voice)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
+                    <div ref="play" v-on:click="PlayExercise(this.$refs.amount, this.$refs.play, this.$refs.video, this.$refs.voice, this.$refs.siren)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
                   </div>
-                  <div v-on:click="NextExercise(this.$refs.video, this.$refs.voice)" class="player-control-button w-inline-block">
+                  <div v-on:click="NextExercise(this.$refs.amount, this.$refs.play, this.$refs.video, this.$refs.voice, this.$refs.siren)" class="player-control-button w-inline-block">
                     <div class="play-right-arrow-icon"></div>
                   </div>
                 </div>

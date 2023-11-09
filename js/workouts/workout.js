@@ -44,6 +44,12 @@ createApp({
         // Intial Audio Source Set
         this.$refs.voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
 
+        // Intial Type Set
+        this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+
+        // Intial Amount Set
+        this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+
         //console.log('Data Test', this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercise].url)
       });
       
@@ -78,6 +84,33 @@ createApp({
       window.Webflow && window.Webflow.ready();
       window.Webflow && window.Webflow.require("ix2").init();
       document.dispatchEvent(new Event("readystatechange"));
+    },
+
+    // Custom Animations For Video Source Changing
+    CustomAnimations(input) {
+      // Prev Exercise Animation
+      if(input == 1)
+      {
+        anime({
+          targets: '.app-fullscreen-video',
+          translateX: ['100vw', '0vh'],
+          easing: 'easeInOutQuad',
+          duration: 1000,
+          opacity: [0, 1],
+        });
+      }
+
+      // Next Exercise Animation
+      else if(input == 0)
+      {
+        anime({
+          targets: '.app-fullscreen-video',
+          translateX: ['-100vw', '0vh'],
+          opacity: [0, 1],
+          easing: 'easeInOutQuad',
+          duration: 1000
+        });
+      }
     },
 
     // Siren & Voice Enabled
@@ -121,9 +154,46 @@ createApp({
       }
     },
 
+    Timer(time, play, video, voice, siren) {
+      let counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises];
+      let percentage = counter / 100 * 100;
+
+      // Progress Wheel Value
+      //setProgress(percentage);
+
+      // Timer To Run Exercise
+      let timer = setInterval(function () {
+
+        // Time Conversion To Minutes And Seconds
+        let minutes = Math.floor(counter / 60); 
+        let seconds = counter % 60;
+        time.textContent = minutes + ":" + seconds;
+
+        // Condtion To Check If Paused
+        if (!time.classList.contains("pausetime")) {
+          counter--;
+
+          //setProgress(counter);
+
+          // Condtion To Check If Finished
+          if (counter < 0) {
+            siren.play();
+
+            this.NextExercise(time, play, video, voice, siren);
+
+            clearInterval(timer);
+            //clearInterval(checkAmrap);
+          }
+        }
+      }, 1000);
+    },
+
     // Play Exercise By Click
-    PlayExercise(play, video, voice)
+    PlayExercise(time, play, video, voice, siren)
     {
+      // Timer For Exercise
+      //this.Timer(time, play, video, voice, siren)
+
       // Checks If Voice Has Played Then Plays If Returns false
       if(!this.voiceHasPlayed)
       {
@@ -142,52 +212,86 @@ createApp({
       if (video.paused) {
         video.play();
         play.classList.toggle("pause");
-        //timerText.classList.remove("pausetime");
+        time.classList.remove("pausetime");
       } else {
         video.pause();
         play.classList.toggle("pause");
-        //timerText.classList.add("pausetime");
+        time.classList.add("pausetime");
       }
     },
 
     // Previous Exercise By Click
-    PrevExercise(video, voice)
+    PrevExercise(time, play, video, voice, siren)
     {
-      anime({
-        targets: '.app-fullscreen-video',
-        translateX: ['-100vw', '0vh'],
-        opacity: [0, 1],
-        easing: 'easeInOutQuad',
-        duration: 1000
-      });
+      // Timer For Exercise
+      //this.Timer(time, play, video, voice, siren)
 
-      //video.play();
+      // Play Icon Condtion Play/Pause
+      if (video.paused) {
+        play.classList.toggle("pause");
+        //timerText.classList.remove("pausetime");
+      } else {
+        play.classList.toggle("pause");
+        //timerText.classList.add("pausetime");
+      }
+
+      // Calling Custom Animations
+      this.CustomAnimations(0)
+
+      // Change Exercises Number
       this.workout.exercises = this.workout.exercises - 1;
+
+      // Change Video/Audio Source
       voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
       video.src = this.exerciseData[this.workout.exercises].Video[0].url
+
+       // Change Type
+       this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+
+       // Change Amount
+       this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+
+      // Play Video/Audio
       voice.play();
       video.play();
-      console.log('method is working', voice, "Exercise Number", this.workout.exercises);
+      play.classList.toggle("pause");
     },
 
     // Next Exercise By Click
-    NextExercise(video, voice)
+    NextExercise(time, play, video, voice, siren)
     {
-      anime({
-        targets: '.app-fullscreen-video',
-        translateX: ['100vw', '0vh'],
-        easing: 'easeInOutQuad',
-        duration: 1000,
-        opacity: [0, 1],
-      });
+      // Timer For Exercise
+      //this.Timer(time, play, video, voice, siren)
 
-      //video.play();
+      // Play Icon Condtion Play/Pause
+      if (video.paused) {
+        play.classList.toggle("pause");
+        //timerText.classList.remove("pausetime");
+      } else {
+        play.classList.toggle("pause");
+        //timerText.classList.add("pausetime");
+      }
+
+      // Calling Custom Animations
+      this.CustomAnimations(1)
+      
+      // Change Exercises Number
       this.workout.exercises = this.workout.exercises + 1;
+
+      // Change Video/Audio Source
       voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
       video.src = this.exerciseData[this.workout.exercises].Video[0].url
+
+      // Change Type
+      this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+
+       // Change Amount
+      this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+
+      // Play Video/Audio
       voice.play();
       video.play();
-      console.log('method is working', voice, "Exercise Number", this.workout.exercises);
+      play.classList.toggle("pause");
     },
 
     // Siren Enabled By Click
