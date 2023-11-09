@@ -87,6 +87,12 @@
     }
   </style>
   <style>
+    .waiting {
+      opacity: 0.5;
+      user-select: none;
+      pointer-events: none;
+      cursor: none !important;
+    }
     .exercises-headings {
       display: flex !important;
     }
@@ -117,12 +123,10 @@
         <div class="app-block viewer">
           <div class="banner top-bar"></div>
           <div class="banner bottom-bar"></div>
-          <div id="videoContainer" w-el="workout_video" class="app-fullscreen-video video-embed w-embed">
             <video ref="video" loop preload="auto" src="" muted webkit-playsinline playsinline class="app-fullscreen-video"
               style="background-color: #c2c2c2">
               <!--<source src="" type="video/mp4" />-->
             </video>
-          </div>
           <div id="exerciseHeader" style="display: none; opacity: 0" class="header-current animated">
             <div class="workout-navigation">
               <div id="repText" class="generic-text-style-2">Time</div>
@@ -218,7 +222,7 @@
                     Single Title
                   </div>
                 </div>
-                <div class="exercises-headings amrap_heading_block"></div>
+                <!--div class="exercises-headings amrap_heading_block"></div>-->
               </div>
               <div id="roundText" class="round-text">
                 <div id="roundTitle" w-el="workout_round_title" class="main-heading-style-9 center-align">
@@ -235,12 +239,9 @@
                   <div class="player-control-button speaker-icon"></div>
                 </a>
                 <div class="player-block main-player-block">
-                  <div id="prevButtonDisabled" w-el="prev_exercise" class="player-control-button disabled">
+                  <div v-on:click="PrevExercise(this.$refs.video, this.$refs.voice)" class="player-control-button w-inline-block">
                     <div class="play-left-icon"></div>
                   </div>
-                  <a id="prevButton" w-el="prev_exercise" href="#" class="player-control-button w-inline-block">
-                    <div class="play-left-icon"></div>
-                  </a>
                   <div id="playEnabled" class="player-control-button play-button">
                     <div class="wheel w-embed">
                       <svg width="100" height="100" viewbox="1 1 250 250">
@@ -248,13 +249,9 @@
                         <circle r="100" cx="124" cy="124" class="progressWheel"></circle>
                       </svg>
                     </div>
-                    <div id="playButton" v-on:click="PlayExercise(this.$refs.video, this.$refs.siren)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
-                    <div id="playButtonDisabled" class="play-icon disabled"></div>
+                    <div ref="play" v-on:click="PlayExercise(this.$refs.play, this.$refs.video, this.$refs.voice)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
                   </div>
-                  <a id="nextButton" w-el="next_exercise" href="#" class="player-control-button w-inline-block">
-                    <div class="play-right-arrow-icon"></div>
-                  </a>
-                  <div id="nextButtonDisabled" w-el="next_exercise" class="player-control-button disabled">
+                  <div v-on:click="NextExercise(this.$refs.video, this.$refs.voice)" class="player-control-button w-inline-block">
                     <div class="play-right-arrow-icon"></div>
                   </div>
                 </div>
@@ -306,13 +303,6 @@
                       </div>
                     </div>
                   </div>
-                  <div class="accordion-body style-1 hide">
-                    <p class="body-copy-text-style-1">
-                      When signals are on you will hear siren count downs and
-                      a half way warnings throughout the workout. This can be
-                      changed at any point during the exercise.
-                    </p>
-                  </div>
                 </div>
                 <div class="accordion style-1">
                   <div class="accordion-header style-3">
@@ -331,24 +321,17 @@
                       </div>
                     </div>
                   </div>
-                  <div class="accordion-body style-1 hide">
-                    <p class="body-copy-text-style-1">
-                      When signals are on you will hear voice count downs and
-                      a half way warnings throughout the workout. This can be
-                      changed at any point during the exercise.
-                    </p>
-                  </div>
                 </div>
               </div>
               <div id="controls" w-el="workout_controls" class="content-spacer workout-controls">
                 <div class="content-headings style-2">
                   <h2 class="main-heading-style-1">Difficulty Settings</h2>
                 </div>
-                <div w-el="single_diff_controls" class="accordion style-1 single-diff-controls">
+                <div class="accordion style-1 single-diff-controls">
                   <div class="accordion-header style-3">
                     <div class="accordion-header-text style-2">
                       <div class="accordion-header-top-content">
-                        <h2 w-el="single_exercise_title" class="main-sub-heading-style-1">
+                        <h2 class="main-sub-heading-style-1">
                           Difficulty Level
                         </h2>
                         <div class="accordion-header-arrow">
@@ -370,17 +353,10 @@
                       </div>
                     </div>
                   </div>
-                  <div class="accordion-body style-1 hide">
-                    <p class="body-copy-text-style-1">
-                      When signals are on you will hear siren count downs and
-                      a half way warnings throughout the workout. This can be
-                      changed at any point during the exercise.
-                    </p>
-                  </div>
                 </div>
               </div>
               <div class="info-block auto-margin">
-                <a id="workoutExit" href="#" class="button-style-3 workout-button-exit w-button">Stop this workout</a>
+                <a v-bind:href="`/workout-overview.html?workout=${workout.id}`" class="button-style-3 workout-button-exit w-button">Stop this workout</a>
               </div>
             </div>
           </div>
@@ -388,10 +364,8 @@
       </div>
     </div>
     <div class="audio">
-        <audio id="voiceSrc" ref="voice" src="">
-        </audio>
-        <audio id="sirenSrc" ref="siren" v-bind:src="`${workout.finishAudio}`">
-        </audio>
+        <audio id="voiceSrc" ref="voice" src=""></audio>
+        <audio id="sirenSrc" ref="siren" v-bind:src="`${workout.finishAudio}`"></audio>
     </div>
   </div>
   <div w-el="execise_notice_modal" class="modal style-2">
@@ -418,6 +392,7 @@
     type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
     crossorigin="anonymous"></script>
   <script src="js/the-legends-web-app.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="js/other/misc.js" type="text/javascript"></script>
   <script src="js/workouts/workout.js" type="text/javascript"></script>
 </body>

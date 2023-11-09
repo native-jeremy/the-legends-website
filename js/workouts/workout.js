@@ -3,14 +3,15 @@ const { createApp } = Vue
 createApp({
   data() {
     return {
-      message: 'Hello Vue!',
       workout: {
+        id: "",
         finishAudio: "",
         round: 0,
         exercises: 0,
         exercise: 0,
         roundAmount: 0,
         exercisesAmount: 0,
+        voiceHasPlayed: false,
       },
       roundData: [],
       exerciseData: [],
@@ -21,6 +22,10 @@ createApp({
     // Intial Request Data Applied To Data Object
     intialRequest()
     {
+      // Workout ID Param Search
+      let workout = new URL(document.location).searchParams;
+      this.workout.id = workout.get("workout");
+
       Wized.request.await("Load Round Info", (response) => {
         //console.log('Round Request', response)
         roundRes = response;
@@ -35,20 +40,44 @@ createApp({
         console.log('Current Round', roundSelected)
         console.log('Round Request', this.roundData)
         console.log('Round Length', this.workout.roundAmount)
+
+        // Intial Audio Source Set
+        this.$refs.voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+
+        //console.log('Data Test', this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercise].url)
       });
       
       Wized.request.await("Load Finished Audio", (response) => {    
         this.workout.finishAudio = response.data[0].Audio[0].url
         console.log("Audio Response", response);
       })
+
+      Wized.request.await("Load Exercise Diff V2", (response) => {
+        console.log("Exercise Response", response);
+
+        response.data.forEach((e, ei) => {
+          this.roundData.forEach((r, ri) => {
+            if(r.ID_Linked_Exercises.some( item => e.Exercise_ID.includes(item)))
+            {
+              console.log("Exercise Name", e);
+              this.exerciseData.push(e);
+            }
+          });
+        })
+        // Intial Video Source Set
+        this.$refs.video.src = this.exerciseData[this.workout.round].Video[0].url
+
+        console.log("Exercise Data", this.exerciseData)
+      })
     },
 
-    // Play Exercise By Click
-    PlayExercise(video, voice)
-    {
-      //video.play();
-      voice.play();
-      console.log('method is working', voice);
+    // Webflow Animations Reset
+    WebflowAnimations() {
+      console.log("interaction loaded");
+      window.Webflow && window.Webflow.destroy();
+      window.Webflow && window.Webflow.ready();
+      window.Webflow && window.Webflow.require("ix2").init();
+      document.dispatchEvent(new Event("readystatechange"));
     },
 
     // Siren & Voice Enabled
@@ -92,6 +121,75 @@ createApp({
       }
     },
 
+    // Play Exercise By Click
+    PlayExercise(play, video, voice)
+    {
+      // Checks If Voice Has Played Then Plays If Returns false
+      if(!this.voiceHasPlayed)
+      {
+        // Audio Condtion Play/Pause
+        if (voice.paused) {
+          voice.play();
+        } 
+        else {
+          voice.pause();
+        }
+
+        this.voiceHasPlayed = true
+      }
+
+      // Video Condtion Play/Pause
+      if (video.paused) {
+        video.play();
+        play.classList.toggle("pause");
+        //timerText.classList.remove("pausetime");
+      } else {
+        video.pause();
+        play.classList.toggle("pause");
+        //timerText.classList.add("pausetime");
+      }
+    },
+
+    // Previous Exercise By Click
+    PrevExercise(video, voice)
+    {
+      anime({
+        targets: '.app-fullscreen-video',
+        translateX: ['-100vw', '0vh'],
+        opacity: [0, 1],
+        easing: 'easeInOutQuad',
+        duration: 1000
+      });
+
+      //video.play();
+      this.workout.exercises = this.workout.exercises - 1;
+      voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+      video.src = this.exerciseData[this.workout.exercises].Video[0].url
+      voice.play();
+      video.play();
+      console.log('method is working', voice, "Exercise Number", this.workout.exercises);
+    },
+
+    // Next Exercise By Click
+    NextExercise(video, voice)
+    {
+      anime({
+        targets: '.app-fullscreen-video',
+        translateX: ['100vw', '0vh'],
+        easing: 'easeInOutQuad',
+        duration: 1000,
+        opacity: [0, 1],
+      });
+
+      //video.play();
+      this.workout.exercises = this.workout.exercises + 1;
+      voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+      video.src = this.exerciseData[this.workout.exercises].Video[0].url
+      voice.play();
+      video.play();
+      console.log('method is working', voice, "Exercise Number", this.workout.exercises);
+    },
+
     // Siren Enabled By Click
     SirenEnableClick(text, toggle) {
 
@@ -126,19 +224,11 @@ createApp({
         text.textContent = "Off";
         toggle.classList.remove("on");
       }
-    },
-
-    // Webflow Animations Reset
-    WebflowAnimations() {
-      console.log("interaction loaded");
-      window.Webflow && window.Webflow.destroy();
-      window.Webflow && window.Webflow.ready();
-      window.Webflow && window.Webflow.require("ix2").init();
-      document.dispatchEvent(new Event("readystatechange"));
     }
   },
   created()
   {
+    // Intial Data Request Called
     this.intialRequest()
   },
   mounted() {
@@ -149,7 +239,7 @@ createApp({
 
     // Webflow Animations Reset Called
     this.WebflowAnimations()
-  }
+  },
 }).mount('#app')
 
 
@@ -214,11 +304,6 @@ let seconds;
 
 const workoutExitButton = document.getElementById("workoutExit");
 
-const playButton = document.getElementById("playButton");
-const nextButton = document.getElementById("nextButton");
-const prevButton = document.getElementById("prevButton");
-const backButton = document.getElementById("backButton");
-
 const minusBtn = document.getElementById("minusBtn");
 const currentNum = document.getElementById("currentNum");
 const limitNum = document.getElementById("limitNum");
@@ -230,67 +315,6 @@ currentNum.innerHTML = amount;
 
 let refreshNum = 0;
 window.onload = async () => {
-  
-  /*function commenttedOut(){
-  
-  const roundLengthCookie = await Wized.data.get("c.roundlength");
-  const exerciseParam = await Wized.data.get("n.parameter.exercise");
-  const exercisesParam = await Wized.data.get("n.parameter.exercises");
-  const roundParam = await Wized.data.get("n.parameter.round");
-  const workoutParam = await Wized.data.get("n.parameter.workout");
-  const recoveryID = await Wized.data.get("c.recoveryid");
-  const sirenValue = localStorage.getItem("siren");
-  const voiceValue = localStorage.getItem("voice");
-
-    let params = window.location.href;
-  let url = new URL(params);
-  let checkurl = url.searchParams;
-
-  let recoveryData;
-
-  window.history.replaceState(null, null, url.toString());
-
-  //enableDisabledStates();
-
-  if (parseInt(roundParam) < 0 && parseInt(exercisesParam) === 0) {
-    roundPopup.style.display = "flex";
-    roundText.style.display = "flex";
-    RoundNumberText.innerHTML = "Redirecting..";
-    enableDisabledStates();
-    window.location.href = "/workout-overview.html?workout=" + workoutParam;
-  } else if (
-    window.location.href == "https://the-legends-web-app.webflow.io/workout"
-  ) {
-    roundPopup.style.display = "flex";
-    roundText.style.display = "flex";
-    RoundNumberText.innerHTML = "Redirecting..";
-    enableDisabledStates();
-    window.location.href = "/program-hub";
-  }
-
-  if (parseInt(roundLengthCookie) === parseInt(roundParam))
-  {
-    RoundNumberText.innerHTML = "Workout Completed";
-    roundTitle.innerHTML = "Congratulations!";
-    roundNumHeader.innerHTML = "";
-    Wized.data.setVariable("complete", "completed");
-    returnMessage.click();
-    roundPopup.style.display = "flex";
-    roundText.style.display = "flex";
-    recoveryLink.href = `/recovery.html?recovery=${recoveryID}&exercises=0`
-  }
-  }*/
-
-  // Vue Variables
-
-  // Index Variables
-  let round = 0
-  let exercises = 0
-  let exercise = 0
-
-  // Length Variables
-  let roundAmount = 0
-  let exercisesAmount = 0
 
   Wized.request.await("Load Round Info", (response) => {
     //setTimeout(() => {console.clear();}, 2000);
@@ -307,46 +331,8 @@ window.onload = async () => {
       loaderTrigger.click();
       videoContainer.style.opacity = "1";
     }
-    //----------------------------------------------------------------
-    if (parseInt(exercisesParam) < 0) {
-      getRoundNum = checkurl.get("round");
-      getRoundNum = parseInt(getRoundNum) - 1;
-      setRoundNum = checkurl.set("round", getRoundNum.toString());
-      getExercisesNum = checkurl.get("exercises");
-      getExercisesNum = 0;
-      setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
 
-      window.location.href = url.toString();
-    }
-
-    if (parseInt(exercisesParam) > mainResponse.data[parseInt(roundParam)].Diff_ID_Linked_Exercises.length - 1) {
-      getRoundNum = checkurl.get("round");
-      getRoundNum = parseInt(getRoundNum) + 1;
-      setRoundNum = checkurl.set("round", getRoundNum.toString());
-      getExercisesNum = checkurl.get("exercises");
-      getExercisesNum = 0;
-      setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
-
-      window.location.href = url.toString();
-    }
-    
-     else if (parseInt(roundParam) !== 0) {
-      RoundNumberText.innerHTML = parseInt(roundParam);
-      roundNumHeader.innerHTML = parseInt(roundParam);
-    } else if (parseInt(roundParam) === 0 && roundSelected !== "Round 0"){
-      RoundNumberText.innerHTML = parseInt(roundParam + 1);
-      roundNumHeader.innerHTML = parseInt(roundParam + 1);
-    }
-
-    roundLength = roundRes.data.length;
-    roundRealNumber = parseInt(roundParam) + 1;
-
-    if (parseInt(exercisesParam) !== 0 ) {
-      roundPopup.style.display = "none";
-      roundText.style.display = "none";
-    }
-
-    if (roundRealNumber > roundLength) {
+   /* if (roundRealNumber > roundLength) {
       RoundNumberText.innerHTML = "Workout Completed";
       roundTitle.innerHTML = "Congratulations!";
       roundNumHeader.innerHTML = "";
@@ -363,7 +349,7 @@ window.onload = async () => {
       RoundNumberText.innerHTML = "Warm Up";
       roundTitle.innerHTML = "";
       roundNumHeader.innerHTML = "";
-    }
+    }*/
 
       //----------------------------------------------------------------
 
@@ -394,7 +380,7 @@ window.onload = async () => {
       }
 
       if (amrapBool == "True") {
-        loadAmrapData();
+        //loadAmrapData();
         
         async function loadAmrapData() {
 
@@ -514,6 +500,8 @@ window.onload = async () => {
                   "style-1",
                   "amrap-diff-controls"
                 );
+
+                `<div class="accordion style-1">`
 
                 content.append(amrapControl);
 
@@ -684,7 +672,7 @@ window.onload = async () => {
       } else {
 
         clearInterval(checkAmrapVideo);
-        loadSingleData();
+        //loadSingleData();
         
         async function loadSingleData() {
 
@@ -769,93 +757,11 @@ window.onload = async () => {
 
       audioSrc.src = mainResponse.data[parseInt(roundParam)].Audio_Source_Linked_Exercises[parseInt(exercisesParam)].url;
 
-      let clearStates = setTimeout(() => {
-        enableActiveStates();
-        clearTimeout(clearStates);
-      }, 1500);
-
-      nextButton.addEventListener("click", () => {
-        updateParams();
-      });
-
-      prevButton.addEventListener("click", backTrackParams);
-
       workoutExitButton.addEventListener("click", exitParams);
 
       function exitParams() {
         workoutExitButton.href = "/workout-overview?workout=" + workoutParam;
       }
-
-      function updateParams() {
-        setTimeout(() => {
-        if(mainResponse.data[parseInt(roundParam)].Amrap_Linked_Exercises.includes("True"))
-        {
-          if(parseInt(exercisesParam) < mainResponse.data[parseInt(roundParam)].Amrap_Linked_Exercises.length - 1)
-          {
-            getExercisesNum = checkurl.get("exercises");
-            getExercisesNum = parseInt(getExercisesNum) + 1;
-            setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
-            window.location.href = url.toString();
-          }
-          else {
-            getRoundNum = checkurl.get("round");
-            getRoundNum = parseInt(getRoundNum) + 1;
-            setRoundNum = checkurl.set("round", getRoundNum.toString());
-            getExercisesNum = checkurl.get("exercises");
-            getExercisesNum = 0;
-            setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
-      
-            window.location.href = url.toString();
-          }
-        }
-        else {
-        getExercisesNum = checkurl.get("exercises");
-        getExercisesNum = parseInt(getExercisesNum) + 1;
-        setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
-        window.location.href = url.toString();
-        }
-        }, 1000);
-      }
-
-      function backTrackParams() {
-        setTimeout(() => {
-        if (parseInt(exercisesParam) < mainResponse.data[parseInt(roundParam)].Diff_ID_Linked_Exercises.length - 1) {
-        getExercisesNum = checkurl.get("exercises");
-        getExercisesNum = parseInt(getExercisesNum) - 1;
-        setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
-        }
-
-        window.location.href = url.toString();
-        //window.history.replaceState(null, null, url.toString());
-        //checkParam()
-      }, 1000);
-      }
-
-      //AUTOPLAYER
-      if ((parseInt(exercisesParam) > 0 && amrapBool == "False") || (parseInt(exercisesParam) > 0 && amrapBool == "True" && videoIndex === 0)) 
-      {
-        setTimeout(autoPlayVideo, 3000);
-      } else if ((parseInt(exercisesParam) > 0 && amrapBool == "True" && videoIndex === 0) || exerciseParam === 0) {
-        setTimeout(autoPlayVideo, 3000);
-      }
-
-      //let counter = repAmount;
-      let clickNum = 0;
-
-      playButton.addEventListener("click", function () {
-        if (clickNum < 1) {
-
-          if(voiceValue !== "off")
-          {
-            playVoice();
-          } 
-          //Conditions
-          roundType();
-        }
-        playVideo();
-        clickNum = clickNum + 1;
-      });
-    //} 
 
     function roundType() {
       if (repType === "Time") {
@@ -930,68 +836,7 @@ window.onload = async () => {
         //console.log("Video Duration", video.duration + "s");
       }
     }
-
-    function playSiren() {
-      if (sirenSrc.paused) {
-        sirenSrc.play();
-      } else {
-        sirenSrc.pause();
-      }
-    }
-
-    function playVoice() {
-        if (voiceSrc.pause) {
-          voiceSrc.play();
-        } else {
-          voiceSrc.pause();
-        }
-    }
   });
-
-  function enableDisabledStates() {
-    playButton.style.display = "none";
-    playButtonDisabled.style.display = "flex";
-    //
-    nextButton.style.display = "none";
-    nextButtonDisabled.style.display = "flex";
-    //
-    prevButton.style.display = "none";
-    prevButtonDisabled.style.display = "flex";
-    progressEl.style.display = "none";
-  }
-
-  function enableActiveStates() {
-    playButton.style.display = "flex";
-    playButtonDisabled.style.display = "none";
-    //
-    nextButton.style.display = "flex";
-    nextButtonDisabled.style.display = "none";
-    //
-    prevButton.style.display = "flex";
-    prevButtonDisabled.style.display = "none";
-    progressEl.style.display = "flex";
-  }
-
-  function autoPlayVideo() {
-    playButton.click();
-  }
-
-  function nextPage() {
-    if (exerciseParam === undefined || exerciseParam === "undefined") {
-      if (refreshNum < 1) {
-        nextButton.click();
-      }
-      playButton.style.display = "none";
-      playButtonDisabled.style.display = "flex";
-      //
-      nextButton.style.display = "none";
-      nextButtonDisabled.style.display = "flex";
-      //
-      prevButton.style.display = "none";
-      prevButtonDisabled.style.display = "flex";
-    }
-    refreshNum = refreshNum + 1;
-  }
 
   $(document).ready(function () {
     const scrollBtn = $(".panel-button");
