@@ -12,9 +12,11 @@ createApp({
         roundAmount: 0,
         exercisesAmount: 0,
         voiceHasPlayed: false,
+        startDifficulty: []
       },
       roundData: [],
       exerciseData: [],
+      StatusCode200: false,
     }
   },
   methods: {
@@ -31,12 +33,13 @@ createApp({
         roundRes = response;
         roundInfo = roundRes.data[this.workout.round];
     
-        roundDiffLevel = roundInfo.Default_Diff_Level.split(", ");
+        this.startDifficulty = roundInfo.Default_Diff_Level.split(", ");
         roundSelected = roundRes.data[this.workout.round].Round_Selection;
 
         this.roundData = roundRes.data
         this.workout.roundAmount = roundRes.data.length
 
+        console.log('startDifficulty', this.startDifficulty)
         console.log('Current Round', roundSelected)
         console.log('Round Request', this.roundData)
         console.log('Round Length', this.workout.roundAmount)
@@ -71,7 +74,10 @@ createApp({
           });
         })
         // Intial Video Source Set
-        this.$refs.video.src = this.exerciseData[this.workout.round].Video[0].url
+        this.$refs.video.src = this.exerciseData[this.workout.round].Video[parseInt(this.$refs.min.textContent - 1)].url
+        this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
+
+        this.StatusCode200 = true;
 
         console.log("Exercise Data", this.exerciseData)
       })
@@ -154,6 +160,7 @@ createApp({
       }
     },
 
+     // Exercise Timer
     Timer(time, play, video, voice, siren) {
       let counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises];
       let percentage = counter / 100 * 100;
@@ -243,13 +250,16 @@ createApp({
 
       // Change Video/Audio Source
       voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-      video.src = this.exerciseData[this.workout.exercises].Video[0].url
+      video.src = this.exerciseData[this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
 
        // Change Type
        this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
 
        // Change Amount
        this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+
+      // Difficulties Applied        
+      this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
 
       // Play Video/Audio
       voice.play();
@@ -280,13 +290,16 @@ createApp({
 
       // Change Video/Audio Source
       voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-      video.src = this.exerciseData[this.workout.exercises].Video[0].url
+      video.src = this.exerciseData[this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
 
-      // Change Type
-      this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+       // Change Type
+       this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
 
        // Change Amount
-      this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+       this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+
+      // Difficulties Applied        
+      this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
 
       // Play Video/Audio
       voice.play();
@@ -296,7 +309,6 @@ createApp({
 
     // Siren Enabled By Click
     SirenEnableClick(text, toggle) {
-
       if (text.innerHTML === "Off") {
         localStorage.setItem("siren", "on");
         sirenSrc.play();
@@ -314,7 +326,6 @@ createApp({
   
     // Voice Enabled By Click
     VoiceEnableClick(text, toggle) {
-      console.log(text, toggle)
       if (text.textContent === "Off") {
         localStorage.setItem("voice", "on");
         voiceSrc.play();
@@ -328,6 +339,31 @@ createApp({
         text.textContent = "Off";
         toggle.classList.remove("on");
       }
+    },
+
+    ChangeDifficulty(input, video, difficulty) {
+      if(input == 0)
+      {
+        difficulty = parseInt(difficulty.textContent) - 1
+        this.$refs.min.textContent = difficulty
+        
+        //this.workout.startDifficulty[difficulty] = this.workout.startDifficulty[difficulty] - 1
+        
+        video.src = this.exerciseData[this.workout.exercises].Video[difficulty].url
+        this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
+        video.play();
+      }
+      else if(input == 1)
+      {
+        difficulty = parseInt(difficulty.textContent) + 1
+        this.$refs.min.textContent = difficulty
+        this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
+
+        //this.workout.startDifficulty[difficulty] = this.workout.startDifficulty[difficulty] + 1
+
+        video.src = this.exerciseData[this.workout.exercises].Video[difficulty].url
+        video.play();
+      }
     }
   },
   created()
@@ -336,6 +372,15 @@ createApp({
     this.intialRequest()
   },
   mounted() {
+    anime({
+      targets: '.path2',
+      strokeDashoffset: [anime.setDashoffset, 0],
+      easing: 'cubicBezier(.5, .05, .1, .3)',
+      duration: 2000,
+      delay: function(el, i) { return i * 250 },
+      direction: 'alternate',
+      loop: true
+    });
     //console.log("mounted element", this.$refs.siren);
 
     // Audio Enabled Method Called
@@ -346,9 +391,9 @@ createApp({
   },
 }).mount('#app')
 
+// Wized.data.setVariable("complete", "completed");
 
-//Element Triggers
-const videoContainer = document.getElementById("videoContainer");
+/*const videoContainer = document.getElementById("videoContainer");
 const loaderTrigger = document.getElementById("Trigger");
 const exerciseTitle = document.getElementById("exerciseTitle");
 const exerciseHeader = document.getElementById("exerciseHeader");
@@ -358,7 +403,7 @@ const roundNumHeader = document.getElementById("headerNumText");
 const roundText = document.getElementById("roundText");
 const videoChange = document.getElementById("videoChange");
 
-// Element Declarations
+
 const repText = document.getElementById("repText");
 const timerText = document.getElementById("safeTimerDisplay");
 const currentTest = document.getElementById("current");
@@ -373,22 +418,20 @@ const workoutMessage = document.getElementById('workoutMessage');
 let voiceSrc = document.getElementById("voiceSrc");
 let sirenSrc = document.getElementById("sirenSrc");
 
-// Param Int Set Variables
+
 let setIntRoundNum;
 let setIntExercisesNum;
 let setIntExerciseNum;
 
-// Param Get Variables
+
 let getRoundNum;
 let getExercisesNum;
 let getExerciseNum;
 
-// Param Set Variables
 let setRoundNum;
 let setExercisesNum;
 let setExerciseNum;
 
-// Temp Variables
 let exerciseDiffRes;
 let roundRes;
 let roundResIndex;
@@ -406,7 +449,6 @@ let diffRes;
 let minutes;
 let seconds;
 
-const workoutExitButton = document.getElementById("workoutExit");
 
 const minusBtn = document.getElementById("minusBtn");
 const currentNum = document.getElementById("currentNum");
@@ -421,7 +463,6 @@ let refreshNum = 0;
 window.onload = async () => {
 
   Wized.request.await("Load Round Info", (response) => {
-    //setTimeout(() => {console.clear();}, 2000);
     const mainResponse = response;
     const repDataInt = response;
     let repAmount;
@@ -431,47 +472,17 @@ window.onload = async () => {
     const amrapResponse = response;
     let checkAmrap;
 
+
     if (repDataInt.status === 200) {
       loaderTrigger.click();
       videoContainer.style.opacity = "1";
     }
-
-   /* if (roundRealNumber > roundLength) {
-      RoundNumberText.innerHTML = "Workout Completed";
-      roundTitle.innerHTML = "Congratulations!";
-      roundNumHeader.innerHTML = "";
-      Wized.data.setVariable("complete", "completed");
-      enableDisabledStates();
-    } else if (parseInt(roundParam) !== 0) {
-      RoundNumberText.innerHTML = parseInt(roundParam);
-      roundNumHeader.innerHTML = parseInt(roundParam);
-    } else if (parseInt(roundParam) === 0 && roundSelected !== "Round 0"){
-      RoundNumberText.innerHTML = parseInt(roundParam + 1);
-      roundNumHeader.innerHTML = parseInt(roundParam + 1);
-    }
-    else if (parseInt(roundParam) === 0 && roundSelected === "Round 0"){
-      RoundNumberText.innerHTML = "Warm Up";
-      roundTitle.innerHTML = "";
-      roundNumHeader.innerHTML = "";
-    }*/
-
-      //----------------------------------------------------------------
-
-    exerciseData = mainResponse.data[exercises];
-
-    console.log("---------------------------------------");
-    console.log("All Rounds:", mainResponse);
-    console.log("---------------------------------------");
-    console.log("Current Round:", mainResponse.data[round]);
-    console.log("---------------------------------------");
-    console.log("Current Exercise Amount:", mainResponse.data[round].Amounts_Name_Linked_Exercises[exercises]);
 
     let audioSrc = document.getElementById("voiceSrc");
     let audioIndex = exercise;
     let vidSrc = document.getElementById("video");
     let videoIndex = exercise;
 
-    //if (exerciseData !== undefined) {
       repAmount = mainResponse.data[round].Amounts_Name_Linked_Exercises[exercises];
       repType = mainResponse.data[round].Rep_Type_Linked_Exercises[exercises]
       amrapBool = mainResponse.data[round].Amrap_Linked_Exercises[exercises];
@@ -483,9 +494,7 @@ window.onload = async () => {
         seconds = time % 60;
       }
 
-      if (amrapBool == "True") {
-        //loadAmrapData();
-        
+      if (amrapBool == "True") {        
         async function loadAmrapData() {
 
           Wized.request.await("Load Exercise Diff", (response) => {
@@ -494,16 +503,13 @@ window.onload = async () => {
             singleBlock.remove();
             
             secondaryResponse = response;
-            
-            //console.log("---------------------------------------");
-            //console.log("Exercise Diff Info Response TEMP! ", secondaryResponse);
 
 
             exerciseDiffRes = diffRes;
 
             let amrapLength = mainResponse.data[parseInt(roundParam)].Amrap_Exercise_Amount_Linked_Exercises.length;
 
-            diffLength = secondaryResponse.data[parseInt(videoIndex)].Video.length // This will keep throwing an error if the video length is more
+            diffLength = secondaryResponse.data[parseInt(videoIndex)].Video.length
             let diffRealLength = secondaryResponse.data[0].Video.length 
             maxLimit = diffLength;
             limitNum.innerHTML = maxLimit;
@@ -542,7 +548,6 @@ window.onload = async () => {
             } 
 
             secondaryResponse.data = videoOrderList;
-            //console.log("Video Order", videoOrderList);
             if (videoSrcIndex.length  <= 0) {
               
               for (let i = 0; i < amrapLength; i++)
@@ -564,16 +569,11 @@ window.onload = async () => {
                 amrapBlock.innerHTML = amrapBlock.innerHTML + renderHeadings
               }
 
-              //console.log("Default Video Length",videoSrcIndex);
-              //console.log("Default Res Level: ", videoSrcIndex)
-              //console.log("amrapLength: ", amrapLength)
             }
 
             if (videoSrcIndex.length > 0) {
               for (let i = 0; i < amrapLength; i++) {
-                //controlNumber.push(currentNumber);----------------------------------------------------------------
                 let content = document.querySelector("#controls");
-                /*let sortedAmrapTitle = repDataInt.data[ parseInt(exercisesParam)].Diff_Exercise_Lookup.reverse();----------------------------------------------------------------*/
                 let sortedAmrapTitle = secondaryResponse.data[i].Exercise_Name;
                 let amrapResTitle = sortedAmrapTitle;
 
@@ -597,7 +597,6 @@ window.onload = async () => {
 
                 const amrapControlName = videoOrderList[i].Exercise_Name;
 
-                //Amrap Control Div "body"----------------------------------------------------------------
                 amrapControl = document.createElement("div");
                 amrapControl.classList.add(
                   "accordion",
@@ -616,77 +615,55 @@ window.onload = async () => {
                 else {
                   currentNumber = videoSrcIndex[i] + 1;
                 }
-                //currentNumber = videoSrcIndex[i];
 
                 currentNumberText = currentNumber;
-                //Amrap Header Content - Content Div----------------------------------------------------------------
                 amrapHeader = document.createElement("div");
                 amrapHeader.classList.add("accordion-header", "style-3");
                 amrapControl.appendChild(amrapHeader);
-                //Amrap Header Text Content - Content Div----------------------------------------------------------------
                 amrapHeaderText = document.createElement("div");
                 amrapHeaderText.classList.add("accordion-header-text", "style-2");
 
                 amrapHeader.appendChild(amrapHeaderText);
 
-                //Amrap Header Top Content - Content Div----------------------------------------------------------------
                 amrapHeaderTop = document.createElement("div");
                 amrapHeaderTop.classList.add("accordion-header-top-content");
 
                 amrapHeaderText.appendChild(amrapHeaderTop);
 
-                //Amrap Exercise Title Text----------------------------------------------------------------
                 amrapTitle = document.createElement("h2");
                 amrapTitle.classList.add("main-sub-heading-style-1");
                 amrapTitle.innerHTML = amrapControlName;
                 amrapHeaderTop.appendChild(amrapTitle);
-                //Counter Content Div----------------------------------------------------------------
                 amrapTrigger = document.createElement("div");
                 amrapTrigger.classList.add("diff-trigger");
                 amrapHeader.appendChild(amrapTrigger);
-                //Minus Button----------------------------------------------------------------
                 amrapMinus = document.createElement("div");
                 amrapMinus.classList.add("counter-btn", "minus-btn");
                 amrapTrigger.appendChild(amrapMinus);
-                //Minus Button > Left Arrow----------------------------------------------------------------
                 amrapMinusArrow = document.createElement("div");
                 amrapMinusArrow.classList.add("counter-arrow", "left");
                 amrapMinus.appendChild(amrapMinusArrow);
-                //Current Diffculty Text "1" - example----------------------------------------------------------------
                 amrapCounter = document.createElement("div");
                 amrapCounter.classList.add("num", "current", "current-num");
-                
-                /*if (localStorage.getItem("diffStart") !== null)
-                {
-                  amrapCounter.innerHTML = localStorage.getItem("diffStart");
-                }
-                else {
-                  amrapCounter.innerHTML = videoSrcIndex[i];
-                }*/
 
                 amrapCounter.innerHTML = videoSrcIndex[i];
 
                 amrapTrigger.appendChild(amrapCounter);
 
-                //Divider "/" Text----------------------------------------------------------------
                 amrapDivider = document.createElement("div");
                 amrapDivider.classList.add("num", "divider");
                 amrapDivider.innerHTML = "/";
                 amrapTrigger.appendChild(amrapDivider);
-                //Limit Text
                 amrapLimit = document.createElement("div");
                 amrapLimit.classList.add("num", "limit", "limit-num");
                 amrapLimit.innerHTML = amrapMaxLimit;
                 amrapTrigger.appendChild(amrapLimit);
-                //Plus Button----------------------------------------------------------------
                 amrapPlus = document.createElement("div");
                 amrapPlus.classList.add("counter-btn", "Plus-btn");
                 amrapTrigger.appendChild(amrapPlus);
-                //Plus Button > Right Arrow----------------------------------------------------------------
                 amrapPlusArrow = document.createElement("div");
                 amrapPlusArrow.classList.add("counter-arrow", "right");
                 amrapPlus.appendChild(amrapPlusArrow);
-                //Push Both Controls----------------------------------------------------------------
                 controlPlusNumber.push(amrapPlus);
                 controlMinusNumber.push(amrapMinus);
 
@@ -716,7 +693,7 @@ window.onload = async () => {
 
                   if(!vidSrc.paused)
                   {       
-                  if (/*Math.floor(vidSrc.currentTime)*/ trackerTime === 5 /*Math.floor(vidSrc.duration)*/) 
+                  if (trackerTime === 5) 
                   {
                     changeVideo = true;
                     if (changeVideo == true)
@@ -769,14 +746,11 @@ window.onload = async () => {
                 }
               }
             }
-            //console.log("---------------------------------------");
-            //console.log("Current Diff:", secondaryResponse);
           });
         }
       } else {
 
         clearInterval(checkAmrapVideo);
-        //loadSingleData();
         
         async function loadSingleData() {
 
@@ -797,9 +771,6 @@ window.onload = async () => {
             diffCurrent = defaultDiff - 1;
             currentNum.innerHTML = defaultDiff;
 
-            /*newcookieIndex =
-            secondaryResponse.data[0].Video.length*/
-
             diffLength =
             secondaryResponse.data[0].Video.length;
             maxLimit = diffLength;
@@ -809,7 +780,6 @@ window.onload = async () => {
             vidSrc.src =
             secondaryResponse.data[0].Video[diffCurrent].url
             
-            // Diff Increase Click Controls - Single Exercise
             function DiffControlsSingle() {
               const singleTitle = document.querySelector('.single-title');
               singleTitle.textContent = secondaryResponse.data[0].Exercise_Name
@@ -832,7 +802,6 @@ window.onload = async () => {
                 }
               });
 
-              // Diff Decrease Click Controls - Single Exercise
               minusBtn.addEventListener("click", function () {
                 if (diffCurrent > minLimit) {
                   diffCurrent--;
@@ -853,8 +822,6 @@ window.onload = async () => {
               });
             }
 
-            //console.log("---------------------------------------");
-            //console.log("Current Diff:", secondaryResponse);
           });
         }
       }
@@ -873,8 +840,6 @@ window.onload = async () => {
       } else if (repType === "Reps") {
         repCount();
       }
-      //console.log("---------------------------------------");
-      //console.log(repType, "Applied To The Exercise");
     }
 
     function timer() {
@@ -893,8 +858,6 @@ window.onload = async () => {
               nextButton.click();
             clearInterval(timer);
             clearInterval(checkAmrap);
-            //console.log("---------------------------------------");
-            //console.log("Completed");
           }
         }
       }, 1000);
@@ -921,8 +884,6 @@ window.onload = async () => {
         video.play();
         playButton.classList.toggle("pause");
         timerText.classList.remove("pausetime");
-        //console.log("---------------------------------------");
-        //console.log("Video Duration", video.duration + "s");
       } else {
         video.pause();
         playButton.classList.toggle("pause");
@@ -936,8 +897,6 @@ window.onload = async () => {
         video.pause();
         playButton.classList.toggle("pause");
         timerText.classList.add("pausetime");
-        //console.log("---------------------------------------");
-        //console.log("Video Duration", video.duration + "s");
       }
     }
   });
@@ -960,4 +919,4 @@ window.onload = async () => {
       );
     }
   });
-};
+};*/
