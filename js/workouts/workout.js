@@ -135,7 +135,7 @@ createApp({
           translateX: ['100vw', '0vw'],
           borderRadius: ['100%', '0%'],
           easing: 'easeInOutQuad',
-          duration: 2000,
+          duration: 1500,
           opacity: [0, 1],
         });
       }
@@ -149,7 +149,7 @@ createApp({
           borderRadius: ['100%', '0%'],
           opacity: [0, 1],
           easing: 'easeInOutQuad',
-          duration: 2000
+          duration: 1500
         });
       }
     },
@@ -208,7 +208,7 @@ createApp({
         video.play();
         play.classList.toggle("pause");
         this.loadedExercise = false;
-      },2500)
+      },1750)
     },
 
     // Siren & Voice Enabled

@@ -384,7 +384,7 @@ a {
 }
 
 .disabled_player {
-  opacity: 0.9;
+  opacity: 1;
   cursor: default;
 }
 
