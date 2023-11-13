@@ -3,7 +3,7 @@
 //----------------------------------------------------------------
 Wized.request.await("Load Home Page", (response) => {
   const snapshot = response.data;
-  console.log(snapshot);
+  //console.log(snapshot);
 //----------------------------------------------------------------
 //  VUE JS CONFIGURATION
 //----------------------------------------------------------------
