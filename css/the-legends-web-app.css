@@ -380,6 +380,12 @@ a {
   padding: 10px 0;
   display: flex;
   position: relative;
+  transition: 1s ease;
+}
+
+.disabled_player {
+  opacity: 0.9;
+  cursor: default;
 }
 
 .workout-player.workout {
@@ -4531,6 +4537,7 @@ a {
   opacity: .5;
   cursor: default;
 }
+
 
 .round-text {
   text-align: center;

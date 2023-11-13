@@ -263,12 +263,12 @@
               </div>
             </div>
             <div class="info-block viewer">
-              <div class="workout-player">
+              <div class="workout-player" v-bind:class="{disabled_player: loadedExercise}">
                 <a href="#scroll" class="player-block panel-button w-inline-block">
                   <div class="player-control-button speaker-icon"></div>
                 </a>
-                <div class="player-block main-player-block">
-                  <div v-on:click="PrevExercise(this.$refs.amount, this.$refs.play, this.$refs.video, this.$refs.voice, this.$refs.siren)" class="player-control-button w-inline-block">
+                <div class="player-block main-player-block" v-show="!loadedExercise">
+                  <div v-on:click="PrevExercise()" class="player-control-button w-inline-block">
                     <div class="play-left-icon"></div>
                   </div>
                   <div id="playEnabled" class="player-control-button play-button">
@@ -278,9 +278,26 @@
                         <circle r="100" cx="124" cy="124" class="progressWheel"></circle>
                       </svg>
                     </div>
-                    <div ref="play" v-on:click="PlayExercise(this.$refs.amount, this.$refs.play, this.$refs.video, this.$refs.voice, this.$refs.siren)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
+                    <div ref="play" v-on:click="PlayExercise(this.$refs.amount,this.$refs.play, this.$refs.video, this.$refs.voice)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
                   </div>
-                  <div v-on:click="NextExercise(this.$refs.amount, this.$refs.play, this.$refs.video, this.$refs.voice, this.$refs.siren)" class="player-control-button w-inline-block">
+                  <div v-on:click="NextExercise()" class="player-control-button w-inline-block" ref="Next">
+                    <div class="play-right-arrow-icon"></div>
+                  </div>
+                </div>
+                <div class="player-block main-player-block" v-show="loadedExercise">
+                  <div class="player-control-button w-inline-block">
+                    <div class="play-left-icon"></div>
+                  </div>
+                  <div id="playEnabled" class="player-control-button play-button">
+                    <div class="wheel w-embed">
+                      <svg width="100" height="100" viewbox="1 1 250 250">
+                        <circle r="100" cx="124" cy="124" class="trackWheel"></circle>
+                        <circle r="100" cx="124" cy="124" class="progressWheel"></circle>
+                      </svg>
+                    </div>
+                    <div data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
+                  </div>
+                  <div class="player-control-button w-inline-block">
                     <div class="play-right-arrow-icon"></div>
                   </div>
                 </div>

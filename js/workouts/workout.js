@@ -18,6 +18,7 @@ createApp({
       exerciseData: [],
       StatusCode200: false,
       popup: true,
+      loadedExercise: false,
     }
   },
   computed: {
@@ -44,7 +45,7 @@ createApp({
   methods: {
 
     // Intial Request Data Applied To Data Object
-    intialRequest()
+    async intialRequest()
     {
       // Workout ID Param Search
       let workout = new URL(document.location).searchParams;
@@ -76,10 +77,10 @@ createApp({
         this.$refs.voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
 
         // Intial Type Set
-        //this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+        this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
 
         // Intial Amount Set
-        //this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
 
         // Exercise Title
         //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
@@ -109,6 +110,7 @@ createApp({
         //this.$refs.max.textContent = this.exerciseData[this.workout.exercises][this.workout.exercises].Video.length
         //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Name
         this.StatusCode200 = true;
+        this.loadedExercise = false;
 
         console.log("Exercise Data", this.exerciseData)
       })
@@ -150,6 +152,63 @@ createApp({
           duration: 2000
         });
       }
+    },
+
+    ChangeExercise(play, video, voice, input)
+    {
+      this.loadedExercise = true;
+      if(input == 1)
+      {
+      // Change Exercises Number
+      this.workout.exercises = this.workout.exercises + 1;
+      voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+      video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
+      }
+      else if (input == 0)
+      {
+      // Change Exercises Number
+      this.workout.exercises = this.workout.exercises - 1;
+
+      // Change Video/Audio Source
+      voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+      video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
+      }
+
+      // Change Type
+      this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+
+      // Change Amount
+      this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+      
+      // Exercise Title
+      //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
+      
+      // Difficulties Applied        
+      this.$refs.max.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Video.length
+
+      // Video & Audio Delay
+      setTimeout(() => {
+        // Timer For Exercise
+        //this.Timer(time, play, video, voice, siren)
+  
+        // Play Icon Condtion Play/Pause
+        if (video.paused) {
+          play.classList.toggle("pause");
+          //timerText.classList.remove("pausetime");
+        } else {
+          play.classList.toggle("pause");
+          //timerText.classList.add("pausetime");
+        }
+  
+        // Change Video/Audio Source
+        //voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+  
+        // Play Video/Audio
+        voice.play();
+        video.play();
+        play.classList.toggle("pause");
+        this.loadedExercise = false;
+      },2500)
     },
 
     // Siren & Voice Enabled
@@ -194,9 +253,9 @@ createApp({
     },
 
      // Exercise Timer
-    Timer(time, play, video, voice, siren) {
+    Timer(time, play, video, siren) {
       let counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises];
-      let percentage = counter / 100 * 100;
+      //let percentage = counter / 100 * 100;
 
       // Progress Wheel Value
       //setProgress(percentage);
@@ -219,7 +278,7 @@ createApp({
           if (counter < 0) {
             siren.play();
 
-            this.NextExercise(time, play, video, voice, siren);
+            this.NextExercise();
 
             clearInterval(timer);
             //clearInterval(checkAmrap);
@@ -229,7 +288,7 @@ createApp({
     },
 
     // Play Exercise By Click
-    PlayExercise(time, play, video, voice, siren)
+    PlayExercise(time, play, video, voice)
     {
       this.popup = false;
       // Timer For Exercise
@@ -253,63 +312,31 @@ createApp({
       if (video.paused) {
         video.play();
         play.classList.toggle("pause");
-        time.classList.remove("pausetime");
+        //time.classList.remove("pausetime");
       } else {
         video.pause();
         play.classList.toggle("pause");
-        time.classList.add("pausetime");
+        //time.classList.add("pausetime");
       }
     },
 
     // Previous Exercise By Click
-    PrevExercise(time, play, video, voice, siren)
+    PrevExercise()
     {
       if(this.workout.exercises == this.roundData[this.workout.round].ID_Linked_Exercises.length)
       {
         this.popup = true;
       }
-      // Timer For Exercise
-      //this.Timer(time, play, video, voice, siren)
-
-      // Play Icon Condtion Play/Pause
-      if (video.paused) {
-        play.classList.toggle("pause");
-        //timerText.classList.remove("pausetime");
-      } else {
-        play.classList.toggle("pause");
-        //timerText.classList.add("pausetime");
-      }
 
       // Calling Custom Animations
       this.CustomAnimations(0)
 
-      // Change Exercises Number
-      this.workout.exercises = this.workout.exercises - 1;
-
-      // Change Video/Audio Source
-      voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-      video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
-
-       // Change Type
-      this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-
-      // Change Amount
-      this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-
-      // Exercise Title
-      //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
-
-      // Difficulties Applied        
-      this.$refs.max.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Video.length
-
-      // Play Video/Audio
-      voice.play();
-      video.play();
-      play.classList.toggle("pause");
+      // Calling Change Exercise
+      this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
     },
 
     // Next Exercise By Click
-    NextExercise(time, play, video, voice, siren)
+    NextExercise()
     {
       if(this.workout.exercises == this.exerciseData[this.workout.round].length)
       {
@@ -317,44 +344,9 @@ createApp({
         this.workout.round = this.workout.round + 1;
         this.workout.exercises = 0
       }
-      // Timer For Exercise
-      //this.Timer(time, play, video, voice, siren)
-
-      // Play Icon Condtion Play/Pause
-      if (video.paused) {
-        play.classList.toggle("pause");
-        //timerText.classList.remove("pausetime");
-      } else {
-        play.classList.toggle("pause");
-        //timerText.classList.add("pausetime");
-      }
-
       // Calling Custom Animations
       this.CustomAnimations(1)
-      
-      // Change Exercises Number
-      this.workout.exercises = this.workout.exercises + 1;
-
-      // Change Video/Audio Source
-      //voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-      video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
-
-      // Change Type
-      this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-
-      // Change Amount
-      this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-
-      // Exercise Title
-      //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
-
-      // Difficulties Applied        
-      this.$refs.max.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Video.length
-
-      // Play Video/Audio
-      voice.play();
-      video.play();
-      play.classList.toggle("pause");
+      this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
     },
 
     // Siren Enabled By Click
@@ -416,12 +408,9 @@ createApp({
       }
     }
   },
-  created()
-  {
+  mounted() {
     // Intial Data Request Called
     this.intialRequest()
-  },
-  mounted() {
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
