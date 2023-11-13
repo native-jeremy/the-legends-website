@@ -273,7 +273,7 @@ createApp({
 
       // Change Video/Audio Source
       voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-      video.src = this.exerciseData[this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
+      video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
 
        // Change Type
        this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
