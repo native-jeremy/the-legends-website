@@ -1,3 +1,12 @@
+anime({
+    targets: '.path3',
+    strokeDashoffset: [anime.setDashoffset, 0],
+    easing: 'cubicBezier(.5, .05, .1, .3)',
+    duration: 2000,
+    delay: function(el, i) { return i * 250 },
+    direction: 'alternate',
+    loop: true
+  });
 Wized.request.await("Load Users Program Hub", (response) => {
   const currentUser = response.data;
   let currentWeek;
@@ -71,7 +80,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           CompletedWorkouts: null,
           nextWorkout: false,
           nextWorkoutID: null,
-          programPop: programDone
+          programPop: programDone,
           }
       },
       created() {
@@ -112,8 +121,9 @@ Wized.request.await("Load Users Program Hub", (response) => {
           textFormat: "percent",
           indeterminateText: 0,
           });
+          document.querySelector('.loading-state-v2').style.display = "none";
           }
-      }
+      },
       }).mount('#app')
       // End Vue Intializer
       });

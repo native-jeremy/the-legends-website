@@ -138,19 +138,18 @@
   <link rel="manifest" href="manifest.json" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
-
 <body>
   <div id="app" w-el="load_app" class="app">
     <div w-el="exercise_page" class="app-main app-base">
       <div class="app-head current-workout">
-        <div class="app-block viewer">
+        <div class="app-block viewer" style="overflow-x: hidden;">
           <div class="banner top-bar"></div>
           <div class="banner bottom-bar"></div>
             <video ref="video" loop preload="auto" src="" muted webkit-playsinline playsinline class="app-fullscreen-video"
               style="background-color: #c2c2c2">
               <!--<source src="" type="video/mp4" />-->
             </video>
-          <div id="exerciseHeader" style="display: none; opacity: 0" class="header-current animated">
+          <div id="exerciseHeader" style="display: none; opacity: 0" class="header-current animated"  v-show="!popup">
             <div class="workout-navigation">
               <div id="repText" ref="type" class="generic-text-style-2">Time</div>
               <div id="safeTimerDisplay" ref="amount" class="generic-text-style-3">
@@ -167,7 +166,6 @@
               </defs>
               <path class="path2" stroke="#397234" d="m190.4,125.6h-60.1V61.1H61.1v133.7h133.7v-69.3l-4.4.1h0Zm-124.8-60h60.1v59.9h-60.1v-59.9Zm0,64.5h60.1v60.3h-60.1v-60.3Zm124.8,60.3h-60.1v-60.3h60.1v60.3Z"/>
             </svg>
-            <div id="Trigger" data-w-id="88c3a08d-4e41-ae0e-b174-11915f51768a" class="loading-trigger"></div>
           </article>
           <!--<article id="loader" class="loading-workout">
             <div class="workout-loader w-embed">
@@ -247,20 +245,20 @@
           </article>-->
           <div class="app-block-content viewer">
             <div class="info-block-header workout">
-              <div id="exerciseTitle" style="display: none; opacity: 0" class="title-text">
+              <div id="exerciseTitle" style="display: none; opacity: 0" class="title-text" v-if="!popup">
                 <div class="exercises-headings single_heading_block">
-                  <div class="main-heading-style-6 center-align single-title">
+                  <div class="main-heading-style-6 center-align single-title" ref="title">
                     Single Title
                   </div>
                 </div>
                 <!--div class="exercises-headings amrap_heading_block"></div>-->
               </div>
-              <div id="roundText" class="round-text">
+              <div id="roundText" class="round-text" v-if="popup">
                 <div id="roundTitle" w-el="workout_round_title" class="main-heading-style-9 center-align">
                   Round
                 </div>
                 <div id="mainNumText" w-el="workout_round_number" class="main-heading-style-4 center-align">
-                  Loading..
+                  {{workout.round + 1}}
                 </div>
               </div>
             </div>
@@ -293,12 +291,12 @@
               <div class="line viewer"></div>
             </div>
           </div>
-          <div id="roundPopup" class="workout-popup">
-            <div id="roundHeader" class="header-current">
+          <div id="roundPopup" class="workout-popup" v-if="popup">
+            <div id="roundHeader" class="header-current" v-if="popup">
               <div class="workout-navigation">
-                <div class="generic-text-style-2">Round</div>
-                <div id="headerNumText" w-el="round-number_header" class="generic-text-style-3">
-                  1
+                <div class="generic-text-style-2" ref="roundText">Round</div>
+                <div id="headerNumText" class="generic-text-style-3">
+                  {{workout.round + 1}}
                 </div>
                 <div class="nav-workout-button">
                   <div class="nav-cog-icon"></div>
@@ -357,6 +355,8 @@
               <div id="controls" class="content-spacer workout-controls">
                 <div class="content-headings style-2">
                   <h2 class="main-heading-style-1">Difficulty Settings</h2>
+                  <h2 class="main-heading-style-1">Round Number {{workout.round}}</h2>
+                  <h2 class="main-heading-style-1">Exercise Number {{workout.exercises}}</h2>
                 </div>
                 <div class="accordion style-1">
                   <div class="accordion-header style-3">

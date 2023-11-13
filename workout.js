@@ -3,27 +3,17 @@ const { createApp } = Vue
 createApp({
   data() {
     return {
+      message: 'Hello Vue!',
       workout: {
-        id: "",
         finishAudio: "",
         round: 0,
         exercises: 0,
         exercise: 0,
         roundAmount: 0,
         exercisesAmount: 0,
-        voiceHasPlayed: false,
-        startDifficulty: []
       },
       roundData: [],
       exerciseData: [],
-      StatusCode200: false,
-      popup: true,
-    }
-  },
-  computed: {
-    // a computed getter
-    exerciseTitle() {
-      return this.exerciseData[this.workout.exercises].Exercise_Name
     }
   },
   methods: {
@@ -31,110 +21,34 @@ createApp({
     // Intial Request Data Applied To Data Object
     intialRequest()
     {
-      // Workout ID Param Search
-      let workout = new URL(document.location).searchParams;
-      this.workout.id = workout.get("workout");
-
       Wized.request.await("Load Round Info", (response) => {
         //console.log('Round Request', response)
         roundRes = response;
         roundInfo = roundRes.data[this.workout.round];
     
-        this.startDifficulty = roundInfo.Default_Diff_Level.split(", ");
+        roundDiffLevel = roundInfo.Default_Diff_Level.split(", ");
         roundSelected = roundRes.data[this.workout.round].Round_Selection;
 
         this.roundData = roundRes.data
         this.workout.roundAmount = roundRes.data.length
 
-        roundRes.data.forEach((round) => {
-          this.exerciseData.push([])
-        });
-
-        console.log('Intial Exercise Data', this.exerciseData)
-
-        console.log('startDifficulty', this.startDifficulty)
         console.log('Current Round', roundSelected)
         console.log('Round Request', this.roundData)
         console.log('Round Length', this.workout.roundAmount)
-
-        // Intial Audio Source Set
-        this.$refs.voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-
-        // Intial Type Set
-        this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-
-        // Intial Amount Set
-        this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-
-        // Exercise Title
-        this.$refs.exercisetitle.textContent = this.exerciseData[this.workout.exercises].Exercise_Name
-
-        //console.log('Data Test', this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercise].url)
       });
       
       Wized.request.await("Load Finished Audio", (response) => {    
         this.workout.finishAudio = response.data[0].Audio[0].url
         console.log("Audio Response", response);
       })
-
-      Wized.request.await("Load Exercise Diff V2", (response) => {
-        console.log("Exercise Response", response);
-
-        response.data.forEach((e, ei) => {
-          this.roundData.forEach((r, ri) => {
-            if(r.ID_Linked_Exercises.some( item => e.Exercise_ID.includes(item)))
-            {
-              console.log("Exercise Name", e);
-              this.exerciseData[ri].push(e);
-            }
-          });
-        })
-        // Intial Video Source Set
-        this.$refs.video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
-        this.$refs.max.textContent = this.exerciseData[this.workout.exercises][this.workout.exercises].Video.length
-        //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Name
-        this.StatusCode200 = true;
-
-        console.log("Exercise Data", this.exerciseData)
-      })
     },
 
-    // Webflow Animations Reset
-    WebflowAnimations() {
-      console.log("interaction loaded");
-      window.Webflow && window.Webflow.destroy();
-      window.Webflow && window.Webflow.ready();
-      window.Webflow && window.Webflow.require("ix2").init();
-      document.dispatchEvent(new Event("readystatechange"));
-    },
-
-    // Custom Animations For Video Source Changing
-    CustomAnimations(input) {
-      // Prev Exercise Animation
-      if(input == 1)
-      {
-        anime({
-          targets: '.app-fullscreen-video',
-          translateX: ['100vw', '0vw'],
-          borderRadius: ['100%', '0%'],
-          easing: 'easeInOutQuad',
-          duration: 2000,
-          opacity: [0, 1],
-        });
-      }
-
-      // Next Exercise Animation
-      else if(input == 0)
-      {
-        anime({
-          targets: '.app-fullscreen-video',
-          translateX: ['-100vw', '0vw'],
-          borderRadius: ['100%', '0%'],
-          opacity: [0, 1],
-          easing: 'easeInOutQuad',
-          duration: 2000
-        });
-      }
+    // Play Exercise By Click
+    PlayExercise(video, voice)
+    {
+      //video.play();
+      voice.play();
+      console.log('method is working', voice);
     },
 
     // Siren & Voice Enabled
@@ -178,172 +92,9 @@ createApp({
       }
     },
 
-     // Exercise Timer
-    Timer(time, play, video, voice, siren) {
-      let counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises];
-      let percentage = counter / 100 * 100;
-
-      // Progress Wheel Value
-      //setProgress(percentage);
-
-      // Timer To Run Exercise
-      let timer = setInterval(function () {
-
-        // Time Conversion To Minutes And Seconds
-        let minutes = Math.floor(counter / 60); 
-        let seconds = counter % 60;
-        time.textContent = minutes + ":" + seconds;
-
-        // Condtion To Check If Paused
-        if (!time.classList.contains("pausetime")) {
-          counter--;
-
-          //setProgress(counter);
-
-          // Condtion To Check If Finished
-          if (counter < 0) {
-            siren.play();
-
-            this.NextExercise(time, play, video, voice, siren);
-
-            clearInterval(timer);
-            //clearInterval(checkAmrap);
-          }
-        }
-      }, 1000);
-    },
-
-    // Play Exercise By Click
-    PlayExercise(time, play, video, voice, siren)
-    {
-      this.popup = false;
-      // Timer For Exercise
-      //this.Timer(time, play, video, voice, siren)
-
-      // Checks If Voice Has Played Then Plays If Returns false
-      if(!this.voiceHasPlayed)
-      {
-        // Audio Condtion Play/Pause
-        if (voice.paused) {
-          voice.play();
-        } 
-        else {
-          voice.pause();
-        }
-
-        this.voiceHasPlayed = true
-      }
-
-      // Video Condtion Play/Pause
-      if (video.paused) {
-        video.play();
-        play.classList.toggle("pause");
-        time.classList.remove("pausetime");
-      } else {
-        video.pause();
-        play.classList.toggle("pause");
-        time.classList.add("pausetime");
-      }
-    },
-
-    // Previous Exercise By Click
-    PrevExercise(time, play, video, voice, siren)
-    {
-      if(this.workout.exercises == this.roundData[this.workout.round].ID_Linked_Exercises.length)
-      {
-        this.popup = true;
-      }
-      // Timer For Exercise
-      //this.Timer(time, play, video, voice, siren)
-
-      // Play Icon Condtion Play/Pause
-      if (video.paused) {
-        play.classList.toggle("pause");
-        //timerText.classList.remove("pausetime");
-      } else {
-        play.classList.toggle("pause");
-        //timerText.classList.add("pausetime");
-      }
-
-      // Calling Custom Animations
-      this.CustomAnimations(0)
-
-      // Change Exercises Number
-      this.workout.exercises = this.workout.exercises - 1;
-
-      // Change Video/Audio Source
-      voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-      video.src = this.exerciseData[this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
-
-       // Change Type
-       this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-
-       // Change Amount
-       this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-
-        // Exercise Title
-        this.$refs.title.textContent = this.exerciseData[this.workout.exercises].Exercise_Name
-
-      // Difficulties Applied        
-      this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
-
-      // Play Video/Audio
-      voice.play();
-      video.play();
-      play.classList.toggle("pause");
-    },
-
-    // Next Exercise By Click
-    NextExercise(time, play, video, voice, siren)
-    {
-      if(this.workout.exercises == this.exerciseData[this.workout.round].length)
-      {
-        this.popup = true;
-        this.workout.round = this.workout.round + 1;
-        this.workout.exercises = 0
-      }
-      // Timer For Exercise
-      //this.Timer(time, play, video, voice, siren)
-
-      // Play Icon Condtion Play/Pause
-      if (video.paused) {
-        play.classList.toggle("pause");
-        //timerText.classList.remove("pausetime");
-      } else {
-        play.classList.toggle("pause");
-        //timerText.classList.add("pausetime");
-      }
-
-      // Calling Custom Animations
-      this.CustomAnimations(1)
-      
-      // Change Exercises Number
-      this.workout.exercises = this.workout.exercises + 1;
-
-      // Change Video/Audio Source
-      voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-      video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
-
-      // Change Type
-      this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-
-      // Change Amount
-      this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-
-      // Exercise Title
-      //this.$refs.title.textContent = this.exerciseData[this.workout.rounds][this.workout.exercises].Exercise_Name
-
-      // Difficulties Applied        
-      this.$refs.max.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Video.length
-
-      // Play Video/Audio
-      voice.play();
-      video.play();
-      play.classList.toggle("pause");
-    },
-
     // Siren Enabled By Click
     SirenEnableClick(text, toggle) {
+
       if (text.innerHTML === "Off") {
         localStorage.setItem("siren", "on");
         sirenSrc.play();
@@ -361,6 +112,7 @@ createApp({
   
     // Voice Enabled By Click
     VoiceEnableClick(text, toggle) {
+      console.log(text, toggle)
       if (text.textContent === "Off") {
         localStorage.setItem("voice", "on");
         voiceSrc.play();
@@ -376,46 +128,20 @@ createApp({
       }
     },
 
-    ChangeDifficulty(input, video, difficulty) {
-      if(input == 0)
-      {
-        difficulty = parseInt(difficulty.textContent) - 1
-        this.$refs.min.textContent = difficulty
-        
-        //this.workout.startDifficulty[difficulty] = this.workout.startDifficulty[difficulty] - 1
-        
-        video.src = this.exerciseData[this.workout.exercises].Video[difficulty].url
-        this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
-        video.play();
-      }
-      else if(input == 1)
-      {
-        difficulty = parseInt(difficulty.textContent) + 1
-        this.$refs.min.textContent = difficulty
-        this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
-
-        //this.workout.startDifficulty[difficulty] = this.workout.startDifficulty[difficulty] + 1
-
-        video.src = this.exerciseData[this.workout.exercises].Video[difficulty].url
-        video.play();
-      }
+    // Webflow Animations Reset
+    WebflowAnimations() {
+      console.log("interaction loaded");
+      window.Webflow && window.Webflow.destroy();
+      window.Webflow && window.Webflow.ready();
+      window.Webflow && window.Webflow.require("ix2").init();
+      document.dispatchEvent(new Event("readystatechange"));
     }
   },
   created()
   {
-    // Intial Data Request Called
     this.intialRequest()
   },
   mounted() {
-    anime({
-      targets: '.path2',
-      strokeDashoffset: [anime.setDashoffset, 0],
-      easing: 'cubicBezier(.5, .05, .1, .3)',
-      duration: 2000,
-      delay: function(el, i) { return i * 250 },
-      direction: 'alternate',
-      loop: true
-    });
     //console.log("mounted element", this.$refs.siren);
 
     // Audio Enabled Method Called
@@ -423,12 +149,12 @@ createApp({
 
     // Webflow Animations Reset Called
     this.WebflowAnimations()
-  },
+  }
 }).mount('#app')
 
-// Wized.data.setVariable("complete", "completed");
 
-/*const videoContainer = document.getElementById("videoContainer");
+//Element Triggers
+const videoContainer = document.getElementById("videoContainer");
 const loaderTrigger = document.getElementById("Trigger");
 const exerciseTitle = document.getElementById("exerciseTitle");
 const exerciseHeader = document.getElementById("exerciseHeader");
@@ -438,7 +164,7 @@ const roundNumHeader = document.getElementById("headerNumText");
 const roundText = document.getElementById("roundText");
 const videoChange = document.getElementById("videoChange");
 
-
+// Element Declarations
 const repText = document.getElementById("repText");
 const timerText = document.getElementById("safeTimerDisplay");
 const currentTest = document.getElementById("current");
@@ -453,20 +179,22 @@ const workoutMessage = document.getElementById('workoutMessage');
 let voiceSrc = document.getElementById("voiceSrc");
 let sirenSrc = document.getElementById("sirenSrc");
 
-
+// Param Int Set Variables
 let setIntRoundNum;
 let setIntExercisesNum;
 let setIntExerciseNum;
 
-
+// Param Get Variables
 let getRoundNum;
 let getExercisesNum;
 let getExerciseNum;
 
+// Param Set Variables
 let setRoundNum;
 let setExercisesNum;
 let setExerciseNum;
 
+// Temp Variables
 let exerciseDiffRes;
 let roundRes;
 let roundResIndex;
@@ -484,6 +212,12 @@ let diffRes;
 let minutes;
 let seconds;
 
+const workoutExitButton = document.getElementById("workoutExit");
+
+const playButton = document.getElementById("playButton");
+const nextButton = document.getElementById("nextButton");
+const prevButton = document.getElementById("prevButton");
+const backButton = document.getElementById("backButton");
 
 const minusBtn = document.getElementById("minusBtn");
 const currentNum = document.getElementById("currentNum");
@@ -496,8 +230,70 @@ currentNum.innerHTML = amount;
 
 let refreshNum = 0;
 window.onload = async () => {
+  
+  /*function commenttedOut(){
+  
+  const roundLengthCookie = await Wized.data.get("c.roundlength");
+  const exerciseParam = await Wized.data.get("n.parameter.exercise");
+  const exercisesParam = await Wized.data.get("n.parameter.exercises");
+  const roundParam = await Wized.data.get("n.parameter.round");
+  const workoutParam = await Wized.data.get("n.parameter.workout");
+  const recoveryID = await Wized.data.get("c.recoveryid");
+  const sirenValue = localStorage.getItem("siren");
+  const voiceValue = localStorage.getItem("voice");
+
+    let params = window.location.href;
+  let url = new URL(params);
+  let checkurl = url.searchParams;
+
+  let recoveryData;
+
+  window.history.replaceState(null, null, url.toString());
+
+  //enableDisabledStates();
+
+  if (parseInt(roundParam) < 0 && parseInt(exercisesParam) === 0) {
+    roundPopup.style.display = "flex";
+    roundText.style.display = "flex";
+    RoundNumberText.innerHTML = "Redirecting..";
+    enableDisabledStates();
+    window.location.href = "/workout-overview.html?workout=" + workoutParam;
+  } else if (
+    window.location.href == "https://the-legends-web-app.webflow.io/workout"
+  ) {
+    roundPopup.style.display = "flex";
+    roundText.style.display = "flex";
+    RoundNumberText.innerHTML = "Redirecting..";
+    enableDisabledStates();
+    window.location.href = "/program-hub";
+  }
+
+  if (parseInt(roundLengthCookie) === parseInt(roundParam))
+  {
+    RoundNumberText.innerHTML = "Workout Completed";
+    roundTitle.innerHTML = "Congratulations!";
+    roundNumHeader.innerHTML = "";
+    Wized.data.setVariable("complete", "completed");
+    returnMessage.click();
+    roundPopup.style.display = "flex";
+    roundText.style.display = "flex";
+    recoveryLink.href = `/recovery.html?recovery=${recoveryID}&exercises=0`
+  }
+  }*/
+
+  // Vue Variables
+
+  // Index Variables
+  let round = 0
+  let exercises = 0
+  let exercise = 0
+
+  // Length Variables
+  let roundAmount = 0
+  let exercisesAmount = 0
 
   Wized.request.await("Load Round Info", (response) => {
+    //setTimeout(() => {console.clear();}, 2000);
     const mainResponse = response;
     const repDataInt = response;
     let repAmount;
@@ -507,17 +303,85 @@ window.onload = async () => {
     const amrapResponse = response;
     let checkAmrap;
 
-
     if (repDataInt.status === 200) {
       loaderTrigger.click();
       videoContainer.style.opacity = "1";
     }
+    //----------------------------------------------------------------
+    if (parseInt(exercisesParam) < 0) {
+      getRoundNum = checkurl.get("round");
+      getRoundNum = parseInt(getRoundNum) - 1;
+      setRoundNum = checkurl.set("round", getRoundNum.toString());
+      getExercisesNum = checkurl.get("exercises");
+      getExercisesNum = 0;
+      setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
+
+      window.location.href = url.toString();
+    }
+
+    if (parseInt(exercisesParam) > mainResponse.data[parseInt(roundParam)].Diff_ID_Linked_Exercises.length - 1) {
+      getRoundNum = checkurl.get("round");
+      getRoundNum = parseInt(getRoundNum) + 1;
+      setRoundNum = checkurl.set("round", getRoundNum.toString());
+      getExercisesNum = checkurl.get("exercises");
+      getExercisesNum = 0;
+      setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
+
+      window.location.href = url.toString();
+    }
+    
+     else if (parseInt(roundParam) !== 0) {
+      RoundNumberText.innerHTML = parseInt(roundParam);
+      roundNumHeader.innerHTML = parseInt(roundParam);
+    } else if (parseInt(roundParam) === 0 && roundSelected !== "Round 0"){
+      RoundNumberText.innerHTML = parseInt(roundParam + 1);
+      roundNumHeader.innerHTML = parseInt(roundParam + 1);
+    }
+
+    roundLength = roundRes.data.length;
+    roundRealNumber = parseInt(roundParam) + 1;
+
+    if (parseInt(exercisesParam) !== 0 ) {
+      roundPopup.style.display = "none";
+      roundText.style.display = "none";
+    }
+
+    if (roundRealNumber > roundLength) {
+      RoundNumberText.innerHTML = "Workout Completed";
+      roundTitle.innerHTML = "Congratulations!";
+      roundNumHeader.innerHTML = "";
+      Wized.data.setVariable("complete", "completed");
+      enableDisabledStates();
+    } else if (parseInt(roundParam) !== 0) {
+      RoundNumberText.innerHTML = parseInt(roundParam);
+      roundNumHeader.innerHTML = parseInt(roundParam);
+    } else if (parseInt(roundParam) === 0 && roundSelected !== "Round 0"){
+      RoundNumberText.innerHTML = parseInt(roundParam + 1);
+      roundNumHeader.innerHTML = parseInt(roundParam + 1);
+    }
+    else if (parseInt(roundParam) === 0 && roundSelected === "Round 0"){
+      RoundNumberText.innerHTML = "Warm Up";
+      roundTitle.innerHTML = "";
+      roundNumHeader.innerHTML = "";
+    }
+
+      //----------------------------------------------------------------
+
+    exerciseData = mainResponse.data[exercises];
+
+    console.log("---------------------------------------");
+    console.log("All Rounds:", mainResponse);
+    console.log("---------------------------------------");
+    console.log("Current Round:", mainResponse.data[round]);
+    console.log("---------------------------------------");
+    console.log("Current Exercise Amount:", mainResponse.data[round].Amounts_Name_Linked_Exercises[exercises]);
 
     let audioSrc = document.getElementById("voiceSrc");
     let audioIndex = exercise;
     let vidSrc = document.getElementById("video");
     let videoIndex = exercise;
 
+    //if (exerciseData !== undefined) {
       repAmount = mainResponse.data[round].Amounts_Name_Linked_Exercises[exercises];
       repType = mainResponse.data[round].Rep_Type_Linked_Exercises[exercises]
       amrapBool = mainResponse.data[round].Amrap_Linked_Exercises[exercises];
@@ -529,7 +393,9 @@ window.onload = async () => {
         seconds = time % 60;
       }
 
-      if (amrapBool == "True") {        
+      if (amrapBool == "True") {
+        loadAmrapData();
+        
         async function loadAmrapData() {
 
           Wized.request.await("Load Exercise Diff", (response) => {
@@ -538,13 +404,16 @@ window.onload = async () => {
             singleBlock.remove();
             
             secondaryResponse = response;
+            
+            //console.log("---------------------------------------");
+            //console.log("Exercise Diff Info Response TEMP! ", secondaryResponse);
 
 
             exerciseDiffRes = diffRes;
 
             let amrapLength = mainResponse.data[parseInt(roundParam)].Amrap_Exercise_Amount_Linked_Exercises.length;
 
-            diffLength = secondaryResponse.data[parseInt(videoIndex)].Video.length
+            diffLength = secondaryResponse.data[parseInt(videoIndex)].Video.length // This will keep throwing an error if the video length is more
             let diffRealLength = secondaryResponse.data[0].Video.length 
             maxLimit = diffLength;
             limitNum.innerHTML = maxLimit;
@@ -583,6 +452,7 @@ window.onload = async () => {
             } 
 
             secondaryResponse.data = videoOrderList;
+            //console.log("Video Order", videoOrderList);
             if (videoSrcIndex.length  <= 0) {
               
               for (let i = 0; i < amrapLength; i++)
@@ -604,11 +474,16 @@ window.onload = async () => {
                 amrapBlock.innerHTML = amrapBlock.innerHTML + renderHeadings
               }
 
+              //console.log("Default Video Length",videoSrcIndex);
+              //console.log("Default Res Level: ", videoSrcIndex)
+              //console.log("amrapLength: ", amrapLength)
             }
 
             if (videoSrcIndex.length > 0) {
               for (let i = 0; i < amrapLength; i++) {
+                //controlNumber.push(currentNumber);----------------------------------------------------------------
                 let content = document.querySelector("#controls");
+                /*let sortedAmrapTitle = repDataInt.data[ parseInt(exercisesParam)].Diff_Exercise_Lookup.reverse();----------------------------------------------------------------*/
                 let sortedAmrapTitle = secondaryResponse.data[i].Exercise_Name;
                 let amrapResTitle = sortedAmrapTitle;
 
@@ -632,14 +507,13 @@ window.onload = async () => {
 
                 const amrapControlName = videoOrderList[i].Exercise_Name;
 
+                //Amrap Control Div "body"----------------------------------------------------------------
                 amrapControl = document.createElement("div");
                 amrapControl.classList.add(
                   "accordion",
                   "style-1",
                   "amrap-diff-controls"
                 );
-
-                `<div class="accordion style-1">`
 
                 content.append(amrapControl);
 
@@ -650,55 +524,77 @@ window.onload = async () => {
                 else {
                   currentNumber = videoSrcIndex[i] + 1;
                 }
+                //currentNumber = videoSrcIndex[i];
 
                 currentNumberText = currentNumber;
+                //Amrap Header Content - Content Div----------------------------------------------------------------
                 amrapHeader = document.createElement("div");
                 amrapHeader.classList.add("accordion-header", "style-3");
                 amrapControl.appendChild(amrapHeader);
+                //Amrap Header Text Content - Content Div----------------------------------------------------------------
                 amrapHeaderText = document.createElement("div");
                 amrapHeaderText.classList.add("accordion-header-text", "style-2");
 
                 amrapHeader.appendChild(amrapHeaderText);
 
+                //Amrap Header Top Content - Content Div----------------------------------------------------------------
                 amrapHeaderTop = document.createElement("div");
                 amrapHeaderTop.classList.add("accordion-header-top-content");
 
                 amrapHeaderText.appendChild(amrapHeaderTop);
 
+                //Amrap Exercise Title Text----------------------------------------------------------------
                 amrapTitle = document.createElement("h2");
                 amrapTitle.classList.add("main-sub-heading-style-1");
                 amrapTitle.innerHTML = amrapControlName;
                 amrapHeaderTop.appendChild(amrapTitle);
+                //Counter Content Div----------------------------------------------------------------
                 amrapTrigger = document.createElement("div");
                 amrapTrigger.classList.add("diff-trigger");
                 amrapHeader.appendChild(amrapTrigger);
+                //Minus Button----------------------------------------------------------------
                 amrapMinus = document.createElement("div");
                 amrapMinus.classList.add("counter-btn", "minus-btn");
                 amrapTrigger.appendChild(amrapMinus);
+                //Minus Button > Left Arrow----------------------------------------------------------------
                 amrapMinusArrow = document.createElement("div");
                 amrapMinusArrow.classList.add("counter-arrow", "left");
                 amrapMinus.appendChild(amrapMinusArrow);
+                //Current Diffculty Text "1" - example----------------------------------------------------------------
                 amrapCounter = document.createElement("div");
                 amrapCounter.classList.add("num", "current", "current-num");
+                
+                /*if (localStorage.getItem("diffStart") !== null)
+                {
+                  amrapCounter.innerHTML = localStorage.getItem("diffStart");
+                }
+                else {
+                  amrapCounter.innerHTML = videoSrcIndex[i];
+                }*/
 
                 amrapCounter.innerHTML = videoSrcIndex[i];
 
                 amrapTrigger.appendChild(amrapCounter);
 
+                //Divider "/" Text----------------------------------------------------------------
                 amrapDivider = document.createElement("div");
                 amrapDivider.classList.add("num", "divider");
                 amrapDivider.innerHTML = "/";
                 amrapTrigger.appendChild(amrapDivider);
+                //Limit Text
                 amrapLimit = document.createElement("div");
                 amrapLimit.classList.add("num", "limit", "limit-num");
                 amrapLimit.innerHTML = amrapMaxLimit;
                 amrapTrigger.appendChild(amrapLimit);
+                //Plus Button----------------------------------------------------------------
                 amrapPlus = document.createElement("div");
                 amrapPlus.classList.add("counter-btn", "Plus-btn");
                 amrapTrigger.appendChild(amrapPlus);
+                //Plus Button > Right Arrow----------------------------------------------------------------
                 amrapPlusArrow = document.createElement("div");
                 amrapPlusArrow.classList.add("counter-arrow", "right");
                 amrapPlus.appendChild(amrapPlusArrow);
+                //Push Both Controls----------------------------------------------------------------
                 controlPlusNumber.push(amrapPlus);
                 controlMinusNumber.push(amrapMinus);
 
@@ -728,7 +624,7 @@ window.onload = async () => {
 
                   if(!vidSrc.paused)
                   {       
-                  if (trackerTime === 5) 
+                  if (/*Math.floor(vidSrc.currentTime)*/ trackerTime === 5 /*Math.floor(vidSrc.duration)*/) 
                   {
                     changeVideo = true;
                     if (changeVideo == true)
@@ -781,11 +677,14 @@ window.onload = async () => {
                 }
               }
             }
+            //console.log("---------------------------------------");
+            //console.log("Current Diff:", secondaryResponse);
           });
         }
       } else {
 
         clearInterval(checkAmrapVideo);
+        loadSingleData();
         
         async function loadSingleData() {
 
@@ -806,6 +705,9 @@ window.onload = async () => {
             diffCurrent = defaultDiff - 1;
             currentNum.innerHTML = defaultDiff;
 
+            /*newcookieIndex =
+            secondaryResponse.data[0].Video.length*/
+
             diffLength =
             secondaryResponse.data[0].Video.length;
             maxLimit = diffLength;
@@ -815,6 +717,7 @@ window.onload = async () => {
             vidSrc.src =
             secondaryResponse.data[0].Video[diffCurrent].url
             
+            // Diff Increase Click Controls - Single Exercise
             function DiffControlsSingle() {
               const singleTitle = document.querySelector('.single-title');
               singleTitle.textContent = secondaryResponse.data[0].Exercise_Name
@@ -837,6 +740,7 @@ window.onload = async () => {
                 }
               });
 
+              // Diff Decrease Click Controls - Single Exercise
               minusBtn.addEventListener("click", function () {
                 if (diffCurrent > minLimit) {
                   diffCurrent--;
@@ -857,11 +761,24 @@ window.onload = async () => {
               });
             }
 
+            //console.log("---------------------------------------");
+            //console.log("Current Diff:", secondaryResponse);
           });
         }
       }
 
       audioSrc.src = mainResponse.data[parseInt(roundParam)].Audio_Source_Linked_Exercises[parseInt(exercisesParam)].url;
+
+      let clearStates = setTimeout(() => {
+        enableActiveStates();
+        clearTimeout(clearStates);
+      }, 1500);
+
+      nextButton.addEventListener("click", () => {
+        updateParams();
+      });
+
+      prevButton.addEventListener("click", backTrackParams);
 
       workoutExitButton.addEventListener("click", exitParams);
 
@@ -869,12 +786,85 @@ window.onload = async () => {
         workoutExitButton.href = "/workout-overview?workout=" + workoutParam;
       }
 
+      function updateParams() {
+        setTimeout(() => {
+        if(mainResponse.data[parseInt(roundParam)].Amrap_Linked_Exercises.includes("True"))
+        {
+          if(parseInt(exercisesParam) < mainResponse.data[parseInt(roundParam)].Amrap_Linked_Exercises.length - 1)
+          {
+            getExercisesNum = checkurl.get("exercises");
+            getExercisesNum = parseInt(getExercisesNum) + 1;
+            setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
+            window.location.href = url.toString();
+          }
+          else {
+            getRoundNum = checkurl.get("round");
+            getRoundNum = parseInt(getRoundNum) + 1;
+            setRoundNum = checkurl.set("round", getRoundNum.toString());
+            getExercisesNum = checkurl.get("exercises");
+            getExercisesNum = 0;
+            setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
+      
+            window.location.href = url.toString();
+          }
+        }
+        else {
+        getExercisesNum = checkurl.get("exercises");
+        getExercisesNum = parseInt(getExercisesNum) + 1;
+        setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
+        window.location.href = url.toString();
+        }
+        }, 1000);
+      }
+
+      function backTrackParams() {
+        setTimeout(() => {
+        if (parseInt(exercisesParam) < mainResponse.data[parseInt(roundParam)].Diff_ID_Linked_Exercises.length - 1) {
+        getExercisesNum = checkurl.get("exercises");
+        getExercisesNum = parseInt(getExercisesNum) - 1;
+        setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
+        }
+
+        window.location.href = url.toString();
+        //window.history.replaceState(null, null, url.toString());
+        //checkParam()
+      }, 1000);
+      }
+
+      //AUTOPLAYER
+      if ((parseInt(exercisesParam) > 0 && amrapBool == "False") || (parseInt(exercisesParam) > 0 && amrapBool == "True" && videoIndex === 0)) 
+      {
+        setTimeout(autoPlayVideo, 3000);
+      } else if ((parseInt(exercisesParam) > 0 && amrapBool == "True" && videoIndex === 0) || exerciseParam === 0) {
+        setTimeout(autoPlayVideo, 3000);
+      }
+
+      //let counter = repAmount;
+      let clickNum = 0;
+
+      playButton.addEventListener("click", function () {
+        if (clickNum < 1) {
+
+          if(voiceValue !== "off")
+          {
+            playVoice();
+          } 
+          //Conditions
+          roundType();
+        }
+        playVideo();
+        clickNum = clickNum + 1;
+      });
+    //} 
+
     function roundType() {
       if (repType === "Time") {
         timer();
       } else if (repType === "Reps") {
         repCount();
       }
+      //console.log("---------------------------------------");
+      //console.log(repType, "Applied To The Exercise");
     }
 
     function timer() {
@@ -893,6 +883,8 @@ window.onload = async () => {
               nextButton.click();
             clearInterval(timer);
             clearInterval(checkAmrap);
+            //console.log("---------------------------------------");
+            //console.log("Completed");
           }
         }
       }, 1000);
@@ -919,6 +911,8 @@ window.onload = async () => {
         video.play();
         playButton.classList.toggle("pause");
         timerText.classList.remove("pausetime");
+        //console.log("---------------------------------------");
+        //console.log("Video Duration", video.duration + "s");
       } else {
         video.pause();
         playButton.classList.toggle("pause");
@@ -932,9 +926,72 @@ window.onload = async () => {
         video.pause();
         playButton.classList.toggle("pause");
         timerText.classList.add("pausetime");
+        //console.log("---------------------------------------");
+        //console.log("Video Duration", video.duration + "s");
       }
     }
+
+    function playSiren() {
+      if (sirenSrc.paused) {
+        sirenSrc.play();
+      } else {
+        sirenSrc.pause();
+      }
+    }
+
+    function playVoice() {
+        if (voiceSrc.pause) {
+          voiceSrc.play();
+        } else {
+          voiceSrc.pause();
+        }
+    }
   });
+
+  function enableDisabledStates() {
+    playButton.style.display = "none";
+    playButtonDisabled.style.display = "flex";
+    //
+    nextButton.style.display = "none";
+    nextButtonDisabled.style.display = "flex";
+    //
+    prevButton.style.display = "none";
+    prevButtonDisabled.style.display = "flex";
+    progressEl.style.display = "none";
+  }
+
+  function enableActiveStates() {
+    playButton.style.display = "flex";
+    playButtonDisabled.style.display = "none";
+    //
+    nextButton.style.display = "flex";
+    nextButtonDisabled.style.display = "none";
+    //
+    prevButton.style.display = "flex";
+    prevButtonDisabled.style.display = "none";
+    progressEl.style.display = "flex";
+  }
+
+  function autoPlayVideo() {
+    playButton.click();
+  }
+
+  function nextPage() {
+    if (exerciseParam === undefined || exerciseParam === "undefined") {
+      if (refreshNum < 1) {
+        nextButton.click();
+      }
+      playButton.style.display = "none";
+      playButtonDisabled.style.display = "flex";
+      //
+      nextButton.style.display = "none";
+      nextButtonDisabled.style.display = "flex";
+      //
+      prevButton.style.display = "none";
+      prevButtonDisabled.style.display = "flex";
+    }
+    refreshNum = refreshNum + 1;
+  }
 
   $(document).ready(function () {
     const scrollBtn = $(".panel-button");
@@ -954,4 +1011,4 @@ window.onload = async () => {
       );
     }
   });
-};*/
+};

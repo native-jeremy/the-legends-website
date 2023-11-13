@@ -4264,6 +4264,13 @@ a {
   position: absolute;
 }
 
+.path3 {
+  stroke: #397234;
+  stroke-width: 10px;
+  /*animation: dash 15s ease-in-out infinite;*/
+  fill: none;
+  }
+
 .loading-state {
   z-index: 9000;
   width: 100vw;
@@ -4273,6 +4280,22 @@ a {
   justify-content: center;
   align-items: center;
   display: none;
+  position: fixed;
+  top: 0%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+}
+
+.loading-state-v2 {
+  z-index: 9000;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  background-color: #fff;
+  justify-content: center;
+  align-items: center;
+  display: flex;
   position: fixed;
   top: 0%;
   bottom: 0%;

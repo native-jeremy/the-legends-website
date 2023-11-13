@@ -1,3 +1,13 @@
+anime({
+  targets: '.path3',
+  strokeDashoffset: [anime.setDashoffset, 0],
+  easing: 'cubicBezier(.5, .05, .1, .3)',
+  duration: 2000,
+  delay: function(el, i) { return i * 250 },
+  direction: 'alternate',
+  loop: true
+});
+
 // URL FILTERING
 // Url search parameters
 let params = new URL(document.location).searchParams;
@@ -167,6 +177,9 @@ createApp({
         this.RecipesArray.push(recipeType);
       });
     }
+    setTimeout(() => {
+      document.querySelector('.loading-state-v2').style.display = "none";
+    },4000)
     // Suffle Feature Code
     function shuffleArray(array, tempFilters) {
       let shuffleArray = [];
