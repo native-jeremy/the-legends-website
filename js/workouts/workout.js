@@ -323,30 +323,31 @@ createApp({
     // Previous Exercise By Click
     PrevExercise()
     {
-      if(this.workout.exercises == this.roundData[this.workout.round].ID_Linked_Exercises.length)
+      if(this.workout.exercises == this.roundData[this.workout.round].ID_Linked_Exercises.length - 1)
       {
         this.popup = true;
       }
-
-      // Calling Custom Animations
-      this.CustomAnimations(0)
-
-      // Calling Change Exercise
-      this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
+      else {
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
+        // Calling Custom Animations
+        this.CustomAnimations(1)
+      }
     },
 
     // Next Exercise By Click
     NextExercise()
     {
-      if(this.workout.exercises == this.exerciseData[this.workout.round].length)
+      if(this.workout.exercises == this.exerciseData[this.workout.round].length - 1)
       {
         this.popup = true;
         this.workout.round = this.workout.round + 1;
         this.workout.exercises = 0
       }
+      else {
+      this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
       // Calling Custom Animations
       this.CustomAnimations(1)
-      this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
+      }
     },
 
     // Siren Enabled By Click
@@ -391,8 +392,8 @@ createApp({
         
         //this.workout.startDifficulty[difficulty] = this.workout.startDifficulty[difficulty] - 1
         
-        video.src = this.exerciseData[this.workout.exercises].Video[difficulty].url
-        this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
+        video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[difficulty].url
+        this.$refs.max.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Video.length
         video.play();
       }
       else if(input == 1)
