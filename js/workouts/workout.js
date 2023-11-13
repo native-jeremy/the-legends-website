@@ -328,9 +328,9 @@ createApp({
         this.popup = true;
       }
       else {
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         // Calling Custom Animations
-        this.CustomAnimations(1)
+        this.CustomAnimations(0)
       }
     },
 
