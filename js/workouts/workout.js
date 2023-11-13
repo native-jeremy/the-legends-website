@@ -23,7 +23,22 @@ createApp({
   computed: {
     // a computed getter
     exerciseTitle() {
-      return this.exerciseData[this.workout.exercises].Exercise_Name
+      return this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
+    },
+    exerciseType() {
+      return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+    },
+    exerciseAmount() {
+      return this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+    },
+    exerciseVideo() {
+      return this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
+    },
+    exerciseVoice() {
+      return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+    },
+    exerciseMaxDifficulties() {
+      return this.exerciseData[this.workout.exercises][this.workout.exercises].Video.length
     }
   },
   methods: {
@@ -61,13 +76,13 @@ createApp({
         this.$refs.voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
 
         // Intial Type Set
-        this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+        //this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
 
         // Intial Amount Set
-        this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        //this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
 
         // Exercise Title
-        this.$refs.exercisetitle.textContent = this.exerciseData[this.workout.exercises].Exercise_Name
+        //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
 
         //console.log('Data Test', this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercise].url)
       });
@@ -91,7 +106,7 @@ createApp({
         })
         // Intial Video Source Set
         this.$refs.video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
-        this.$refs.max.textContent = this.exerciseData[this.workout.exercises][this.workout.exercises].Video.length
+        //this.$refs.max.textContent = this.exerciseData[this.workout.exercises][this.workout.exercises].Video.length
         //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Name
         this.StatusCode200 = true;
 
@@ -276,16 +291,16 @@ createApp({
       video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
 
        // Change Type
-       this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+      this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
 
-       // Change Amount
-       this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+      // Change Amount
+      this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
 
-        // Exercise Title
-        this.$refs.title.textContent = this.exerciseData[this.workout.exercises].Exercise_Name
+      // Exercise Title
+      //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
 
       // Difficulties Applied        
-      this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
+      this.$refs.max.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Video.length
 
       // Play Video/Audio
       voice.play();
@@ -321,7 +336,7 @@ createApp({
       this.workout.exercises = this.workout.exercises + 1;
 
       // Change Video/Audio Source
-      voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+      //voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
       video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
 
       // Change Type
@@ -331,7 +346,7 @@ createApp({
       this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
 
       // Exercise Title
-      //this.$refs.title.textContent = this.exerciseData[this.workout.rounds][this.workout.exercises].Exercise_Name
+      //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
 
       // Difficulties Applied        
       this.$refs.max.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Video.length
