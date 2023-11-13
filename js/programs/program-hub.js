@@ -121,7 +121,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           textFormat: "percent",
           indeterminateText: 0,
           });
-          document.querySelector('.loading-state-v2').style.display = "none";
+          setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
           }
       },
       }).mount('#app')
