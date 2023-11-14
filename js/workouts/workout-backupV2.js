@@ -33,12 +33,12 @@ createApp({
       return this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
     },
     exerciseVideo() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Video[0 /*parseInt(this.$refs.min.textContent - 1)*/].url
+      return this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
     },
     exerciseVoice() {
       return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
     },
-    exerciseMax() {
+    exerciseMaxDifficulties() {
       return this.exerciseData[this.workout.exercises][this.workout.exercises].Video.length
     }
   },
@@ -72,6 +72,20 @@ createApp({
         console.log('Current Round', roundSelected)
         console.log('Round Request', this.roundData)
         console.log('Round Length', this.workout.roundAmount)
+
+        // Intial Audio Source Set
+        //this.$refs.voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+
+        // Intial Type Set
+        //this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+
+        // Intial Amount Set
+        //this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+
+        // Exercise Title
+        //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
+
+        //console.log('Data Test', this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercise].url)
       });
       
       Wized.request.await("Load Finished Audio", (response) => {    
@@ -91,6 +105,10 @@ createApp({
             }
           });
         })
+        // Intial Video Source Set
+        //this.$refs.video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
+        //this.$refs.max.textContent = this.exerciseData[this.workout.exercises][this.workout.exercises].Video.length
+        //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Name
         this.StatusCode200 = true;
         this.loadedExercise = false;
 
@@ -143,20 +161,30 @@ createApp({
       {
       // Change Exercises Number
       this.workout.exercises = this.workout.exercises + 1;
+      //voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+      //video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
       }
       else if (input == 0)
       {
       // Change Exercises Number
       this.workout.exercises = this.workout.exercises - 1;
+
+      // Change Video/Audio Source
+      //voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+      //video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[parseInt(this.$refs.min.textContent - 1)].url
       }
-      else if (input == 2)
-      {
-         // Change Round Number
-        this.workout.round = this.workout.round - 1;
-         // Change Exercises Number
-        this.workout.exercises = this.exerciseData[this.workout.round].length - 1;
-        this.popup = false;
-      }
+
+      // Change Type
+      //this.$refs.type.textContent = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+
+      // Change Amount
+      //this.$refs.amount.textContent = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+      
+      // Exercise Title
+      //this.$refs.title.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
+      
+      // Difficulties Applied        
+      //this.$refs.max.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Video.length
 
       // Video & Audio Delay
       setTimeout(() => {
@@ -171,6 +199,9 @@ createApp({
           play.classList.toggle("pause");
           //timerText.classList.add("pausetime");
         }
+  
+        // Change Video/Audio Source
+        //voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
   
         // Play Video/Audio
         voice.play();
@@ -292,17 +323,9 @@ createApp({
     // Previous Exercise By Click
     PrevExercise()
     {
-      if(this.workout.exercises == 0)
+      if(this.workout.exercises == this.roundData[this.workout.round].ID_Linked_Exercises.length - 1)
       {
         this.popup = true;
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2)
-        this.CustomAnimations(0)
-      }
-      else if(this.workout.exercises - 1 == 0)
-      {
-        this.popup = true;
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
-        this.CustomAnimations(0)
       }
       else {
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
