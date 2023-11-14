@@ -120,7 +120,7 @@
     }
 
   .path2 {
-
+    will-change: transform;
     stroke: white;
     stroke-width: 10px;
     /*animation: dash 15s ease-in-out infinite;*/
@@ -245,7 +245,7 @@
           </article>-->
           <div class="app-block-content viewer">
             <div class="info-block-header workout">
-              <div id="exerciseTitle" style="display: none; opacity: 0" class="title-text" v-if="!popup">
+              <div id="exerciseTitle" style="display: none; opacity: 0" class="title-text" v-bind:class="{show_text: !popup}" v-if="!popup">
                 <div class="exercises-headings single_heading_block">
                   <div class="main-heading-style-6 center-align single-title" v-if="StatusCode200 == true">
                     {{exerciseTitle}}
@@ -322,6 +322,24 @@
             </div>
             <div class="app-block-content workout"></div>
           </div>
+          <div class="finish_modal" id="finish" v-if="completed">
+            <div id="recoveryMessage" class="finish_modal_body workout_style">
+              <div class="modal-header">
+                <h2 class="finish_modal_heading">
+                  You have completed your workout!
+                </h2>
+              </div>
+              <div class="modal-content">
+                <p class="modal-body-copy workout_style_copy">
+                  Congratulations! click the button below to start your recovery.
+                </p>
+              </div>
+              <a id="recoveryLink" href="#"
+                class="finish_button margin-top-xsmall w-button">start recovery</a>
+              <a href="program-hub.html"
+                class="finish_button margin-top-xxsmall w-button">go to program hub</a>
+            </div>
+          </div>
         </div>
         <div id="scroll" class="app-panel">
           <div id="top" class="app-body full-height">
@@ -369,7 +387,7 @@
                   </div>
                 </div>
               </div>
-              <div id="controls" class="content-spacer workout-controls" v-show="StatusCode200 == true">
+              <div id="controls" class="content-spacer workout-controls" v-show="StatusCode200 == true && completed !== true" >
                 <div class="content-headings style-2">
                   <h2 class="main-heading-style-1">Difficulty Settings</h2>
                   <h2 class="main-heading-style-1">Round Number {{workout.round}}</h2>
@@ -414,24 +432,6 @@
     <div class="audio">
         <audio id="voiceSrc" ref="voice" v-bind:src="`${exerciseVoice}`" v-if="StatusCode200 == true"></audio>
         <audio id="sirenSrc" ref="siren" v-bind:src="`${workout.finishAudio}`" v-if="StatusCode200 == true"></audio>
-    </div>
-  </div>
-  <div w-el="execise_notice_modal" class="modal style-2">
-    <div id="recoveryMessage" class="modal-body workout_style">
-      <div class="modal-header">
-        <h2 class="modal-heading workout_heading">
-          You have completed your workout!
-        </h2>
-      </div>
-      <div class="modal-content">
-        <p class="modal-body-copy workout_style_copy">
-          Congratulations! click the button below to start your recovery.
-        </p>
-      </div>
-      <a id="recoveryLink" data-w-id="94994933-7b79-a0e6-fdeb-bf2fe08e70d5" href="#"
-        class="button-style-1 margin-top-xsmall w-button">start recovery</a>
-      <a data-w-id="e66ae1d3-a128-2dbd-ab7a-600206216659" href="program-hub.html"
-        class="button-style-1 margin-top-xsmall w-button">go to program hub</a>
     </div>
   </div>
   <div id="return" data-w-id="80985ed4-635f-e834-38d5-ca513f69ee79" class="modal-trigger"></div>

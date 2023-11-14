@@ -18,6 +18,7 @@ createApp({
       exerciseData: [],
       StatusCode200: false,
       popup: true,
+      completed: false,
       loadedExercise: false,
     }
   },
@@ -40,10 +41,9 @@ createApp({
     },
     exerciseMax() {
       return this.exerciseData[this.workout.exercises][this.workout.exercises].Video.length
-    }
+    },
   },
   methods: {
-
     // Intial Request Data Applied To Data Object
     async intialRequest()
     {
@@ -91,8 +91,12 @@ createApp({
             }
           });
         })
+        // Stagger Loading assets
+        setTimeout(() => {
         this.StatusCode200 = true;
         this.loadedExercise = false;
+        this.title(true)
+        }, 4000);
 
         console.log("Exercise Data", this.exerciseData)
       })
@@ -136,28 +140,36 @@ createApp({
       }
     },
 
+    // Exercise Change Logic
     ChangeExercise(play, video, voice, input)
     {
       this.loadedExercise = true;
       if(input == 1)
       {
-      // Change Exercises Number
-      this.workout.exercises = this.workout.exercises + 1;
+        // Change Exercises Number
+        this.workout.exercises = this.workout.exercises + 1;
       }
       else if (input == 0)
       {
-      // Change Exercises Number
-      this.workout.exercises = this.workout.exercises - 1;
+        // Change Exercises Number
+        this.workout.exercises = this.workout.exercises - 1;
+      }
+      else if (input == 3)
+      {
+        // Change Exercises Number
+        this.workout.exercises = this.workout.exercises - 1;
       }
       else if (input == 2)
       {
-         // Change Round Number
+        // Change Round Number
         this.workout.round = this.workout.round - 1;
-         // Change Exercises Number
+        // Change Exercises Number
         this.workout.exercises = this.exerciseData[this.workout.round].length - 1;
         this.popup = false;
       }
 
+      if(input !== 3)
+      {
       // Video & Audio Delay
       setTimeout(() => {
         // Timer For Exercise
@@ -178,6 +190,11 @@ createApp({
         play.classList.toggle("pause");
         this.loadedExercise = false;
       },1750)
+      }
+      else if(input == 3)
+      {
+        this.loadedExercise = false;
+      }
     },
 
     // Siren & Voice Enabled
@@ -294,36 +311,71 @@ createApp({
     {
       if(this.workout.exercises == 0)
       {
+        // Round Change
         this.popup = true;
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2)
         this.CustomAnimations(0)
+        this.title(true)
       }
+      // Round Start
       else if(this.workout.exercises - 1 == 0)
       {
         this.popup = true;
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
+        this.$refs.play.classList.toggle("pause")
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 3)
         this.CustomAnimations(0)
+        this.title(true)
       }
       else {
+        // Exercise Change
+        this.popup = false;
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         // Calling Custom Animations
         this.CustomAnimations(0)
+        this.title(true)
       }
     },
 
     // Next Exercise By Click
     NextExercise()
     {
-      if(this.workout.exercises == this.exerciseData[this.workout.round].length - 1)
+      // Round Change
+      if(this.workout.exercises == this.exerciseData[this.workout.round].length - 1 && this.workout.round + 1 !== this.roundData.length)
       {
         this.popup = true;
         this.workout.round = this.workout.round + 1;
         this.workout.exercises = 0
+        this.$refs.play.classList.toggle("pause")
+        console.log('First Condition')
+        this.title(true)
+      }
+      // Finished Change
+      else if(this.workout.exercises + 1 == this.exerciseData[this.workout.round].length && this.workout.round + 1 == this.roundData.length)
+      {
+        this.popup = true;
+        this.completed = true;
+        //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
+        this.title(false)
+        console.log('Main Condition')
       }
       else {
-      this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
-      // Calling Custom Animations
-      this.CustomAnimations(1)
+        // Exercise Change
+        this.popup = false;
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
+        console.log('Final Condition')
+        // Calling Custom Animations
+        this.CustomAnimations(1)
+        this.title(true)
+      }
+    },
+
+    title(input)
+    {
+      if(input == true) {
+      document.title = this.exerciseTitle
+      }
+      else if (input == false) {
+        document.title = 'Completed Workout!'
       }
     },
 
