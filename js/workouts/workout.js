@@ -325,6 +325,7 @@ createApp({
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 3)
         this.CustomAnimations(0)
         this.title(true)
+        this.voiceHasPlayed = false
       }
       else {
         // Exercise Change
@@ -348,6 +349,7 @@ createApp({
         this.$refs.play.classList.toggle("pause")
         console.log('First Condition')
         this.title(true)
+        this.voiceHasPlayed = false
       }
       // Finished Change
       else if(this.workout.exercises + 1 == this.exerciseData[this.workout.round].length && this.workout.round + 1 == this.roundData.length)
