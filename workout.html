@@ -151,7 +151,7 @@
           <div id="exerciseHeader" style="display: none; opacity: 0" class="header-current animated"  v-show="!popup">
             <div class="workout-navigation">
               <div id="repText" class="generic-text-style-2" v-if="StatusCode200 == true">{{exerciseType}}</div>
-              <div id="safeTimerDisplay"  class="generic-text-style-3" v-if="StatusCode200 == true">
+              <div id="safeTimerDisplay" ref="time"  class="generic-text-style-3" v-if="StatusCode200 == true">
                 {{exerciseAmount}}
               </div>
               <a href="#scroll" class="nav-workout-button panel-button w-inline-block">
@@ -277,7 +277,7 @@
                         <circle r="100" cx="124" cy="124" class="progressWheel"></circle>
                       </svg>
                     </div>
-                    <div ref="play" v-on:click="PlayExercise(this.$refs.amount,this.$refs.play, this.$refs.video, this.$refs.voice)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
+                    <div ref="play" v-on:click="PlayExercise(this.$refs.time, this.$refs.play, this.$refs.video, this.$refs.voice)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
                   </div>
                   <div v-on:click="NextExercise()" class="player-control-button w-inline-block" ref="Next">
                     <div class="play-right-arrow-icon"></div>

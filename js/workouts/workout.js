@@ -18,7 +18,7 @@ createApp({
       exerciseData: [],
       StatusCode200: false,
       popup: true,
-      completed: true,
+      completed: false,
       loadedExercise: false,
       min: 0,
       Debug: false,
@@ -119,16 +119,6 @@ createApp({
             });
           });
         })
-        
-        /*response.data.forEach((e, ei) => {
-          this.roundData.forEach((r, ri) => {
-            if(r.ID_Linked_Exercises.some( item => e.Exercise_ID.includes(item)))
-            {
-              console.log("Exercise Name", e);
-              this.exerciseData[ri].push(e);
-            }
-          });
-        })*/
 
         // Stagger Loading assets
         setTimeout(() => {
@@ -289,8 +279,14 @@ createApp({
       }
     },
 
+    TimerConversion(time, text) {
+      minutes = Math.floor(time / 60); 
+      seconds = time % 60;
+      text.innerHTML = minutes + ":" + seconds;
+    },
+
      // Exercise Timer
-    Timer(time, play, video, siren) {
+    Timer(time, video, siren) {
       let counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises];
       //let percentage = counter / 100 * 100;
 
@@ -298,27 +294,22 @@ createApp({
       //setProgress(percentage);
 
       // Timer To Run Exercise
-      let timer = setInterval(function () {
-
-        // Time Conversion To Minutes And Seconds
-        let minutes = Math.floor(counter / 60); 
-        let seconds = counter % 60;
-        time.textContent = minutes + ":" + seconds;
+      let timer = setInterval(() => {
+        //setProgress(counter);
 
         // Condtion To Check If Paused
         if (!time.classList.contains("pausetime")) {
+          this.TimerConversion(counter, time);
           counter--;
-
-          //setProgress(counter);
-
           // Condtion To Check If Finished
           if (counter < 0) {
             siren.play();
+          setTimeout(() => {
+          this.NextExercise(timer);
+          }, 2000);
 
-            this.NextExercise();
-
-            clearInterval(timer);
-            //clearInterval(checkAmrap);
+          clearInterval(timer);
+          //clearInterval(checkAmrap);
           }
         }
       }, 1000);
@@ -349,11 +340,13 @@ createApp({
       if (video.paused) {
         video.play();
         play.classList.toggle("pause");
-        //time.classList.remove("pausetime");
+        time.classList.remove("pausetime");
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
       } else {
         video.pause();
         play.classList.toggle("pause");
-        //time.classList.add("pausetime");
+        time.classList.add("pausetime");
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.$refs.realAmount)
       }
     },
 
@@ -389,8 +382,9 @@ createApp({
     },
 
     // Next Exercise By Click
-    NextExercise()
+    NextExercise(timer)
     {
+      clearInterval(timer);
       // Round Change
       if(this.workout.exercises == this.exerciseData[this.workout.round].length - 1 && this.workout.round + 1 !== this.roundData.length)
       {
