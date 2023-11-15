@@ -18,29 +18,55 @@ createApp({
       exerciseData: [],
       StatusCode200: false,
       popup: true,
-      completed: false,
+      completed: true,
       loadedExercise: false,
+      min: 0,
+      Debug: false,
     }
   },
   computed: {
     // a computed getter
     exerciseTitle() {
+      if(this.StatusCode200 == true)
+      {
       return this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
+      }
     },
     exerciseType() {
+      if(this.StatusCode200 == true)
+      {
       return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+      }
     },
     exerciseAmount() {
+      if(this.StatusCode200 == true)
+      {
       return this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+      }
     },
     exerciseVideo() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Video[0 /*parseInt(this.$refs.min.textContent - 1)*/].url
+      if(this.StatusCode200 == true)
+      {
+      return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
+      }
     },
     exerciseVoice() {
+      if(this.StatusCode200 == true)
+      {
       return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+      }
     },
     exerciseMax() {
-      return this.exerciseData[this.workout.exercises][this.workout.exercises].Video.length
+      if(this.StatusCode200 == true)
+      {
+      return this.exerciseData[this.workout.round][this.workout.exercises].Video.length
+      }
+    },
+    exerciseMin() {
+      if(this.StatusCode200 == true)
+      {
+      return this.min
+      }
     },
   },
   methods: {
@@ -80,9 +106,21 @@ createApp({
       })
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
-        console.log("Exercise Response", response);
-
+        //console.log("Exercise Response", response);
         response.data.forEach((e, ei) => {
+          this.roundData.forEach((r, ri) => {
+            r.ID_Linked_Exercises.forEach((id, index) => {
+              if(e.Exercise_ID.includes(id))
+              {
+                //console.log("MATCH!");
+                //console.log("Exercise Name", e);
+                this.exerciseData[ri].push(e);
+              }
+            });
+          });
+        })
+        
+        /*response.data.forEach((e, ei) => {
           this.roundData.forEach((r, ri) => {
             if(r.ID_Linked_Exercises.some( item => e.Exercise_ID.includes(item)))
             {
@@ -90,7 +128,8 @@ createApp({
               this.exerciseData[ri].push(e);
             }
           });
-        })
+        })*/
+
         // Stagger Loading assets
         setTimeout(() => {
         this.StatusCode200 = true;
@@ -133,6 +172,18 @@ createApp({
           targets: '.app-fullscreen-video',
           translateX: ['-100vw', '0vw'],
           borderRadius: ['100%', '0%'],
+          opacity: [0, 1],
+          easing: 'easeInOutQuad',
+          duration: 1500
+        });
+      }  
+
+      else if(input == 2)
+      {
+        anime({
+          targets: '.app-fullscreen-video',
+          translateY: ['100vh', '0vh'],
+          borderRadius: ['50%', '0%'],
           opacity: [0, 1],
           easing: 'easeInOutQuad',
           duration: 1500
@@ -415,30 +466,58 @@ createApp({
       }
     },
 
-    /*ChangeDifficulty(input, video, difficulty) {
+    ChangeDifficulty(input, video, difficulty) {
+      if (video.paused) {
+        video.play();
+        this.$refs.play.classList.toggle("pause");
+        //time.classList.remove("pausetime");
+      } else {
+        video.pause();
+        this.$refs.play.classList.toggle("pause");
+        //time.classList.add("pausetime");
+      }
+
+      this.CustomAnimations(2)
+
       if(input == 0)
       {
-        difficulty = parseInt(difficulty.textContent) - 1
-        this.$refs.min.textContent = difficulty
+        this.min = this.min - 1
         
-        //this.workout.startDifficulty[difficulty] = this.workout.startDifficulty[difficulty] - 1
-        
-        video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[difficulty].url
-        this.$refs.max.textContent = this.exerciseData[this.workout.round][this.workout.exercises].Video.length
-        video.play();
+        video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
+        setTimeout(() => {
+          // Video Condtion Play/Pause
+          if (video.paused) {
+            video.play();
+            this.$refs.play.classList.toggle("pause");
+            //time.classList.remove("pausetime");
+          } else {
+            video.pause();
+            this.$refs.play.classList.toggle("pause");
+            //time.classList.add("pausetime");
+          }
+        }, 1500)
       }
       else if(input == 1)
       {
-        difficulty = parseInt(difficulty.textContent) + 1
-        this.$refs.min.textContent = difficulty
-        this.$refs.max.textContent = this.exerciseData[this.workout.exercises].Video.length
+        this.min = this.min + 1
 
         //this.workout.startDifficulty[difficulty] = this.workout.startDifficulty[difficulty] + 1
 
-        video.src = this.exerciseData[this.workout.exercises].Video[difficulty].url
-        video.play();
+        video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
+        setTimeout(() => {
+       // Video Condtion Play/Pause
+          if (video.paused) {
+            video.play();
+            this.$refs.play.classList.toggle("pause");
+            //time.classList.remove("pausetime");
+          } else {
+            video.pause();
+            this.$refs.play.classList.toggle("pause");
+            //time.classList.add("pausetime");
+          }
+        }, 1500)
       }
-    }*/
+    }
   },
   mounted() {
     // Intial Data Request Called
