@@ -380,6 +380,12 @@ a {
   padding: 10px 0;
   display: flex;
   position: relative;
+  transition: 1s ease;
+}
+
+.disabled_player {
+  opacity: 1;
+  cursor: default;
 }
 
 .workout-player.workout {
@@ -728,10 +734,60 @@ a {
   right: 0%;
 }
 
-.modal.style-2 {
+#finish {
+  z-index: 100;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--dark-olive-green);
+  opacity: 1;
+  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .28));
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 125px;
+  display: flex;
+  position: absolute;
+  top: 0%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+}
+
+.show_text {
+  display: flex !important;
+  opacity: 1 !important;
+}
+
+@media screen and (max-width: 767px)
+{
+  #finish {
+    padding: 50px;
+  }
+
+  .finish_modal_heading {
+    font-size: 30px;
+    line-height: 45px;
+  }
+}
+
+@media screen and (max-width: 479px)
+{
+  #finish {
+    padding: 30px;
+  }
+
+  .finish_modal_heading {
+    font-size: 22px;
+    line-height: 30px;
+  }
+  
+}
+
+.modal.style-3 {
   z-index: 9200;
   background-color: #fff;
-  display: none;
+  display: flex !important;
+  opacity: 1 !important;
 }
 
 .modal.on {
@@ -754,6 +810,18 @@ a {
   display: flex;
 }
 
+.finish_modal_body {
+  width: auto;
+  max-width: 500px;
+  height: auto;
+  text-align: center;
+  color: white;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  display: flex;
+}
+
 .modal-body.style-2 {
   max-width: 600px;
 }
@@ -772,6 +840,13 @@ a {
 .modal-heading.workout_heading {
   font-size: 40px;
   line-height: 49px;
+}
+
+.finish_modal_heading {
+  font-size: 35px;
+  line-height: 45px;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 .modal-header {
@@ -810,6 +885,24 @@ a {
   width: 100%;
   background-color: var(--dark-olive-green);
   color: #fff;
+  text-align: center;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+  padding: 15px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 25px;
+  display: flex;
+}
+
+.finish_button {
+  width: 100%;
+  background-color: #ffffff;
+  color: #397234;
   text-align: center;
   letter-spacing: .5px;
   text-transform: uppercase;
@@ -3064,6 +3157,7 @@ a {
   bottom: 0%;
   left: 0%;
   right: 0%;
+  will-change: transform;
 }
 
 .app-fullscreen-video.scroll {
@@ -4531,6 +4625,7 @@ a {
   opacity: .5;
   cursor: default;
 }
+
 
 .round-text {
   text-align: center;

@@ -22,6 +22,8 @@ createApp({
       loadedExercise: false,
       min: 0,
       Debug: false,
+      counter: 0,
+      fullyLoaded: false,
     }
   },
   computed: {
@@ -106,8 +108,8 @@ createApp({
       })
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
-        //console.log("Exercise Response", response);
-        response.data.forEach((e, ei) => {
+        console.log("Exercise DATA", response);
+        /*response.data.forEach((e, ei) => {
           this.roundData.forEach((r, ri) => {
             r.ID_Linked_Exercises.forEach((id, index) => {
               if(e.Exercise_ID.includes(id))
@@ -118,14 +120,54 @@ createApp({
               }
             });
           });
-        })
+        })*/
+        this.roundData.forEach((r, ri) => {
+          r.Diff_ID_Linked_Exercises.forEach((id, index) => {
+            response.data.forEach((e, ei) => {
+              if(e.ID.includes(id))
+              {
+                this.exerciseData[ri].push(e);
+              }
+            });
+          });
+        });
+
+        let tempData = [];
+
+        /*this.exerciseData.forEach((e, ei) => {
+          e.forEach((id, index) => {
+            if(this.roundData[ei].Diff_ID_Linked_Exercises.indexOf(id.ID))
+            {
+              const newIndex = this.roundData[ei].Diff_ID_Linked_Exercises.indexOf(id.ID)
+              this.exerciseData[ei][newIndex] = id;
+            }
+            //exerciseData[ei][newIndex] = id;
+            console.log('ID:', this.roundData[ei].Diff_ID_Linked_Exercises.indexOf(id.ID))
+          });
+        });*/
+
+        /*this.roundData.forEach((e, ei) => {
+          e.Diff_ID_Linked_Exercises.forEach((id, index) => {
+            if(this.exerciseData[ei][index].ID.includes(id))
+            {
+              tempData.push([this.exerciseData[ei][index]])
+              console.log('Found ID Exercises:', e.Diff_ID_Linked_Exercises.indexOf(this.exerciseData[ei][index].ID))
+              console.log('Found ID Round:', index);
+              console.log('ID:', id)
+              console.log('DATA:', tempData)
+            }
+            //exerciseData[ei][newIndex] = id;
+            //console.log('ID:', this.exerciseData[ei][index].ID.includes(id))
+          });
+        });*/
+
 
         // Stagger Loading assets
-        setTimeout(() => {
-        this.StatusCode200 = true;
-        this.loadedExercise = false;
-        this.title(true)
-        }, 4000);
+        //setTimeout(() => {
+        //this.StatusCode200 = true;
+        //this.loadedExercise = false;
+        //this.title(true)
+        //}, 4000);
 
         console.log("Exercise Data", this.exerciseData)
       })
@@ -285,8 +327,32 @@ createApp({
       text.innerHTML = minutes + ":" + seconds;
     },
 
+    Timer(time, video, siren)
+    { 
+      
+      if (!time.classList.contains("pausetime"))
+      {
+        timer = setInterval(() => {
+          this.counter--;
+          this.TimerConversion(this.counter, time);
+
+          // Condtion To Check If Finished
+          if (this.counter == 0) {
+            siren.play();
+            setTimeout(() => {
+            this.NextExercise(timer);
+            }, 2000);
+            clearInterval(timer);
+          }
+        }, 1000);
+      }
+      else {
+        clearInterval(timer);
+      }
+    },
+
      // Exercise Timer
-    Timer(time, video, siren) {
+    /*Timer(time, video, siren) {
       let counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises];
       //let percentage = counter / 100 * 100;
 
@@ -296,10 +362,9 @@ createApp({
       // Timer To Run Exercise
       let timer = setInterval(() => {
         //setProgress(counter);
-
+        this.TimerConversion(counter, time);
         // Condtion To Check If Paused
         if (!time.classList.contains("pausetime")) {
-          this.TimerConversion(counter, time);
           counter--;
           // Condtion To Check If Finished
           if (counter < 0) {
@@ -312,8 +377,12 @@ createApp({
           //clearInterval(checkAmrap);
           }
         }
+        else if(time.classList.contains("pausetime")) {
+          counter
+          clearInterval(timer);
+        }
       }, 1000);
-    },
+    },*/
 
     // Play Exercise By Click
     PlayExercise(time, play, video, voice)
@@ -346,7 +415,7 @@ createApp({
         video.pause();
         play.classList.toggle("pause");
         time.classList.add("pausetime");
-        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.$refs.realAmount)
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren)
       }
     },
 
@@ -513,9 +582,17 @@ createApp({
       }
     }
   },
-  mounted() {
+  created()
+  {
     // Intial Data Request Called
     this.intialRequest()
+  },
+  mounted() {
+    setTimeout(() => { 
+      this.StatusCode200 = true;
+      this.loadedExercise = false;
+      this.title(true)
+    }, 10000)
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
@@ -532,6 +609,9 @@ createApp({
 
     // Webflow Animations Reset Called
     this.WebflowAnimations()
+  },
+  updated() {
+    this.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
   },
 }).mount('#app')
 
