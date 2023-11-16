@@ -63,7 +63,6 @@ createApp({
       RecipesParsed: [],
       RecipesArray: [],
       FavouritesActive: false,
-      RenderRecipes: [],
     };
   },
   methods: {
@@ -100,9 +99,6 @@ createApp({
           let tempRecipes = JSON.parse(response.data.Recipes_Stored);
           this.RecipesParsed = JSON.parse(response.data.Recipes_Stored);
           console.log("Recipes From Airtable", tempRecipes);
-          tempRecipes.forEach((type) => {
-            this.RenderRecipes.push(type)
-          });
           this.Breakfast = tempRecipes[0];
           this.HeroImage = this.Breakfast[0].Images[0].url.toString();
           this.Lunch = tempRecipes[1];
@@ -134,7 +130,6 @@ createApp({
           };
         });
         const recipeType = shuffleArray(newArr, tempFilters);
-        this.RenderRecipes.push(recipeType)
         this.Breakfast = recipeType;
         this.HeroImage = recipeType[0].Images[0].url;
         this.RecipesArray.push(recipeType);
@@ -150,7 +145,6 @@ createApp({
           };
         });
         const recipeType = shuffleArray(newArr, tempFilters);
-        this.RenderRecipes.push(recipeType)
         this.Lunch = recipeType;
         this.RecipesArray.push(recipeType);
       });
@@ -165,7 +159,6 @@ createApp({
           };
         });
         const recipeType = shuffleArray(newArr, tempFilters);
-        this.RenderRecipes.push(recipeType)
         this.Dinner = recipeType;
         this.RecipesArray.push(recipeType);
       });
@@ -180,7 +173,6 @@ createApp({
           };
         });
         const recipeType = shuffleArray(newArr, tempFilters);
-        this.RenderRecipes.push(recipeType)
         this.Snacks = recipeType;
         this.RecipesArray.push(recipeType);
       });
@@ -219,17 +211,11 @@ createApp({
     }
   },
   mounted() {
-    setTimeout(() => {
     console.log("interaction loaded");
     window.Webflow && window.Webflow.destroy();
     window.Webflow && window.Webflow.ready();
     window.Webflow && window.Webflow.require("ix2").init();
     document.dispatchEvent(new Event("readystatechange"));
-    sal({
-      threshold: 0.25,
-      once: false,
-    });
-    }, 3000);
     // Matching filters to checkboxes
     let check = document.querySelectorAll('[type="checkbox"]');
     let checkCustom = document.querySelectorAll(".w-checkbox-input");
@@ -262,7 +248,6 @@ createApp({
         );
       }, 3000);
     } else {
-      console.log("Render Recipes Pushed", this.RenderRecipes);
       /*console.log("User updated", this.User);
       console.log("Filters updated", this.Filters);
       console.log("Breakfast image loaded", this.HeroImage);

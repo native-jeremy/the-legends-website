@@ -109,6 +109,10 @@ Wized.request.await("Load Users Program Hub", (response) => {
           //console.log("Completed Array", this.CompletedWorkouts)
           //console.log("Next Workout", this.nextWorkoutID)
           //console.log("Progress", this.ProgramCompleted)
+          sal({
+            threshold: 0.5,
+            once: false,
+          });
           if("Completed_Workout_Week" in currentUser)
           {
           // Progress Wheel

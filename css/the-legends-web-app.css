@@ -7,6 +7,26 @@
   --notification-bell-animtated: 15px;
 }
 
+html { 
+	scroll-behavior: smooth !important;
+}
+
+.app-head {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+/*width*/
+body::-webkit-scrollbar {
+width:8px;
+background: #e5e5e5;
+}
+/*thumb*/
+body::-webkit-scrollbar-thumb {
+background: #315e2d;
+border: 1px solid #397234;
+}
+
 .w-layout-grid {
   grid-row-gap: 16px;
   grid-column-gap: 16px;
@@ -93,6 +113,10 @@ body {
   font-weight: 300;
   line-height: 20px;
   display: flex;
+}
+
+text {
+  font-family: Montserrat, sans-serif !important;
 }
 
 h1 {

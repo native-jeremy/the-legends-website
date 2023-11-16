@@ -94,6 +94,15 @@ body {
   line-height: 20px;
   display: flex;
 }
+.text {
+  font-family: Montserrat, sans-serif !important;
+}
+
+.circle-progress-text {
+  color: #fff;
+  fill: #fff;
+  font-family: Montserrat, sans-serif !important;
+}
 
 h1 {
   margin-top: 0;

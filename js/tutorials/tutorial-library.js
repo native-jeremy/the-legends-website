@@ -10,7 +10,7 @@ createApp({
   },
   computed: {
     filteredList() {
-      console.log("TUTORIAL", this.Tutorials);
+      //console.log("TUTORIAL", this.Tutorials);
       return this.Tutorials.filter((item) =>
         item.Tutorial.toUpperCase().includes(this.Search.toUpperCase())
       );

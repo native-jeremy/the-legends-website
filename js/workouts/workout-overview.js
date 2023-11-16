@@ -117,6 +117,10 @@ window.onload = async () => {
  };
 
 setTimeout(() => {
+  sal({
+    threshold: 0.25,
+    once: false,
+  });
    const timeConvert = document.querySelectorAll('.convert_time');
    timeConvert.forEach(time => {
      if(time.textContent.includes('Reps'))
