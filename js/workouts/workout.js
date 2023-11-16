@@ -16,6 +16,12 @@ createApp({
       },
       roundData: [],
       exerciseData: [],
+      amrapData: {
+        time: 0,
+        amounts: null,
+        titles: null,
+        videos: null
+      },
       StatusCode200: false,
       popup: true,
       completed: false,
@@ -24,6 +30,8 @@ createApp({
       Debug: false,
       counter: 0,
       fullyLoaded: false,
+      type: "",
+      isAmrap: "",
     }
   },
   computed: {
@@ -93,6 +101,8 @@ createApp({
         roundRes.data.forEach((round) => {
           this.exerciseData.push([])
         });
+
+        this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
 
         console.log('Intial Exercise Data', this.exerciseData)
 
@@ -329,7 +339,6 @@ createApp({
 
     Timer(time, video, siren)
     { 
-      
       if (!time.classList.contains("pausetime"))
       {
         timer = setInterval(() => {
@@ -342,6 +351,9 @@ createApp({
             setTimeout(() => {
             this.NextExercise(timer);
             }, 2000);
+            clearInterval(timer);
+          }
+          else if (this.changedExercise) {
             clearInterval(timer);
           }
         }, 1000);
@@ -410,12 +422,18 @@ createApp({
         video.play();
         play.classList.toggle("pause");
         time.classList.remove("pausetime");
+        if(this.type == "Time")
+        {
         this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+        }
       } else {
         video.pause();
         play.classList.toggle("pause");
         time.classList.add("pausetime");
-        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren)
+        if(this.type == "Time")
+        {
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+        }
       }
     },
 
@@ -478,6 +496,10 @@ createApp({
         // Exercise Change
         this.popup = false;
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
+        if(this.type == "Time")
+        {
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+        }
         console.log('Final Condition')
         // Calling Custom Animations
         this.CustomAnimations(1)
@@ -612,6 +634,8 @@ createApp({
   },
   updated() {
     this.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+    this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+    this.amrapCheck();
   },
 }).mount('#app')
 
