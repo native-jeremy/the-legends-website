@@ -32,6 +32,7 @@ createApp({
       fullyLoaded: false,
       type: "",
       isAmrap: "",
+      volume: false,
     }
   },
   computed: {
@@ -53,6 +54,12 @@ createApp({
       {
       return this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
       }
+    },
+    amrapActive() {
+      return this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
+    },
+    amrapAmounts() {
+      return this.roundData[this.workout.round].Amrap_Exercise_Amount_Linked_Exercises
     },
     exerciseVideo() {
       if(this.StatusCode200 == true)
@@ -192,6 +199,12 @@ createApp({
       document.dispatchEvent(new Event("readystatechange"));
     },
 
+    Volume()
+    {
+      this.volume = !this.volume;
+      console.log("volume loaded");
+    },
+
     // Custom Animations For Video Source Changing
     CustomAnimations(input) {
       // Prev Exercise Animation
@@ -222,15 +235,26 @@ createApp({
 
       else if(input == 2)
       {
+        this.loadedExercise = true
         anime({
           targets: '.app-fullscreen-video',
           translateY: ['100vh', '0vh'],
-          borderRadius: ['50%', '0%'],
+          borderRadius: ['100%', '0%'],
           opacity: [0, 1],
           easing: 'easeInOutQuad',
           duration: 1500
         });
       }
+    },
+
+    // Custom Animation For Video Loop
+    VideoLoopAnimation() {
+      anime({
+        targets: '.app-fullscreen-video',
+        easing: 'easeInOutQuad',
+        duration: 750,
+        opacity: [0, 1],
+      });
     },
 
     // Exercise Change Logic
@@ -400,6 +424,7 @@ createApp({
     PlayExercise(time, play, video, voice)
     {
       this.popup = false;
+      this.AmrapVideo(this.$refs.video)
       // Timer For Exercise
       //this.Timer(time, play, video, voice, siren)
 
@@ -552,6 +577,7 @@ createApp({
     },
 
     ChangeDifficulty(input, video, difficulty) {
+      this.loadedExercise = true
       if (video.paused) {
         video.play();
         this.$refs.play.classList.toggle("pause");
@@ -590,6 +616,7 @@ createApp({
 
         video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
         setTimeout(() => {
+          this.loadedExercise = false;
        // Video Condtion Play/Pause
           if (video.paused) {
             video.play();
@@ -602,7 +629,70 @@ createApp({
           }
         }, 1500)
       }
+    },
+    AmrapVideo(video)
+    {
+      let videoLoop;
+      if(this.amrapActive == 'True')
+      {
+        let srcIndex = 0;
+        let trackerTime = 0;
+        video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.workout.exercise].url;
+        videoLoop = setInterval(() => {
+        if(!video.paused)
+          {       
+          if (trackerTime === 5) 
+          {
+            changeVideo = true;
+            if(changeVideo == true)
+            {
+              this.VideoLoopAnimation()
+              srcIndex++;
+              if (srcIndex < this.exerciseData[this.workout.round].length) {
+                video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.workout.exercise].url;
+    
+                let playPromise = video.play();
+    
+                if (playPromise !== undefined) {
+                  playPromise.then(_ => {
+                    video.play();
+                  })
+                  .catch(error => {
+                    console.log = function() {} 
+                  });
+                }
+              }
+              else if (srcIndex >= this.exerciseData[this.workout.round].length)
+              {
+                srcIndex = 0;
+                video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.workout.exercise].url;    
+                let playPromise = video.play();
+    
+                if (playPromise !== undefined) {
+                  playPromise.then(_ => {
+                    video.play();
+                  })
+                  .catch(error => {
+                    console.log = function() {} 
+                  });
+                }
+              }
+              trackerTime = 0
+            } 
+          }
+          else {
+            trackerTime = trackerTime + 1
+          }
+          }
+        else if (video.paused) {
+          trackerTime = trackerTime;
+        }
+        }, 1000);
+      }
+    else {
+      clearInterval(videoLoop)
     }
+    },
   },
   created()
   {
@@ -635,7 +725,6 @@ createApp({
   updated() {
     this.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
     this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-    this.amrapCheck();
   },
 }).mount('#app')
 

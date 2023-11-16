@@ -141,7 +141,7 @@
   <div id="app" w-el="load_app" class="app">
     <div w-el="exercise_page" class="app-main app-base">
       <div class="app-head current-workout">
-        <div class="app-block viewer" style="overflow-x: hidden; background-color: #397235; background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .28));">
+        <div class="app-block viewer">
           <div class="banner top-bar"></div>
           <div class="banner bottom-bar"></div>
             <video ref="video" loop preload="auto" v-bind:src="`${exerciseVideo}`" muted webkit-playsinline playsinline class="app-fullscreen-video"
@@ -246,8 +246,18 @@
             <div class="info-block-header workout">
               <div id="exerciseTitle" style="display: none; opacity: 0" class="title-text" v-bind:class="{show_text: !popup}" v-if="!popup">
                 <div class="exercises-headings single_heading_block">
-                  <div class="main-heading-style-6 center-align single-title" v-if="StatusCode200 == true">
+                  <div class="main-heading-style-6 center-align single-title" v-if="StatusCode200 == true && amrapActive !== 'True'">
                     {{exerciseTitle}}
+                  </div>
+                  <div v-if="amrapActive == 'True'">
+                    <div v-for="(title, index) in roundData[workout.round].Exercise_Title_Linked_Exercises" :key="title">
+                      <div class="generic-text-style-3 amrap-amount">
+                        {{roundData[workout.round].Amrap_Exercise_Amount_Linked_Exercises[index]}}
+                      </div>
+                      <div class="main-heading-style-6 center-align single-title">
+                        {{title}}
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <!--div class="exercises-headings amrap_heading_block"></div>-->
@@ -392,7 +402,8 @@
                   <h2 class="main-heading-style-1" v-if="Debug">Round Number {{workout.round}}</h2>
                   <h2 class="main-heading-style-1" v-if="Debug">Exercise Number {{workout.exercises}}</h2>
                 </div>
-                <div class="accordion style-1">
+                <!--Single-->
+                <div class="accordion style-1" v-if="StatusCode200 == true && amrapActive !== 'True'">
                   <div class="accordion-header style-3">
                     <div class="accordion-header-text style-2">
                       <div class="accordion-header-top-content">
@@ -407,7 +418,7 @@
                     <div class="diff-trigger">
                       <div class="counter-btn" v-if="StatusCode200 == true &&this.min == 0" style="cursor: default !important;">
                       </div>
-                      <div class="counter-btn" v-on:click="ChangeDifficulty(0, this.$refs.video, this.$refs.min)" v-if="StatusCode200 == true &&this.min !== 0">
+                      <div class="counter-btn" v-on:click="ChangeDifficulty(0, this.$refs.video, this.$refs.min)" v-if="StatusCode200 == true && this.min !== 0">
                         <div class="counter-arrow left"></div>
                       </div>
                       <div class="counter-num">
@@ -419,6 +430,40 @@
                         <div class="counter-arrow right"></div>
                       </div>
                       <div class="counter-btn" v-if="StatusCode200 == true && this.min + 1 == exerciseMax" style="cursor: default !important;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--Amrap-->
+                <div v-if="StatusCode200 == true && amrapActive == 'True'" style="width: 100%; min-width: 100%;">                
+                  <div class="accordion style-1" v-for="(title, index) in roundData[workout.round].Exercise_Title_Linked_Exercises" :key="title">
+                    <div class="accordion-header style-3">
+                      <div class="accordion-header-text style-2">
+                        <div class="accordion-header-top-content">
+                          <h2 class="main-sub-heading-style-1" ref="diffControlTitle">
+                            {{roundData[workout.round].Exercise_Title_Linked_Exercises[index]}}
+                          </h2>
+                          <div class="accordion-header-arrow">
+                            <div class="accordion-arrow-icon hide"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="diff-trigger">
+                        <div class="counter-btn" v-if="StatusCode200 == true &&this.min == 0" style="cursor: default !important;">
+                        </div>
+                        <div class="counter-btn" v-on:click="ChangeDifficulty(0, this.$refs.video, this.$refs.min)" v-if="StatusCode200 == true &&this.min !== 0">
+                          <div class="counter-arrow left"></div>
+                        </div>
+                        <div class="counter-num">
+                          <div class="num current" ref="min" v-if="StatusCode200 == true">{{exerciseMin + 1}}</div>
+                          <div class="num divider">/</div>
+                          <div class="num limit" ref="max" v-if="StatusCode200 == true">{{exerciseMax}}</div>
+                        </div>
+                        <div class="counter-btn" v-on:click="ChangeDifficulty(1, this.$refs.video, this.$refs.min)" v-if="StatusCode200 == true && this.min + 1 !== exerciseMax">
+                          <div class="counter-arrow right"></div>
+                        </div>
+                        <div class="counter-btn" v-if="StatusCode200 == true && this.min + 1 == exerciseMax" style="cursor: default !important;">
+                        </div>
                       </div>
                     </div>
                   </div>
