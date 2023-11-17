@@ -1,5 +1,4 @@
-setTimeout(() =>{
-  anime({
+anime({
     targets: '.path3',
     strokeDashoffset: [anime.setDashoffset, 0],
     easing: 'cubicBezier(.5, .05, .1, .3)',
@@ -7,8 +6,7 @@ setTimeout(() =>{
     delay: function(el, i) { return i * 250 },
     direction: 'alternate',
     loop: true
-  });
-  }, 2000)
+});
 //----------------------------------------------------------------
 //  HOME PAGE REQUEST | FROM WIZED
 //----------------------------------------------------------------
