@@ -7,24 +7,25 @@
   --notification-bell-animtated: 15px;
 }
 
-html { 
+/*html { 
 	scroll-behavior: smooth !important;
-}
+}*/
 
-.app-head {
+/*.app-head {
   overflow-x: hidden !important;
   overflow-y: auto !important;
-}
+}*/
 
 /*width*/
 body::-webkit-scrollbar {
 width:8px;
 background: #e5e5e5;
+border: none !important;
 }
 /*thumb*/
 body::-webkit-scrollbar-thumb {
 background: #397234;
-border: none;
+border: none !important;
 }
 
 .w-layout-grid {
