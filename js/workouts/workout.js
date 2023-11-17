@@ -398,33 +398,36 @@ createApp({
     },
 
     Timer(time, video, siren)
-    { 
-      if (!time.classList.contains("pausetime"))
-      {
-        timer = setInterval(() => {
-          let percentage = this.workout.counter / 100 * 100;
-          // Progress Wheel Value
-          this.setProgress(percentage);
-          this.workout.counter--;
-          //this.TimerConversion(this.workout.counter, time);
+    {
+      if(this.type == "Time")
+      { 
+        if (!time.classList.contains("pausetime"))
+        {
+          timer = setInterval(() => {
+            let percentage = this.workout.counter / 100 * 100;
+            // Progress Wheel Value
+            this.setProgress(percentage);
+            this.workout.counter--;
+            this.TimerConversion(this.workout.counter, time);
 
-          // Condtion To Check If Finished
-          if (this.workout.counter == 0) {
-            siren.play();
-            video.pause();
-            video.currentTime = 0;
-            clearInterval(timer);
-            setTimeout(() => {
-            this.NextExercise();
-            }, 2000);
-          }
-          else if (this.changedExercise) {
-            clearInterval(timer);
-          }
-        }, 1000);
-      }
-      else {
-        clearInterval(timer);
+            // Condtion To Check If Finished
+            if (this.workout.counter == 0) {
+              siren.play();
+              video.pause();
+              video.currentTime = 0;
+              clearInterval(timer);
+              setTimeout(() => {
+              this.NextExercise();
+              }, 2000);
+            }
+            else if (this.changedExercise) {
+              clearInterval(timer);
+            }
+          }, 1000);
+        }
+        else {
+          clearInterval(timer);
+        }
       }
     },
 
@@ -527,7 +530,12 @@ createApp({
       else {
         // Exercise Change
         this.popup = false;
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
+        if(this.type == "Time")
+        {
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+        }
+        console.log('Final Condition')
         // Calling Custom Animations
         this.CustomAnimations(0)
         this.title(true)
@@ -621,7 +629,10 @@ createApp({
         video.pause();
         this.$refs.play.classList.toggle("pause");
         this.$refs.time.classList.add("pausetime");
+        if(this.type == "Time")
+        { 
         this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+        }
 
       this.CustomAnimations(2)
 
@@ -636,12 +647,18 @@ createApp({
             video.play();
             this.$refs.play.classList.toggle("pause");
             this.$refs.time.classList.remove("pausetime");
+            if(this.type == "Time")
+            { 
             this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+            }
           } else {
             video.pause();
             this.$refs.play.classList.toggle("pause");
             this.$refs.time.classList.add("pausetime");
+            if(this.type == "Time")
+            { 
             this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+            }
           }
         }, 1500)
       }
@@ -662,7 +679,10 @@ createApp({
             video.pause();
             this.$refs.play.classList.toggle("pause");
             this.$refs.time.classList.add("pausetime");
+            if(this.type == "Time")
+            { 
             this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+            }
           }
         }, 1500)
       }
