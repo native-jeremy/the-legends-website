@@ -1,5 +1,5 @@
 window.onload = async () => {
-    const userId = await Wized.data.get('c.userid');
+    const userId = localStorage.getItem('siren');
     console.log('UserID: ', userId);
     const mainBtn = document.getElementById('mainBtn');
 
