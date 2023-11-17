@@ -85,6 +85,7 @@ Wized.request.await("Load About Page", (response) => {
           });
           }
           setTimeout(delayedSelection, 3000);
+          setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 2000);
       }
   }).mount('#app')
 //----------------------------------------------------------------
