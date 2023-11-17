@@ -12,7 +12,8 @@ createApp({
         roundAmount: 0,
         exercisesAmount: 0,
         voiceHasPlayed: false,
-        startDifficulty: []
+        startDifficulty: [],
+        counter: 0,
       },
       roundData: [],
       exerciseData: [],
@@ -28,7 +29,6 @@ createApp({
       loadedExercise: false,
       min: 0,
       Debug: false,
-      counter: 0,
       fullyLoaded: false,
       type: "",
       isAmrap: "",
@@ -38,51 +38,84 @@ createApp({
   computed: {
     // a computed getter
     exerciseTitle() {
-      if(this.StatusCode200 == true)
+      if(this.StatusCode200 == true && this.exerciseData.length > 0)
       {
       return this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
       }
+      else {
+        return 'Loading...'
+      }
     },
     exerciseType() {
-      if(this.StatusCode200 == true)
+      if(this.StatusCode200 == true && this.exerciseData.length > 0)
       {
       return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
       }
+      else {
+        return 'Loading...'
+      }
     },
     exerciseAmount() {
-      if(this.StatusCode200 == true)
+      if(this.workout.counter > 0)
       {
-      return this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+      return this.workout.counter
+      }
+      else {
+        return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
       }
     },
     amrapActive() {
+      if(this.exerciseData.length > 0)
+      {
       return this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
+      }
+      else {
+        return 0
+      }
     },
     amrapAmounts() {
+      if(this.exerciseData.length > 0)
+      {
       return this.roundData[this.workout.round].Amrap_Exercise_Amount_Linked_Exercises
+      }
+      else {
+        return 0
+      }
     },
     exerciseVideo() {
-      if(this.StatusCode200 == true)
+      if(this.StatusCode200 == true && this.exerciseData.length > 0)
       {
       return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
       }
+      else {
+        return 
+      }
     },
     exerciseVoice() {
-      if(this.StatusCode200 == true)
+      if(this.StatusCode200 == true && this.exerciseData.length > 0)
       {
       return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
       }
+      else {
+        return 0
+      }
     },
     exerciseMax() {
-      if(this.StatusCode200 == true)
+      if(this.StatusCode200 == true && this.exerciseData.length > 0)
       {
       return this.exerciseData[this.workout.round][this.workout.exercises].Video.length
       }
+      else {
+        return 0
+      }
     },
     exerciseMin() {
-      if(this.StatusCode200 == true)
+      if(this.StatusCode200 == true && this.exerciseData.length > 0)
       {
       return this.min
+      }
+      else {
+        return 0;
       }
     },
   },
@@ -126,6 +159,7 @@ createApp({
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
         console.log("Exercise DATA", response);
+        this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
         /*response.data.forEach((e, ei) => {
           this.roundData.forEach((r, ri) => {
             r.ID_Linked_Exercises.forEach((id, index) => {
@@ -197,12 +231,6 @@ createApp({
       window.Webflow && window.Webflow.ready();
       window.Webflow && window.Webflow.require("ix2").init();
       document.dispatchEvent(new Event("readystatechange"));
-    },
-
-    Volume()
-    {
-      this.volume = !this.volume;
-      console.log("volume loaded");
     },
 
     // Custom Animations For Video Source Changing
@@ -355,6 +383,14 @@ createApp({
       }
     },
 
+    setProgress(percent) {
+      let progress = document.querySelector('.progressWheel');
+      let radius = progress.r.baseVal.value;
+      let circumference = radius * 2 * Math.PI;
+      progress.style.strokeDasharray = circumference;
+      progress.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+    },
+
     TimerConversion(time, text) {
       minutes = Math.floor(time / 60); 
       seconds = time % 60;
@@ -366,16 +402,21 @@ createApp({
       if (!time.classList.contains("pausetime"))
       {
         timer = setInterval(() => {
-          this.counter--;
-          this.TimerConversion(this.counter, time);
+          let percentage = this.workout.counter / 100 * 100;
+          // Progress Wheel Value
+          this.setProgress(percentage);
+          this.workout.counter--;
+          //this.TimerConversion(this.workout.counter, time);
 
           // Condtion To Check If Finished
-          if (this.counter == 0) {
+          if (this.workout.counter == 0) {
             siren.play();
-            setTimeout(() => {
-            this.NextExercise(timer);
-            }, 2000);
+            video.pause();
+            video.currentTime = 0;
             clearInterval(timer);
+            setTimeout(() => {
+            this.NextExercise();
+            }, 2000);
           }
           else if (this.changedExercise) {
             clearInterval(timer);
@@ -494,9 +535,8 @@ createApp({
     },
 
     // Next Exercise By Click
-    NextExercise(timer)
+    NextExercise()
     {
-      clearInterval(timer);
       // Round Change
       if(this.workout.exercises == this.exerciseData[this.workout.round].length - 1 && this.workout.round + 1 !== this.roundData.length)
       {
@@ -578,15 +618,10 @@ createApp({
 
     ChangeDifficulty(input, video, difficulty) {
       this.loadedExercise = true
-      if (video.paused) {
-        video.play();
-        this.$refs.play.classList.toggle("pause");
-        //time.classList.remove("pausetime");
-      } else {
         video.pause();
         this.$refs.play.classList.toggle("pause");
-        //time.classList.add("pausetime");
-      }
+        this.$refs.time.classList.add("pausetime");
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
 
       this.CustomAnimations(2)
 
@@ -600,19 +635,19 @@ createApp({
           if (video.paused) {
             video.play();
             this.$refs.play.classList.toggle("pause");
-            //time.classList.remove("pausetime");
+            this.$refs.time.classList.remove("pausetime");
+            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
           } else {
             video.pause();
             this.$refs.play.classList.toggle("pause");
-            //time.classList.add("pausetime");
+            this.$refs.time.classList.add("pausetime");
+            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
           }
         }, 1500)
       }
       else if(input == 1)
       {
         this.min = this.min + 1
-
-        //this.workout.startDifficulty[difficulty] = this.workout.startDifficulty[difficulty] + 1
 
         video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
         setTimeout(() => {
@@ -621,11 +656,13 @@ createApp({
           if (video.paused) {
             video.play();
             this.$refs.play.classList.toggle("pause");
-            //time.classList.remove("pausetime");
+            this.$refs.time.classList.remove("pausetime");
+            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
           } else {
             video.pause();
             this.$refs.play.classList.toggle("pause");
-            //time.classList.add("pausetime");
+            this.$refs.time.classList.add("pausetime");
+            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
           }
         }, 1500)
       }
@@ -704,7 +741,7 @@ createApp({
       this.StatusCode200 = true;
       this.loadedExercise = false;
       this.title(true)
-    }, 10000)
+    }, 6000)
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
@@ -723,7 +760,6 @@ createApp({
     this.WebflowAnimations()
   },
   updated() {
-    this.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
     this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
   },
 }).mount('#app')

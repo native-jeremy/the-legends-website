@@ -24,6 +24,7 @@ background: #e5e5e5;
 /*thumb*/
 body::-webkit-scrollbar-thumb {
 background: #397234;
+border: none;
 }
 
 .w-layout-grid {
