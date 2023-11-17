@@ -65,7 +65,27 @@ Wized.request.await("Load Home Page", (response) => {
           IphoneDescriptionMindset: snapshot.Iphone_Description_Mindset,   
       }
       },
+      methods: {
+        async checkUser()
+        {
+          const userId = await Wized.data.get('c.userid');
+          console.log('UserID: ', userId);
+          const mainBtn = document.getElementById('mainBtn');
+
+          if(userId !== undefined || userId !== null)
+          {
+              mainBtn.href = "/program-hub-welcome.html";
+              mainBtn.textContent = "Home";
+              console.log('Home');
+          }
+          else {
+              mainBtn.textContent = "Login";
+              console.log('Login');
+          }
+        }
+      },
       mounted(){
+        this.checkUser();
       function delayedSelection() {
           console.log("interaction loaded");
           window.Webflow && window.Webflow.destroy();

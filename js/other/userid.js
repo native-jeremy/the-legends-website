@@ -1,6 +1,5 @@
 window.onload = async () => {
-    setTimeout(() => {
-    const userId = Wized.data.get('c.userid');
+    const userId = await Wized.data.get('c.userid');
     console.log('UserID: ', userId);
     const mainBtn = document.getElementById('mainBtn');
 
@@ -14,5 +13,4 @@ window.onload = async () => {
         mainBtn.textContent = "Login";
         console.log('Login');
     }
-}, 3000);
   };
