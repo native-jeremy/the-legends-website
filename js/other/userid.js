@@ -1,14 +1,14 @@
 window.onload = async () => {
-    const userId = localStorage.getItem('siren');
+    const userId = localStorage.getItem('recpies_stored');
     console.log('UserID: ', userId);
     const mainBtn = document.getElementById('mainBtn');
 
-    if(userId !== undefined || userId !== null || userId !== '')
+    if(!userId)
     {
         mainBtn.href = "/program-hub-welcome.html";
         mainBtn.textContent = "Home";
     }
-    else if (userId == undefined || userId == null || userId == '') {
+    else if (userId) {
         mainBtn.textContent = "Login";
     }
   };
