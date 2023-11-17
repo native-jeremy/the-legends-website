@@ -3,12 +3,12 @@ window.onload = async () => {
     console.log('UserID: ', userId);
     const mainBtn = document.getElementById('mainBtn');
 
-    if(userId !== 'undefined' || userId !== null || userId !== '')
+    if(userId !== undefined || userId !== null || userId !== '')
     {
         mainBtn.href = "/program-hub-welcome.html";
         mainBtn.textContent = "Home";
     }
-    else {
+    else if (userId == undefined || userId == null || userId == '') {
         mainBtn.textContent = "Login";
     }
   };
