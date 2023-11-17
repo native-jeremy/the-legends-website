@@ -3,7 +3,7 @@ anime({
   strokeDashoffset: [anime.setDashoffset, 0],
   easing: 'cubicBezier(.5, .05, .1, .3)',
   duration: 2000,
-  delay: function(el, i) { return i * 250 },
+  delay: function(el, i) { return i * 500 },
   direction: 'alternate',
   loop: true
 });
@@ -132,7 +132,7 @@ Wized.request.await("Load Home Page", (response) => {
               }
             }
           }
-          setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 1000);
+          document.querySelector('.loading-state-v2').style.display = "none"
       }
   }).mount('#app')
 //----------------------------------------------------------------
