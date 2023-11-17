@@ -1,4 +1,5 @@
-anime({
+setTimeout(() =>{
+  anime({
     targets: '.path3',
     strokeDashoffset: [anime.setDashoffset, 0],
     easing: 'cubicBezier(.5, .05, .1, .3)',
@@ -6,7 +7,8 @@ anime({
     delay: function(el, i) { return i * 250 },
     direction: 'alternate',
     loop: true
-});
+  });
+  }, 2000)
 //----------------------------------------------------------------
 //  HOME PAGE REQUEST | FROM WIZED
 //----------------------------------------------------------------
@@ -83,7 +85,7 @@ Wized.request.await("Load About Page", (response) => {
           });
           }
           setTimeout(delayedSelection, 3000);
-          setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 2000);
+          document.querySelector('.loading-state-v2').style.display = "none"
       }
   }).mount('#app')
 //----------------------------------------------------------------
