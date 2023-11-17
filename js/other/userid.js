@@ -7,8 +7,10 @@ window.onload = async () => {
     {
         mainBtn.href = "/program-hub-welcome.html";
         mainBtn.textContent = "Home";
+        console.log('Home');
     }
     else {
         mainBtn.textContent = "Login";
+        console.log('Login');
     }
   };
