@@ -4,7 +4,7 @@ window.onload = async () => {
   const emailErr = document.querySelector(".email_tooltip");
   loginButton.addEventListener("click", () => {
     Wized.request.await("Login user", (response) => {
-      if (response.statusCode !== 500) {
+      if (response.status == 500) {
         emailErr.classList.remove("hide_tooltip");
       } else {
         emailErr.classList.add("hide_tooltip");
