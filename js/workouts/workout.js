@@ -642,15 +642,13 @@ createApp({
         
         video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
         setTimeout(() => {
-          // Video Condtion Play/Pause
+          this.loadedExercise = false;
+       // Video Condtion Play/Pause
           if (video.paused) {
             video.play();
             this.$refs.play.classList.toggle("pause");
             this.$refs.time.classList.remove("pausetime");
-            if(this.type == "Time")
-            { 
             this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
-            }
           } else {
             video.pause();
             this.$refs.play.classList.toggle("pause");
