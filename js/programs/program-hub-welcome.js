@@ -1,4 +1,3 @@
-
 anime({
     targets: '.path3',
     strokeDashoffset: [anime.setDashoffset, 0],

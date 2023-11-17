@@ -1,4 +1,14 @@
 window.onload = async () => {
+  anime({
+    targets: '.path3',
+    strokeDashoffset: [anime.setDashoffset, 0],
+    easing: 'cubicBezier(.5, .05, .1, .3)',
+    duration: 2000,
+    delay: function(el, i) { return i * 250 },
+    direction: 'alternate',
+    loop: true
+});
+
     //Element Variables
     const sliderControls = document.querySelector(".slider-controls");
     const errorModal = document.getElementById("errorModal");
@@ -296,6 +306,8 @@ window.onload = async () => {
           setTimeout(() => {
             console.clear();
           }, 3000)
+
+          setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 6000);
   
           Wized.data.listen("v.programMatch", async () => {
             const programMatch = await Wized.data.get("v.program"); // Get new value
