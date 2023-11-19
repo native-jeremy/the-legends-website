@@ -530,11 +530,8 @@ createApp({
       else {
         // Exercise Change
         this.popup = false;
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
-        if(this.type == "Time")
-        {
-        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
-        }
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         console.log('Final Condition')
         // Calling Custom Animations
         this.CustomAnimations(0)
@@ -569,10 +566,7 @@ createApp({
         // Exercise Change
         this.popup = false;
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
-        if(this.type == "Time")
-        {
-        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
-        }
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         console.log('Final Condition')
         // Calling Custom Animations
         this.CustomAnimations(1)
