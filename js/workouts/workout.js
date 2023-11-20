@@ -812,8 +812,6 @@ createApp({
     this.intialRequest()
   },
   mounted() {
-        // Intial Data Request Called
-        this.intialRequest()
     setTimeout(() => { 
       this.StatusCode200 = true;
       this.loadedExercise = false;
