@@ -605,7 +605,7 @@ createApp({
       }
     },
 
-    ChangeDifficulty(input, video, event) {
+    ChangeDifficulty(input, video) {
       this.loadedExercise = true
         video.pause();
         this.$refs.play.classList.toggle("pause");
@@ -665,62 +665,9 @@ createApp({
           }
         }, 1500)
       }
-
-      if(input == 2)
-      {
-        console.log("Event", event.target.value)
-        const newDiff = parseInt(e.target.textContent) - 1
-        //this.min = this.min - 1
-        
-        video.src = this.exerciseData[this.workout.round][srcIndex].Video[newDiff].url
-        setTimeout(() => {
-          this.loadedExercise = false;
-       // Video Condtion Play/Pause
-          if (video.paused) {
-            video.play();
-            this.$refs.play.classList.toggle("pause");
-            this.$refs.time.classList.remove("pausetime");
-            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
-          } else {
-            video.pause();
-            this.$refs.play.classList.toggle("pause");
-            this.$refs.time.classList.add("pausetime");
-            if(this.type == "Time")
-            { 
-            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
-            }
-          }
-        }, 1500)
-      }
-      else if(input == 3)
-      {
-        console.log("Event", event.target.value)
-        const newDiff = parseInt(e.target.textContent) + 1
-        //this.min = this.min - 1
-        
-        video.src = this.exerciseData[this.workout.round][srcIndex].Video[newDiff].url
-        setTimeout(() => {
-          this.loadedExercise = false;
-       // Video Condtion Play/Pause
-          if (video.paused) {
-            video.play();
-            this.$refs.play.classList.toggle("pause");
-            this.$refs.time.classList.remove("pausetime");
-            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
-          } else {
-            video.pause();
-            this.$refs.play.classList.toggle("pause");
-            this.$refs.time.classList.add("pausetime");
-            if(this.type == "Time")
-            { 
-            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
-            }
-          }
-        }, 1500)
-      }
     },
 
-    ChangeAmrapDifficulty(input, video, title) {
+    ChangeAmrapDifficulty(input, video, index, number) {
       this.loadedExercise = true
         video.pause();
         this.$refs.play.classList.toggle("pause");
@@ -734,9 +681,9 @@ createApp({
 
       if(input == 0)
       {
-        console.log("Event", title)
-        const newDiff = parseInt(event[index].innerHTML) - 1
-        //this.min = this.min - 1
+        console.log("Event", index[number].innerHTML)
+        const newDiff = parseInt(index[number].innerHTML) - 1
+        index[number].innerHTML = newDiff;
         
         video.src = this.exerciseData[this.workout.round][srcIndex].Video[newDiff].url
         setTimeout(() => {
@@ -760,9 +707,9 @@ createApp({
       }
       else if(input == 1)
       {
-        console.log("Event", title)
-        const newDiff = parseInt(event[index].innerHTML) + 1
-        //this.min = this.min - 1
+        console.log("Event", index[number].innerHTML)
+        const newDiff = parseInt(index[number].innerHTML) + 1
+        index[number].innerHTML = newDiff;
         
         video.src = this.exerciseData[this.workout.round][srcIndex].Video[newDiff].url
         setTimeout(() => {
@@ -788,8 +735,9 @@ createApp({
     AmrapVideo(video)
     {
       let videoLoop;
-      if(this.amrapActive == 'True')
+      if(this.amrapActive == 'True' && this.amrapPlayed !== true)
       {
+        this.amrapPlayed = true;
         srcIndex = 0;
         trackerTime = 0;
         video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.workout.exercise].url;
@@ -804,7 +752,8 @@ createApp({
               this.VideoLoopAnimation()
               srcIndex++;
               if (srcIndex < this.exerciseData[this.workout.round].length) {
-                video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.workout.exercise].url;
+                const index = parseInt(this.$refs.min[srcIndex].innerHTML)
+                video.src = this.exerciseData[this.workout.round][srcIndex].Video[index].url;
     
                 let playPromise = video.play();
     
@@ -820,7 +769,8 @@ createApp({
               else if (srcIndex >= this.exerciseData[this.workout.round].length)
               {
                 srcIndex = 0;
-                video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.workout.exercise].url;    
+                const index = parseInt(this.$refs.min[srcIndex].innerHTML)
+                video.src = this.exerciseData[this.workout.round][srcIndex].Video[index].url;    
                 let playPromise = video.play();
     
                 if (playPromise !== undefined) {

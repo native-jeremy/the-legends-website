@@ -374,20 +374,16 @@
                         </div>
                       </div>
                       <div class="diff-trigger">
-                        <div class="counter-btn" v-if="StatusCode200 == true &&this.min == 0" style="cursor: default !important;">
-                        </div>
-                        <div class="counter-btn" v-on:click="ChangeAmrapDifficulty(0, this.$refs.video, this.$refs.min, title)" v-if="StatusCode200 == true && this.min !== 0">
+                        <div class="counter-btn" v-on:click="ChangeAmrapDifficulty(0, this.$refs.video, this.$refs.min, index)">
                           <div class="counter-arrow left"></div>
                         </div>
                         <div class="counter-num">
-                          <div class="num current" ref="min" v-if="StatusCode200 == true">{{exerciseMin + 1}}</div>
+                          <div class="num current" ref="min" v-if="StatusCode200 == true">{{exerciseMin}}</div>
                           <div class="num divider">/</div>
-                          <div class="num limit" ref="max" v-if="StatusCode200 == true">{{exerciseMax}}</div>
+                          <div class="num limit" ref="max" v-if="StatusCode200 == true">{{this.exerciseData[this.workout.round][index].Video.length - 1}}</div>
                         </div>
-                        <div class="counter-btn" v-on:click="ChangeAmrapDifficulty(1, this.$refs.video, this.$refs.min, title)" v-if="StatusCode200 == true && this.min + 1 !== exerciseMax">
+                        <div class="counter-btn" v-on:click="ChangeAmrapDifficulty(1, this.$refs.video, this.$refs.min, index)">
                           <div class="counter-arrow right"></div>
-                        </div>
-                        <div class="counter-btn" v-if="StatusCode200 == true && this.min + 1 == exerciseMax" style="cursor: default !important;">
                         </div>
                       </div>
                     </div>
