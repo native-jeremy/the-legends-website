@@ -392,39 +392,6 @@ createApp({
       }
     },
 
-     // Exercise Timer
-    /*Timer(time, video, siren) {
-      let counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises];
-      //let percentage = counter / 100 * 100;
-
-      // Progress Wheel Value
-      //setProgress(percentage);
-
-      // Timer To Run Exercise
-      let timer = setInterval(() => {
-        //setProgress(counter);
-        this.TimerConversion(counter, time);
-        // Condtion To Check If Paused
-        if (!time.classList.contains("pausetime")) {
-          counter--;
-          // Condtion To Check If Finished
-          if (counter < 0) {
-            siren.play();
-          setTimeout(() => {
-          this.NextExercise(timer);
-          }, 2000);
-
-          clearInterval(timer);
-          //clearInterval(checkAmrap);
-          }
-        }
-        else if(time.classList.contains("pausetime")) {
-          counter
-          clearInterval(timer);
-        }
-      }, 1000);
-    },*/
-
     // Play Exercise By Click
     PlayExercise(time, play, video, voice)
     {
@@ -479,6 +446,7 @@ createApp({
         // Round Change
         this.popup = true;
         this.min = 0
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2)
         this.CustomAnimations(0)
         this.title(true)
@@ -488,6 +456,7 @@ createApp({
       {
         this.popup = true;
         this.min = 0
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 3)
         this.CustomAnimations(0)
@@ -523,6 +492,7 @@ createApp({
         this.title(true)
         this.voiceHasPlayed = false
         this.min = 0
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
       }
       // Finished Change
       else if(this.workout.exercises + 1 == this.exerciseData[this.workout.round].length && this.workout.round + 1 == this.roundData.length)
@@ -551,6 +521,7 @@ createApp({
         this.workout.round = this.workout.round + 1;
         this.workout.exercises = 0
         this.min = 0
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
         console.log('Armap Condition')
         this.title(true)
@@ -561,6 +532,7 @@ createApp({
         this.popup = false;
         clearInterval(timer)
         this.min = 0
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
         console.log('Final Condition')
         // Calling Custom Animations
