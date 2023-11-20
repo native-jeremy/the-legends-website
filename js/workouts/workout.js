@@ -478,6 +478,7 @@ createApp({
       {
         // Round Change
         this.popup = true;
+        this.min = 0
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2)
         this.CustomAnimations(0)
         this.title(true)
@@ -486,6 +487,7 @@ createApp({
       else if(this.workout.exercises - 1 == 0)
       {
         this.popup = true;
+        this.min = 0
         this.$refs.play.classList.toggle("pause")
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 3)
         this.CustomAnimations(0)
@@ -494,6 +496,7 @@ createApp({
       }
       else {
         // Exercise Change
+        this.min = 0
         this.popup = false;
         clearInterval(timer)
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
@@ -519,12 +522,14 @@ createApp({
         console.log('First Condition')
         this.title(true)
         this.voiceHasPlayed = false
+        this.min = 0
       }
       // Finished Change
       else if(this.workout.exercises + 1 == this.exerciseData[this.workout.round].length && this.workout.round + 1 == this.roundData.length)
       {
         this.popup = true;
         this.completed = true;
+        this.min = 0
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
@@ -533,6 +538,7 @@ createApp({
       else if(this.amrapActive == "True" && this.workout.round + 1 == this.roundData.length) {
         this.popup = true;
         this.completed = true;
+        this.min = 0
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
@@ -544,6 +550,7 @@ createApp({
         clearInterval(timer)
         this.workout.round = this.workout.round + 1;
         this.workout.exercises = 0
+        this.min = 0
         this.$refs.play.classList.toggle("pause")
         console.log('Armap Condition')
         this.title(true)
@@ -553,6 +560,7 @@ createApp({
         // Exercise Change
         this.popup = false;
         clearInterval(timer)
+        this.min = 0
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
         console.log('Final Condition')
         // Calling Custom Animations
@@ -742,6 +750,8 @@ createApp({
         trackerTime = 0;
         video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.workout.exercise].url;
         videoLoop = setInterval(() => {
+        if(this.amrapActive == 'True')
+        {
         if(!video.paused)
           {       
           if (trackerTime === 5) 
@@ -791,6 +801,11 @@ createApp({
           }
         else if (video.paused) {
           trackerTime = trackerTime;
+        }
+        }
+        else {
+          this.amrapPlayed = false;
+          clearInterval(videoLoop)
         }
         }, 1000);
       }
