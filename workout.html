@@ -202,8 +202,11 @@
                   <div class="player-control-button speaker-icon"></div>
                 </a>
                 <div class="player-block main-player-block" v-show="!loadedExercise">
-                  <div v-on:click="PrevExercise()" class="player-control-button w-inline-block">
+                  <div v-on:click="PrevExercise()" class="player-control-button w-inline-block" v-if="workout.exercises > 0">
                     <div class="play-left-icon"></div>
+                  </div>
+                  <div class="player-control-button w-inline-block" v-if="workout.exercises == 0">
+                    <div class="play-left-icon" style="opacity: 0.6; user-select: none; cursor: default;"></div>
                   </div>
                   <div id="playEnabled" class="player-control-button play-button">
                     <div class="wheel w-embed">

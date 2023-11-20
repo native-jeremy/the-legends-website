@@ -6983,6 +6983,10 @@ a {
   padding-bottom: 25px;
 }
 
+.keep_space {
+  visibility: hidden;
+}
+
 .messages-list-block.awards {
   border-bottom-style: none;
   margin-top: 50px;

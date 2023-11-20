@@ -803,6 +803,13 @@ createApp({
       this.StatusCode200 = true;
       this.loadedExercise = false;
       this.title(true)
+      let params = new URL(document.location).searchParams;
+      let round = parseInt(params.get("round"));
+  
+      if(window.location.href.includes("round"))
+      {
+        this.workout.round = round
+      }
     }, 6000)
     anime({
       targets: '.path2',
