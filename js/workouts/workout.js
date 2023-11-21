@@ -104,6 +104,7 @@ createApp({
 
         this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
 
+
         console.log('Intial Exercise Data', this.exerciseData)
 
         console.log('startDifficulty', this.startDifficulty)
@@ -119,7 +120,6 @@ createApp({
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
         console.log("Exercise DATA", response);
-        this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
         /*response.data.forEach((e, ei) => {
           this.roundData.forEach((r, ri) => {
             r.ID_Linked_Exercises.forEach((id, index) => {
@@ -146,6 +146,9 @@ createApp({
             });
           });
         });
+
+        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+        this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
 
         let tempData = [];
 
@@ -886,7 +889,6 @@ createApp({
     });
   },
   updated() {
-    this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
     if(this.completed == true)
     {
       Wized.data.setVariable("complete", "completed");
