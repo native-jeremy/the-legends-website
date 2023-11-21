@@ -39,13 +39,11 @@ createApp({
       isAmrap: "",
       volume: false,
       amrapPlayed: false,
+      roundSkipped: false,
     }
   },
   computed: {
     // a computed getter
-    exerciseTitle() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
-    },
     exerciseType() {
       return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
     },
@@ -57,9 +55,6 @@ createApp({
     },
     amrapAmounts() {
       return this.roundData[this.workout.round].Amrap_Exercise_Amount_Linked_Exercises
-    },
-    exerciseVideo() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
     },
     exerciseVoice() {
       return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
@@ -75,7 +70,13 @@ createApp({
     },
     exerciseNext() {
       return this.amrapData.nextExercise
-    }
+    },
+    exerciseTitle() {
+      return this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
+    },
+    exerciseVideo() {
+      return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
+    },
   },
   methods: {
     // Intial Request Data Applied To Data Object
@@ -533,13 +534,21 @@ createApp({
         this.title(true)
         this.voiceHasPlayed = false
       }
-      else if (this.amrapActive == "False") {
+      else if (this.amrapActive == "False"  && this.roundSkipped !== true) {
         // Exercise Change
         this.popup = false;
-        if(timer !== undefined)
-        {
         clearInterval(timer)
-        }
+        this.min = 0
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
+        console.log('Final Condition')
+        // Calling Custom Animations
+        this.CustomAnimations(1)
+        this.title(true)
+      }
+      else if (this.amrapActive == "False" && this.roundSkipped == true) {
+        // Exercise Change
+        this.popup = false;
         this.min = 0
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
@@ -840,9 +849,10 @@ createApp({
   
       if(window.location.href.includes("round"))
       {
+        this.roundSkipped = true;
         this.workout.round = round
       }
-    }, 15000)
+    }, 6000)
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
