@@ -152,7 +152,7 @@
             <div class="workout-navigation">
               <div id="repText" class="generic-text-style-2" v-if="StatusCode200 == true">{{exerciseType}}</div>
               <div id="safeTimerDisplay" ref="time"  class="generic-text-style-3" v-if="StatusCode200 == true">
-             
+             <span>{{parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])}}</span>
               </div>
               <a href="#scroll" class="nav-workout-button panel-button w-inline-block">
                 <div class="nav-cog-icon"></div>
@@ -174,7 +174,7 @@
                     {{exerciseTitle}}
                   </div>
                   <div v-if="amrapActive == 'True'">
-                    <div v-for="(title, index) in roundData[workout.round].Exercise_Title_Linked_Exercises" :key="title">
+                    <div v-for="(title, index) in amrapData.amraps" :key="title">
                       <div class="generic-text-style-3 amrap-amount">
                         {{roundData[workout.round].Amrap_Exercise_Amount_Linked_Exercises[index]}}
                       </div>
@@ -363,12 +363,12 @@
                 </div>
                 <!--Amrap-->
                 <div v-if="StatusCode200 == true && amrapActive == 'True'" style="width: 100%; min-width: 100%;">                
-                  <div class="accordion style-1" v-for="(title, index) in roundData[workout.round].Exercise_Title_Linked_Exercises" :key="title">
+                  <div class="accordion style-1" v-for="(title, index) in amrapData.amraps" :key="title">
                     <div class="accordion-header style-3">
                       <div class="accordion-header-text style-2">
                         <div class="accordion-header-top-content">
                           <h2 class="main-sub-heading-style-1" ref="diffControlTitle">
-                            {{roundData[workout.round].Exercise_Title_Linked_Exercises[index]}}
+                            {{title}}
                           </h2>
                           <div class="accordion-header-arrow">
                             <div class="accordion-arrow-icon hide"></div>

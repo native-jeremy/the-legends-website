@@ -22,8 +22,11 @@ createApp({
         amounts: null,
         titles: null,
         videos: null,
+        amraps: [],
         diff: [],
         currentIndices: [],
+        nextExercise: 0,
+        hasRest: false,
       },
       StatusCode200: false,
       popup: true,
@@ -69,6 +72,9 @@ createApp({
     },
     exerciseDiffs() {
       return this.amrapData.currentIndices
+    },
+    exerciseNext() {
+      return this.amrapData.nextExercise
     }
   },
   methods: {
@@ -135,8 +141,6 @@ createApp({
           });
         });
 
-        let tempData = [];
-
         /*this.exerciseData.forEach((e, ei) => {
           e.forEach((id, index) => {
             if(this.roundData[ei].Diff_ID_Linked_Exercises.indexOf(id.ID))
@@ -173,6 +177,17 @@ createApp({
         //}, 4000);
 
         console.log("Exercise Data", this.exerciseData)
+        this.StatusCode200 = true;
+        this.loadedExercise = false;
+        this.title(true)
+        let params = new URL(document.location).searchParams;
+        let round = parseInt(params.get("round"));
+    
+        if(window.location.href.includes("round"))
+        {
+          this.workout.round = round
+        }
+        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
       })
     },
 
@@ -530,7 +545,7 @@ createApp({
       else if (this.amrapActive == "False") {
         // Exercise Change
         this.popup = false;
-        clearInterval(timer)
+
         this.min = 0
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
@@ -661,10 +676,8 @@ createApp({
 
       if(input == 0)
       {
-        console.log("Event", index[number].innerHTML)
         this.amrapData.currentIndices[number] = this.amrapData.currentIndices[number] - 1;
         const newDiff = this.amrapData.currentIndices[number]
-        //const newDiff = parseInt(index[number].innerHTML) - 1
         index[number].innerHTML = newDiff;
         
         video.src = this.exerciseData[this.workout.round][srcIndex].Video[newDiff].url
@@ -689,10 +702,8 @@ createApp({
       }
       else if(input == 1)
       {
-        console.log("Event", index[number].innerHTML)
         this.amrapData.currentIndices[number] = this.amrapData.currentIndices[number] + 1;
         const newDiff = this.amrapData.currentIndices[number]
-        //const newDiff = parseInt(index[number].innerHTML) + 1
         index[number].innerHTML = newDiff;
         
         video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.amrapData.diff[srcIndex][newDiff]].url
@@ -725,7 +736,20 @@ createApp({
         this.amrapPlayed = true;
         srcIndex = 0;
         trackerTime = 0;
-        video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.amrapData.diff[srcIndex][0]].url
+        const index =  this.amrapData.currentIndices[srcIndex]
+        video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.amrapData.diff[srcIndex][index]].url
+        this.roundData[this.workout.round].Exercise_Title_Linked_Exercises.forEach((value, index) => {
+          if(value.includes('Rest'))
+          {
+            this.amrapData.nextExercise = index
+            this.amrapData.hasRest = true
+            console.log('Value: ', index)
+          }
+          else {
+            this.amrapData.amraps.push(value)
+          }
+        });
+        console.log('New Data: ', this.amrapData.amraps)
         videoLoop = setInterval(() => {
         if(this.amrapActive == 'True')
         {
@@ -738,7 +762,7 @@ createApp({
             {
               this.VideoLoopAnimation()
               srcIndex++;
-              if (srcIndex < this.exerciseData[this.workout.round].length) {
+              if (srcIndex < this.amrapData.amraps.length) {
                 const index = this.amrapData.currentIndices[srcIndex]
                 video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.amrapData.diff[srcIndex][index]].url;
     
@@ -753,7 +777,7 @@ createApp({
                   });
                 }
               }
-              else if (srcIndex >= this.exerciseData[this.workout.round].length)
+              else if (srcIndex >= this.amrapData.amraps.length)
               {
                 srcIndex = 0;
                 const index = parseInt(this.$refs.min[srcIndex].innerHTML)
@@ -809,22 +833,11 @@ createApp({
   },
   created()
   {
-    // Intial Data Request Called
-    this.intialRequest()
+
   },
   mounted() {
-    setTimeout(() => { 
-      this.StatusCode200 = true;
-      this.loadedExercise = false;
-      this.title(true)
-      let params = new URL(document.location).searchParams;
-      let round = parseInt(params.get("round"));
-  
-      if(window.location.href.includes("round"))
-      {
-        this.workout.round = round
-      }
-    }, 6000)
+        // Intial Data Request Called
+    this.intialRequest()
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
@@ -863,7 +876,6 @@ createApp({
     });
   },
   updated() {
-    this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
     if(this.completed == true)
     {
       Wized.data.setVariable("complete", "completed");
