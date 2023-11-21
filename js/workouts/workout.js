@@ -177,6 +177,7 @@ createApp({
         //}, 4000);
 
         console.log("Exercise Data", this.exerciseData)
+
         this.StatusCode200 = true;
         this.loadedExercise = false;
         this.title(true)
@@ -187,7 +188,6 @@ createApp({
         {
           this.workout.round = round
         }
-        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
       })
     },
 
@@ -545,7 +545,10 @@ createApp({
       else if (this.amrapActive == "False") {
         // Exercise Change
         this.popup = false;
-
+        if(timer !== 'undefined')
+        {
+        clearInterval(timer)
+        }
         this.min = 0
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
@@ -833,11 +836,10 @@ createApp({
   },
   created()
   {
-
+      // Intial Data Request Called
+      this.intialRequest()
   },
   mounted() {
-        // Intial Data Request Called
-    this.intialRequest()
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
@@ -876,6 +878,7 @@ createApp({
     });
   },
   updated() {
+    this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
     if(this.completed == true)
     {
       Wized.data.setVariable("complete", "completed");
