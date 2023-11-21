@@ -96,6 +96,7 @@ createApp({
 
         this.roundData = roundRes.data
         this.workout.roundAmount = roundRes.data.length
+        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
 
         // I Commented This Solution Out It Caused The Computed Property To Apply
         /*roundRes.data.forEach((round) => {
@@ -103,7 +104,6 @@ createApp({
         });*/
 
         this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
-
 
         console.log('Intial Exercise Data', this.exerciseData)
 
@@ -120,18 +120,7 @@ createApp({
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
         console.log("Exercise DATA", response);
-        /*response.data.forEach((e, ei) => {
-          this.roundData.forEach((r, ri) => {
-            r.ID_Linked_Exercises.forEach((id, index) => {
-              if(e.Exercise_ID.includes(id))
-              {
-                //console.log("MATCH!");
-                //console.log("Exercise Name", e);
-                this.exerciseData[ri].push(e);
-              }
-            });
-          });
-        })*/
+        this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
         this.roundData.forEach((r, ri) => {
 
           // Added This To Intialise Exercise Data
@@ -147,39 +136,7 @@ createApp({
           });
         });
 
-        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-        this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
-
-        let tempData = [];
-
-        /*this.exerciseData.forEach((e, ei) => {
-          e.forEach((id, index) => {
-            if(this.roundData[ei].Diff_ID_Linked_Exercises.indexOf(id.ID))
-            {
-              const newIndex = this.roundData[ei].Diff_ID_Linked_Exercises.indexOf(id.ID)
-              this.exerciseData[ei][newIndex] = id;
-            }
-            //exerciseData[ei][newIndex] = id;
-            console.log('ID:', this.roundData[ei].Diff_ID_Linked_Exercises.indexOf(id.ID))
-          });
-        });*/
-
-        /*this.roundData.forEach((e, ei) => {
-          e.Diff_ID_Linked_Exercises.forEach((id, index) => {
-            if(this.exerciseData[ei][index].ID.includes(id))
-            {
-              tempData.push([this.exerciseData[ei][index]])
-              console.log('Found ID Exercises:', e.Diff_ID_Linked_Exercises.indexOf(this.exerciseData[ei][index].ID))
-              console.log('Found ID Round:', index);
-              console.log('ID:', id)
-              console.log('DATA:', tempData)
-            }
-            //exerciseData[ei][newIndex] = id;
-            //console.log('ID:', this.exerciseData[ei][index].ID.includes(id))
-          });
-        });*/
-
-        console.log("Exercise Data", this.exerciseData)
+        console.log("Exercise Data END!", this.exerciseData)
         this.StatusCode200 = true;
         this.loadedExercise = false;
         this.title(true)
