@@ -178,6 +178,7 @@ createApp({
 
         console.log("Exercise Data", this.exerciseData)
 
+        setTimeout(() => {
         this.StatusCode200 = true;
         this.loadedExercise = false;
         this.title(true)
@@ -188,6 +189,7 @@ createApp({
         {
           this.workout.round = round
         }
+      }, 4000);
       })
     },
 
