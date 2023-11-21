@@ -536,7 +536,7 @@ createApp({
       else if (this.amrapActive == "False") {
         // Exercise Change
         this.popup = false;
-        if(timer !== 'undefined')
+        if(timer !== undefined)
         {
         clearInterval(timer)
         }
@@ -831,6 +831,7 @@ createApp({
     this.intialRequest()
   },
   mounted() {
+    setTimeout(() => { 
       this.StatusCode200 = true;
       this.loadedExercise = false;
       this.title(true)
@@ -841,6 +842,7 @@ createApp({
       {
         this.workout.round = round
       }
+    }, 15000)
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
