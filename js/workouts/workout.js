@@ -97,9 +97,10 @@ createApp({
         this.roundData = roundRes.data
         this.workout.roundAmount = roundRes.data.length
 
-        roundRes.data.forEach((round) => {
+        // I Commented This Solution Out It Caused The Computed Property To Apply
+        /*roundRes.data.forEach((round) => {
           this.exerciseData.push([])
-        });
+        });*/
 
         this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
 
@@ -132,6 +133,10 @@ createApp({
           });
         })*/
         this.roundData.forEach((r, ri) => {
+
+          // Added This To Intialise Exercise Data
+          this.exerciseData.push([])
+          
           r.Diff_ID_Linked_Exercises.forEach((id, index) => {
             response.data.forEach((e, ei) => {
               if(e.ID.includes(id))
@@ -171,15 +176,10 @@ createApp({
           });
         });*/
 
-
-        // Stagger Loading assets
-        //setTimeout(() => {
-        //this.StatusCode200 = true;
-        //this.loadedExercise = false;
-        //this.title(true)
-        //}, 4000);
-
         console.log("Exercise Data", this.exerciseData)
+        this.StatusCode200 = true;
+        this.loadedExercise = false;
+        this.title(true)
       })
     },
 
@@ -840,10 +840,6 @@ createApp({
     this.intialRequest()
   },
   mounted() {
-    setTimeout(() => { 
-      this.StatusCode200 = true;
-      this.loadedExercise = false;
-      this.title(true)
       let params = new URL(document.location).searchParams;
       let round = parseInt(params.get("round"));
   
@@ -852,7 +848,6 @@ createApp({
         this.roundSkipped = true;
         this.workout.round = round
       }
-    }, 6000)
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
