@@ -141,6 +141,8 @@ createApp({
           });
         });
 
+        let tempData = [];
+
         /*this.exerciseData.forEach((e, ei) => {
           e.forEach((id, index) => {
             if(this.roundData[ei].Diff_ID_Linked_Exercises.indexOf(id.ID))
@@ -178,19 +180,6 @@ createApp({
 
         console.log("Exercise Data", this.exerciseData)
       })
-
-      setTimeout(() => {
-        this.StatusCode200 = true;
-        this.loadedExercise = false;
-        this.title(true)
-        let params = new URL(document.location).searchParams;
-        let round = parseInt(params.get("round"));
-    
-        if(window.location.href.includes("round"))
-        {
-          this.workout.round = round
-        }
-      }, 4000);
     },
 
     // Webflow Animations Reset
@@ -838,10 +827,20 @@ createApp({
   },
   created()
   {
-      // Intial Data Request Called
-      this.intialRequest()
+    // Intial Data Request Called
+    this.intialRequest()
   },
   mounted() {
+      this.StatusCode200 = true;
+      this.loadedExercise = false;
+      this.title(true)
+      let params = new URL(document.location).searchParams;
+      let round = parseInt(params.get("round"));
+  
+      if(window.location.href.includes("round"))
+      {
+        this.workout.round = round
+      }
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
