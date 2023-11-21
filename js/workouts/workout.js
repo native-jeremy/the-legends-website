@@ -23,6 +23,7 @@ createApp({
         titles: null,
         videos: null,
         diff: [],
+        currentIndices: [],
       },
       StatusCode200: false,
       popup: true,
@@ -66,6 +67,9 @@ createApp({
     exerciseMin() {
       return this.min
     },
+    exerciseDiffs() {
+      return this.amrapData.currentIndices
+    }
   },
   methods: {
     // Intial Request Data Applied To Data Object
@@ -397,10 +401,6 @@ createApp({
     {
       this.popup = false;
       this.AmrapVideo(this.$refs.video)
-      if(this.amrapActive == "True")
-      {
-        this.AmrapDiffs()
-      }
       // Timer For Exercise
       //this.Timer(time, play, video, voice, siren)
 
@@ -662,7 +662,9 @@ createApp({
       if(input == 0)
       {
         console.log("Event", index[number].innerHTML)
-        const newDiff = parseInt(index[number].innerHTML) - 1
+        this.amrapData.currentIndices[number] = this.amrapData.currentIndices[number] - 1;
+        const newDiff = this.amrapData.currentIndices[number]
+        //const newDiff = parseInt(index[number].innerHTML) - 1
         index[number].innerHTML = newDiff;
         
         video.src = this.exerciseData[this.workout.round][srcIndex].Video[newDiff].url
@@ -688,10 +690,12 @@ createApp({
       else if(input == 1)
       {
         console.log("Event", index[number].innerHTML)
-        const newDiff = parseInt(index[number].innerHTML) + 1
+        this.amrapData.currentIndices[number] = this.amrapData.currentIndices[number] + 1;
+        const newDiff = this.amrapData.currentIndices[number]
+        //const newDiff = parseInt(index[number].innerHTML) + 1
         index[number].innerHTML = newDiff;
         
-        video.src = this.exerciseData[this.workout.round][srcIndex].Video[newDiff].url
+        video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.amrapData.diff[srcIndex][newDiff]].url
         setTimeout(() => {
           this.loadedExercise = false;
        // Video Condtion Play/Pause
@@ -717,10 +721,11 @@ createApp({
       let videoLoop;
       if(this.amrapActive == 'True' && this.amrapPlayed !== true)
       {
+        this.AmrapDiffs()
         this.amrapPlayed = true;
         srcIndex = 0;
         trackerTime = 0;
-        video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.workout.exercise].url;
+        video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.amrapData.diff[srcIndex][0]].url
         videoLoop = setInterval(() => {
         if(this.amrapActive == 'True')
         {
@@ -734,8 +739,8 @@ createApp({
               this.VideoLoopAnimation()
               srcIndex++;
               if (srcIndex < this.exerciseData[this.workout.round].length) {
-                const index = parseInt(this.$refs.min[srcIndex].innerHTML)
-                video.src = this.exerciseData[this.workout.round][srcIndex].Video[index].url;
+                const index = this.amrapData.currentIndices[srcIndex]
+                video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.amrapData.diff[srcIndex][index]].url;
     
                 let playPromise = video.play();
     
@@ -752,7 +757,7 @@ createApp({
               {
                 srcIndex = 0;
                 const index = parseInt(this.$refs.min[srcIndex].innerHTML)
-                video.src = this.exerciseData[this.workout.round][srcIndex].Video[index].url;    
+                video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.amrapData.diff[srcIndex][index]].url;    
                 let playPromise = video.play();
     
                 if (playPromise !== undefined) {
@@ -787,9 +792,18 @@ createApp({
     },
     AmrapDiffs()
     {
-      this.roundData[this.workout.round].Exercise_Title_Linked_Exercises.forEach((item, index) => {
-        const number = 1
-        this.amrapData.diff.push(number);
+      // Converts String Number to Integer
+      // &&
+      // Creates Starting Indices For AmrapDiffs
+      this.exerciseData[this.workout.round].forEach((item, index) => {
+        let convertedNumbers = []
+        let startIndex = 0
+        item.Diff_Level.forEach((diff) => {
+          let stringNumber = parseInt(diff) - 1
+          convertedNumbers.push(stringNumber)
+        });
+        this.amrapData.diff.push(convertedNumbers);
+        this.amrapData.currentIndices.push(startIndex);
       });
     }
   },

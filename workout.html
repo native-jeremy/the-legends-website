@@ -36,7 +36,6 @@
   <link href="images/webclip.svg" rel="apple-touch-icon" />
   <script src="https://embed.wized.com/ISnIcZEHtJQbNBpztLDV.js"></script>
   <script data-wized-id="ISnIcZEHtJQbNBpztLDV" src="https://embed.wized.com"></script>
-  <link rel="stylesheet" href=" https://cdn.jsdelivr.net/gh/MorganBrownDev/Elegant-CSS/src/css/elegant.css">
   <!--  Custom  -->
   <link rel="stylesheet" type="text/css"
     href="https://cdn.jsdelivr.net/gh/native-jeremy/the-legends-config/css/styles-u17.css" />
@@ -188,11 +187,11 @@
                 <!--div class="exercises-headings amrap_heading_block"></div>-->
               </div>
               <div id="roundText" class="round-text" v-if="popup">
-                <div id="roundTitle" w-el="workout_round_title" class="main-heading-style-9 center-align">
-                  Round
+                <div id="roundTitle" class="main-heading-style-9 center-align">
+                 <span v-show="workout.round > 0">Round</span>
                 </div>
                 <div id="mainNumText" w-el="workout_round_number" class="main-heading-style-4 center-align">
-                  {{workout.round + 1}}
+                  <span v-show="workout.round > 0">{{workout.round}}</span><span v-show="workout.round == 0">Warm Up</span>
                 </div>
               </div>
             </div>
@@ -248,9 +247,9 @@
           <div id="roundPopup" class="workout-popup" v-if="popup">
             <div id="roundHeader" class="header-current" v-if="popup">
               <div class="workout-navigation">
-                <div class="generic-text-style-2" ref="roundText">Round</div>
+                <div class="generic-text-style-2" ref="roundText"><span v-show="workout.round > 0">Round</span><span v-show="workout.round == 0">Warm Up</span></div>
                 <div id="headerNumText" class="generic-text-style-3">
-                  {{workout.round + 1}}
+                  <span v-show="workout.round > 0">{{workout.round}}</span>
                 </div>
                 <div class="nav-workout-button">
                   <div class="nav-cog-icon"></div>
@@ -377,16 +376,20 @@
                         </div>
                       </div>
                       <div class="diff-trigger">
-                        <div class="counter-btn" v-on:click="ChangeAmrapDifficulty(0, this.$refs.video, this.$refs.min, index)">
+                        <div class="counter-btn" v-if="StatusCode200 == true && exerciseDiffs[index] == 0" style="cursor: default !important;">
+                        </div>
+                        <div class="counter-btn" v-on:click="this.amrapData.currentIndices[index]--" v-if="StatusCode200 == true && exerciseDiffs[index] !== 0">
                           <div class="counter-arrow left"></div>
                         </div>
                         <div class="counter-num">
-                          <div class="num current" ref="min" v-if="StatusCode200 == true">{{exerciseMin}}</div>
+                          <div class="num current" ref="min" v-if="StatusCode200 == true">{{exerciseDiffs[index] + 1}}</div>
                           <div class="num divider">/</div>
                           <div class="num limit" ref="max" v-if="StatusCode200 == true">{{this.exerciseData[this.workout.round][index].Video.length - 1}}</div>
                         </div>
-                        <div class="counter-btn" v-on:click="ChangeAmrapDifficulty(1, this.$refs.video, this.$refs.min, index)">
+                        <div class="counter-btn" v-on:click="this.amrapData.currentIndices[index]++" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 !== this.exerciseData[this.workout.round][index].Video.length - 1">
                           <div class="counter-arrow right"></div>
+                        </div>
+                        <div class="counter-btn" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 == this.exerciseData[this.workout.round][index].Video.length - 1" style="cursor: default !important;">
                         </div>
                       </div>
                     </div>
