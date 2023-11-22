@@ -73,7 +73,7 @@ createApp({
       return this.amrapData.currentIndices
     },
     defaultDiffs() {
-      return this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+      return parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
     },
     exerciseNext() {
       return this.amrapData.nextExercise
@@ -82,7 +82,7 @@ createApp({
       return this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
     },
     exerciseVideo() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
+      return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.defaultDiffs].url
     },
   },
   methods: {
@@ -101,7 +101,8 @@ createApp({
         roundSelected = roundRes.data[this.workout.round].Round_Selection; 
         this.roundData = roundRes.data
 
-        this.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+        this.workout.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
 
         this.workout.roundAmount = roundRes.data.length
         this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
@@ -335,32 +336,14 @@ createApp({
 
         if(this.voiceMuted !== "off")
         {
-          if(!this.voiceHasPlayed)
-          {
-            // Voice Audio Condtion Play/Pause
-            if (voice.paused) {
-              voice.play();
-            } 
-            else {
-              voice.pause();
-            }
-            this.voiceHasPlayed = true
-          }
+          voice.play();
+          this.voiceHasPlayed = true
         }
         if(this.sirenMuted !== "off")
         {
-          if(!this.sirenActive)
-          {
-            // Siren Audio Condtion Play/Pause
-            if (siren.paused) {
-              siren.muted = true;
-              siren.play();
-            } 
-            else {
-              siren.pause();
-            }
-            this.sirenActive = true
-          }
+          siren.muted = true;
+          siren.play();
+          this.sirenActive = true
         }
 
         play.classList.toggle("pause");
@@ -488,12 +471,7 @@ createApp({
       if(!this.voiceHasPlayed)
       {
         // Voice Audio Condtion Play/Pause
-        if (voice.paused) {
-          voice.play();
-        } 
-        else {
-          voice.pause();
-        }
+        voice.play()
         this.voiceHasPlayed = true
       }
     }
@@ -502,13 +480,8 @@ createApp({
       if(!this.sirenActive)
       {
         // Siren Audio Condtion Play/Pause
-        if (siren.paused) {
-          siren.muted = true;
-          siren.play();
-        } 
-        else {
-          siren.pause();
-        }
+        siren.muted = true;
+        siren.play();
         this.sirenActive = true
       }
     }
@@ -537,13 +510,15 @@ createApp({
     // Previous Exercise By Click
     PrevExercise()
     {
+      //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+
       if(this.workout.exercises == 0)
       {
         // Round Change
         this.popup = true;
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2)
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2, this.$refs.siren)
         this.CustomAnimations(0)
         this.title(true)
       }
@@ -551,12 +526,12 @@ createApp({
       else if(this.workout.exercises - 1 == 0)
       {
         this.popup = true;
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         clearInterval(timer)
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
         this.$refs.time.classList.toggle("pausetime")
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 3)
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 3, this.$refs.siren)
         this.CustomAnimations(0)
         this.title(true)
         this.voiceHasPlayed = false
@@ -564,10 +539,10 @@ createApp({
       }
       else {
         // Exercise Change
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.popup = false;
         clearInterval(timer)
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0, this.$refs.siren)
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         console.log('Final Condition')
         // Calling Custom Animations
@@ -583,10 +558,15 @@ createApp({
       {
         if(this.sirenMuted !== "off")
         {
-        siren.muted = false;
         siren.play()
+        this.sirenActive = false;
         }
       }
+      else {
+        this.sirenActive = false;
+      }
+
+      //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
 
       // Round Change
       if(this.workout.exercises == this.exerciseData[this.workout.round].length - 1 && this.workout.round + 1 !== this.roundData.length && this.amrapActive !== "True")
@@ -600,7 +580,7 @@ createApp({
         this.title(true)
         this.voiceHasPlayed = false
         this.sirenActive = false
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
       }
       // Finished Change
@@ -608,7 +588,7 @@ createApp({
       {
         this.popup = true;
         this.completed = true;
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
@@ -617,19 +597,19 @@ createApp({
       else if(amrap == "True" && this.workout.round + 1 == this.roundData.length) {
         this.popup = true;
         this.completed = true;
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
         console.log('Amrap Finish Condition')
       }
-      else if(amrap == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped !== true)
+      else if(this.amrapActive == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped !== true)
       {
         this.popup = true;
         clearInterval(timer)
         this.workout.round = this.workout.round + 1;
         this.workout.exercises = 0
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
         console.log('Armap Condition')
@@ -637,23 +617,23 @@ createApp({
         this.voiceHasPlayed = false
         this.sirenActive = false
       }
-      else if (amrap == "False"  && this.roundSkipped !== true) {
+      else if (this.amrapActive == "False"  && this.roundSkipped !== true) {
         // Exercise Change
         this.popup = false;
         clearInterval(timer)
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1, this.$refs.siren)
         console.log('Final Condition')
         // Calling Custom Animations
         this.CustomAnimations(1)
         this.title(true)
       }
-      else if (amrap == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped == true) {
+      else if (this.amrapActive == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped == true) {
         // Exercise Change
         this.popup = false;
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1, this.$refs.siren)
         console.log('Final Condition')
         // Calling Custom Animations
         this.CustomAnimations(1)
@@ -724,7 +704,7 @@ createApp({
 
       if(input == 0)
       {
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1 - 1
+        this.min = this.min - 1
         
         video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
         setTimeout(() => {
@@ -748,7 +728,7 @@ createApp({
       }
       else if(input == 1)
       {
-        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1 + 1
+        this.min = this.min + 1
 
         video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
         setTimeout(() => {
