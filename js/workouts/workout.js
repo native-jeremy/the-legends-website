@@ -406,7 +406,7 @@ createApp({
             // Condtion To Check If Finished
             if (this.workout.counter == 0) {
               siren.currentTime = 0;
-              siren.volume = 1.0
+              siren.muted = false;
               siren.play();
               video.pause();
               video.currentTime = 0;
@@ -435,6 +435,7 @@ createApp({
       //this.Timer(time, play, video, voice, siren)
 
       // Checks If Voice Has Played Then Plays If Returns false
+      //setTimeout(() => {
       if(!this.voiceHasPlayed)
       {
         // Voice Audio Condtion Play/Pause
@@ -447,7 +448,7 @@ createApp({
 
         // Siren Audio Condtion Play/Pause
         if (siren.paused) {
-          siren.volume = 0
+          siren.muted = true;
           siren.play();
           console.log("Siren Audio Played!");
         } 
@@ -458,6 +459,7 @@ createApp({
         this.voiceHasPlayed = true
         this.sirenActive = true
       }
+      //}, 2000);
 
       // Video Condtion Play/Pause
       if (video.paused) {
@@ -523,7 +525,7 @@ createApp({
     {
       if(this.exerciseType == "Reps")
       {
-        siren.volume = 1.0
+        siren.muted = false;
         siren.play()
       }
 
