@@ -42,6 +42,8 @@ createApp({
       roundSkipped: false,
       timerEnded: false,
       sirenActive: false,
+      sirenMuted: "",
+      voiceMuted: "",
     }
   },
   computed: {
@@ -70,6 +72,9 @@ createApp({
     exerciseDiffs() {
       return this.amrapData.currentIndices
     },
+    defaultDiffs() {
+      return this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+    },
     exerciseNext() {
       return this.amrapData.nextExercise
     },
@@ -93,18 +98,13 @@ createApp({
         roundRes = response;
         roundInfo = roundRes.data[this.workout.round];
     
-        this.startDifficulty = roundInfo.Default_Diff_Level.split(", ");
-        roundSelected = roundRes.data[this.workout.round].Round_Selection;
-
+        roundSelected = roundRes.data[this.workout.round].Round_Selection; 
         this.roundData = roundRes.data
+
+        this.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+
         this.workout.roundAmount = roundRes.data.length
         this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-
-        // I Commented This Solution Out It Caused The Computed Property To Apply
-        /*roundRes.data.forEach((round) => {
-          this.exerciseData.push([])
-        });*/
-
         this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
 
         console.log('Intial Exercise Data', this.exerciseData)
@@ -248,13 +248,20 @@ createApp({
     },
 
     // Exercise Change Logic
-    ChangeExercise(play, video, voice, input)
+    ChangeExercise(play, video, voice, input, siren)
     {
       this.loadedExercise = true;
       if(input == 1)
       {
         // Change Exercises Number
+        if(this.amrapActive == 'True' && this.roundSkipped == true)
+        {
+          this.workout.exercises = this.amrapData.nextExercise
+        }
+        else 
+        {
         this.workout.exercises = this.workout.exercises + 1;
+        }
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         if(this.exerciseType == "Time")
         {
@@ -323,8 +330,39 @@ createApp({
         }
   
         // Play Video/Audio
-        voice.play();
+        //voice.play();
         video.play();
+
+        if(this.voiceMuted !== "off")
+        {
+          if(!this.voiceHasPlayed)
+          {
+            // Voice Audio Condtion Play/Pause
+            if (voice.paused) {
+              voice.play();
+            } 
+            else {
+              voice.pause();
+            }
+            this.voiceHasPlayed = true
+          }
+        }
+        if(this.sirenMuted !== "off")
+        {
+          if(!this.sirenActive)
+          {
+            // Siren Audio Condtion Play/Pause
+            if (siren.paused) {
+              siren.muted = true;
+              siren.play();
+            } 
+            else {
+              siren.pause();
+            }
+            this.sirenActive = true
+          }
+        }
+
         play.classList.toggle("pause");
         this.loadedExercise = false;
       },1750)
@@ -341,12 +379,15 @@ createApp({
       // Local Storage Audio Values
       const sirenValue = localStorage.getItem("siren");
       const voiceValue = localStorage.getItem("voice");
+      this.sirenMuted = sirenValue;
+      this.voiceMuted = voiceValue;
       
       // Siren Intialising On
       if (sirenValue === undefined || sirenValue === null) {
         localStorage.setItem("siren", "on");
         SirenText.textContent = "On";
-        sirenToggleOn.classList.add("on");
+        SirenToggle.classList.add("on");
+        this.sirenMuted = localStorage.getItem("siren");;
       }
       // Siren On
       else if (sirenValue === "on") {
@@ -355,7 +396,7 @@ createApp({
       }
       // Siren Off
       else if (sirenValue === "off") {
-        sirenText.innerHTML = "Off";
+        SirenText.innerHTML = "Off";
         SirenToggle.classList.remove("on");
       }
       // Voice Intialising On
@@ -363,6 +404,7 @@ createApp({
         localStorage.setItem("voice", "on");
         VoiceText.textContent = "On";
         VoiceToggle.classList.add("on");
+        this.voiceMuted = localStorage.getItem("voice");
       }
       // Voice On
       else if (voiceValue == "on") {
@@ -396,6 +438,7 @@ createApp({
       { 
         if (!time.classList.contains("pausetime") && !end)
         {
+          setTimeout(() => {
           timer = setInterval(() => {
             let percentage = this.workout.counter / 100 * 100;
             // Progress Wheel Value
@@ -406,8 +449,11 @@ createApp({
             // Condtion To Check If Finished
             if (this.workout.counter == 0) {
               siren.currentTime = 0;
+              if(this.sirenMuted !== 'off')
+              {
               siren.muted = false;
               siren.play();
+              }
               video.pause();
               video.currentTime = 0;
               clearInterval(timer);
@@ -416,6 +462,7 @@ createApp({
               }, 2000);
             }
           }, 1000);
+        }, 1000)
         }
         else {
           clearInterval(timer);
@@ -436,6 +483,8 @@ createApp({
 
       // Checks If Voice Has Played Then Plays If Returns false
       //setTimeout(() => {
+    if(this.voiceMuted !== "off")
+    {
       if(!this.voiceHasPlayed)
       {
         // Voice Audio Condtion Play/Pause
@@ -445,20 +494,24 @@ createApp({
         else {
           voice.pause();
         }
-
+        this.voiceHasPlayed = true
+      }
+    }
+    if(this.sirenMuted !== "off")
+    {
+      if(!this.sirenActive)
+      {
         // Siren Audio Condtion Play/Pause
         if (siren.paused) {
           siren.muted = true;
           siren.play();
-          console.log("Siren Audio Played!");
         } 
         else {
           siren.pause();
         }
-
-        this.voiceHasPlayed = true
         this.sirenActive = true
       }
+    }
       //}, 2000);
 
       // Video Condtion Play/Pause
@@ -499,12 +552,15 @@ createApp({
       {
         this.popup = true;
         this.min = 0
+        clearInterval(timer)
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
+        this.$refs.time.classList.toggle("pausetime")
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 3)
         this.CustomAnimations(0)
         this.title(true)
         this.voiceHasPlayed = false
+        this.sirenActive = false
       }
       else {
         // Exercise Change
@@ -521,12 +577,15 @@ createApp({
     },
 
     // Next Exercise By Click
-    NextExercise(siren)
+    NextExercise(siren, amrap)
     {
       if(this.exerciseType == "Reps")
       {
+        if(this.sirenMuted !== "off")
+        {
         siren.muted = false;
         siren.play()
+        }
       }
 
       // Round Change
@@ -540,6 +599,7 @@ createApp({
         console.log('First Condition')
         this.title(true)
         this.voiceHasPlayed = false
+        this.sirenActive = false
         this.min = 0
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
       }
@@ -554,7 +614,7 @@ createApp({
         this.title(false)
         console.log('Main Condition')
       }
-      else if(this.amrapActive == "True" && this.workout.round + 1 == this.roundData.length) {
+      else if(amrap == "True" && this.workout.round + 1 == this.roundData.length) {
         this.popup = true;
         this.completed = true;
         this.min = 0
@@ -563,7 +623,7 @@ createApp({
         this.title(false)
         console.log('Amrap Finish Condition')
       }
-      else if(this.amrapActive == "True" && this.workout.round + 1 !== this.roundData.length)
+      else if(amrap == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped !== true)
       {
         this.popup = true;
         clearInterval(timer)
@@ -575,8 +635,9 @@ createApp({
         console.log('Armap Condition')
         this.title(true)
         this.voiceHasPlayed = false
+        this.sirenActive = false
       }
-      else if (this.amrapActive == "False"  && this.roundSkipped !== true) {
+      else if (amrap == "False"  && this.roundSkipped !== true) {
         // Exercise Change
         this.popup = false;
         clearInterval(timer)
@@ -588,11 +649,10 @@ createApp({
         this.CustomAnimations(1)
         this.title(true)
       }
-      else if (this.amrapActive == "False" && this.roundSkipped == true) {
+      else if (amrap == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped == true) {
         // Exercise Change
         this.popup = false;
         this.min = 0
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
         console.log('Final Condition')
         // Calling Custom Animations
@@ -615,12 +675,14 @@ createApp({
     SirenEnableClick(text, toggle) {
       if (text.innerHTML === "Off") {
         localStorage.setItem("siren", "on");
+        this.sirenMuted = localStorage.getItem("siren");
         sirenSrc.play();
         text.textContent = "On";
         toggle.classList.add("on");
       } 
       else if (text.textContent === "On") {
         localStorage.setItem("siren", "off");
+        this.sirenMuted = localStorage.getItem("siren");
         sirenSrc.pause();
         sirenSrc.currentTime = "0";
         text.textContent = "Off";
@@ -632,12 +694,14 @@ createApp({
     VoiceEnableClick(text, toggle) {
       if (text.textContent === "Off") {
         localStorage.setItem("voice", "on");
+        this.voiceMuted = localStorage.getItem("voice");
         voiceSrc.play();
         text.textContent = "On";
         toggle.classList.add("on");
       } 
       else if (voiceText.innerHTML === "On") {
         localStorage.setItem("voice", "off");
+        this.voiceMuted = localStorage.getItem("voice");
         voiceSrc.pause();
         voiceSrc.currentTime = "0";
         text.textContent = "Off";

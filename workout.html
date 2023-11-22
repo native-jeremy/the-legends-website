@@ -220,7 +220,7 @@
                     </div>
                     <div ref="play" v-on:click="PlayExercise(this.$refs.time, this.$refs.play, this.$refs.video, this.$refs.voice,this.$refs.siren)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
                   </div>
-                  <div v-on:click="NextExercise(this.$refs.siren)" class="player-control-button w-inline-block" ref="Next">
+                  <div v-on:click="NextExercise(this.$refs.siren, this.amrapActive)" class="player-control-button w-inline-block" ref="Next">
                     <div class="play-right-arrow-icon"></div>
                   </div>
                 </div>
@@ -386,14 +386,14 @@
                           <div class="counter-arrow left"></div>
                         </div>
                         <div class="counter-num">
-                          <div class="num current" ref="min" v-if="StatusCode200 == true">{{exerciseDiffs[index] + 1}}</div>
+                          <div class="num current" ref="min" v-if="StatusCode200 == true">{{exerciseDiffs[index]}}</div>
                           <div class="num divider">/</div>
                           <div class="num limit" ref="max" v-if="StatusCode200 == true">{{this.exerciseData[this.workout.round][index].Video.length - 1}}</div>
                         </div>
-                        <div class="counter-btn" v-on:click="this.amrapData.currentIndices[index]++" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 !== this.exerciseData[this.workout.round][index].Video.length - 1">
+                        <div class="counter-btn" v-on:click="this.amrapData.currentIndices[index]++" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 !== this.exerciseData[this.workout.round][index].Video.length">
                           <div class="counter-arrow right"></div>
                         </div>
-                        <div class="counter-btn" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 == this.exerciseData[this.workout.round][index].Video.length - 1" style="cursor: default !important;">
+                        <div class="counter-btn" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 == this.exerciseData[this.workout.round][index].Video.length" style="cursor: default !important;">
                         </div>
                       </div>
                     </div>
