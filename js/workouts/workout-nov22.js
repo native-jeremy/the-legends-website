@@ -40,7 +40,6 @@ createApp({
       volume: false,
       amrapPlayed: false,
       roundSkipped: false,
-      timerEnded: false,
     }
   },
   computed: {
@@ -141,48 +140,7 @@ createApp({
         this.StatusCode200 = true;
         this.loadedExercise = false;
         this.title(true)
-        this.intialisation
       })
-    },
-
-    // Data Intialised in Exercise
-    intialisation()
-    {
-      // Turns On Round Popup
-      this.popup = true;
-
-      // Checks If Exercise Is An Amrap
-      this.AmrapVideo(this.$refs.video)
-
-      // Checks If Voice Has Played Then Plays If Returns false
-      if(!this.voiceHasPlayed)
-      {
-        // Audio Condtion Play/Pause
-        if (voice.paused) {
-          voice.play();
-        } 
-        else {
-          voice.pause();
-        }
-
-        this.voiceHasPlayed = true
-      }
-
-      // Video Condtion Play/Pause
-      if (video.paused) {
-        video.play();
-        play.classList.toggle("pause");
-        time.classList.remove("pausetime");
-        if(this.exerciseType == "Time")
-        {
-          this.timerEnded = true;
-          // Timer For Exercise
-          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
-        }
-        else {
-          this.timerEnded = true;
-        }
-      }
     },
 
     // Webflow Animations Reset
@@ -255,14 +213,9 @@ createApp({
         // Change Exercises Number
         this.workout.exercises = this.workout.exercises + 1;
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-        if(this.exerciseType == "Time")
+        if(this.type == "Time")
         {
-          this.timerEnded = false;
-          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
-        }
-        else {
-          this.timerEnded = true;
-          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
         }
       }
       else if (input == 0)
@@ -270,14 +223,9 @@ createApp({
         // Change Exercises Number
         this.workout.exercises = this.workout.exercises - 1;
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-        if(this.exerciseType == "Time")
+        if(this.type == "Time")
         {
-          this.timerEnded = false;
-          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
-        }
-        else {
-          this.timerEnded = true;
-          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
         }
       }
       else if (input == 3)
@@ -285,14 +233,9 @@ createApp({
         // Change Exercises Number
         this.workout.exercises = this.workout.exercises - 1;
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-        if(this.exerciseType == "Time")
+        if(this.type == "Time")
         {
-          this.timerEnded = false;
-          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
-        }
-        else {
-          this.timerEnded = true;
-          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
         }
       }
       else if (input == 2)
@@ -389,11 +332,11 @@ createApp({
       text.innerHTML = minutes + ":" + seconds;
     },
 
-    Timer(time, video, siren, end)
+    Timer(time, video, siren)
     {
-      if(this.exerciseType == "Time")
+      if(this.type == "Time")
       { 
-        if (!time.classList.contains("pausetime") && !end)
+        if (!time.classList.contains("pausetime"))
         {
           timer = setInterval(() => {
             let percentage = this.workout.counter / 100 * 100;
@@ -417,9 +360,6 @@ createApp({
         else {
           clearInterval(timer);
         }
-      }
-      else {
-      clearInterval(timer);
       }
     },
 
@@ -450,17 +390,17 @@ createApp({
         video.play();
         play.classList.toggle("pause");
         time.classList.remove("pausetime");
-        if(this.exerciseType == "Time")
+        if(this.type == "Time")
         {
-        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
         }
       } else {
         video.pause();
         play.classList.toggle("pause");
         time.classList.add("pausetime");
-        if(this.exerciseType == "Time")
+        if(this.type == "Time")
         {
-        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
         }
       }
     },
@@ -623,7 +563,6 @@ createApp({
       }
     },
 
-    // Single Exercise Difficulty Change
     ChangeDifficulty(input, video) {
       this.loadedExercise = true
         video.pause();
@@ -686,7 +625,6 @@ createApp({
       }
     },
 
-    // Amrap Exercise Difficulty Change
     ChangeAmrapDifficulty(input, video, index, number) {
       this.loadedExercise = true
         video.pause();
@@ -752,8 +690,6 @@ createApp({
         }, 1500)
       }
     },
-
-    // Amrap Exercise Video Check
     AmrapVideo(video)
     {
       let videoLoop;
@@ -841,8 +777,6 @@ createApp({
       clearInterval(videoLoop)
     }
     },
-
-    // Amrap Exercise Difficulty Values Created
     AmrapDiffs()
     {
       // Converts String Number to Integer
@@ -866,14 +800,14 @@ createApp({
     this.intialRequest()
   },
   mounted() {
-    let params = new URL(document.location).searchParams;
-    let round = parseInt(params.get("round"));
+      let params = new URL(document.location).searchParams;
+      let round = parseInt(params.get("round"));
   
-    if(window.location.href.includes("round"))
-    {
-      this.roundSkipped = true;
-      this.workout.round = round
-    }
+      if(window.location.href.includes("round"))
+      {
+        this.roundSkipped = true;
+        this.workout.round = round
+      }
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
@@ -890,8 +824,6 @@ createApp({
 
     // Webflow Animations Reset Called
     this.WebflowAnimations()
-
-
 
     // ID Param removed
     $(document).ready(function () {
