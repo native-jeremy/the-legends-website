@@ -41,6 +41,7 @@ createApp({
       amrapPlayed: false,
       roundSkipped: false,
       timerEnded: false,
+      sirenActive: false,
     }
   },
   computed: {
@@ -404,6 +405,8 @@ createApp({
 
             // Condtion To Check If Finished
             if (this.workout.counter == 0) {
+              siren.currentTime = 0;
+              siren.volume = 1.0
               siren.play();
               video.pause();
               video.currentTime = 0;
@@ -424,7 +427,7 @@ createApp({
     },
 
     // Play Exercise By Click
-    PlayExercise(time, play, video, voice)
+    PlayExercise(time, play, video, voice, siren)
     {
       this.popup = false;
       this.AmrapVideo(this.$refs.video)
@@ -434,7 +437,7 @@ createApp({
       // Checks If Voice Has Played Then Plays If Returns false
       if(!this.voiceHasPlayed)
       {
-        // Audio Condtion Play/Pause
+        // Voice Audio Condtion Play/Pause
         if (voice.paused) {
           voice.play();
         } 
@@ -442,7 +445,18 @@ createApp({
           voice.pause();
         }
 
+        // Siren Audio Condtion Play/Pause
+        if (siren.paused) {
+          siren.volume = 0
+          siren.play();
+          console.log("Siren Audio Played!");
+        } 
+        else {
+          siren.pause();
+        }
+
         this.voiceHasPlayed = true
+        this.sirenActive = true
       }
 
       // Video Condtion Play/Pause
@@ -505,8 +519,14 @@ createApp({
     },
 
     // Next Exercise By Click
-    NextExercise()
+    NextExercise(siren)
     {
+      if(this.exerciseType == "Reps")
+      {
+        siren.volume = 1.0
+        siren.play()
+      }
+
       // Round Change
       if(this.workout.exercises == this.exerciseData[this.workout.round].length - 1 && this.workout.round + 1 !== this.roundData.length && this.amrapActive !== "True")
       {

@@ -218,9 +218,9 @@
                         <circle r="100" cx="124" cy="124" class="progressWheel"></circle>
                       </svg>
                     </div>
-                    <div ref="play" v-on:click="PlayExercise(this.$refs.time, this.$refs.play, this.$refs.video, this.$refs.voice)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
+                    <div ref="play" v-on:click="PlayExercise(this.$refs.time, this.$refs.play, this.$refs.video, this.$refs.voice,this.$refs.siren)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
                   </div>
-                  <div v-on:click="NextExercise()" class="player-control-button w-inline-block" ref="Next">
+                  <div v-on:click="NextExercise(this.$refs.siren)" class="player-control-button w-inline-block" ref="Next">
                     <div class="play-right-arrow-icon"></div>
                   </div>
                 </div>
