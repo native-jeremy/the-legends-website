@@ -541,7 +541,7 @@ createApp({
       {
         // Round Change
         this.popup = true;
-        this.min = 0
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2)
         this.CustomAnimations(0)
@@ -551,7 +551,7 @@ createApp({
       else if(this.workout.exercises - 1 == 0)
       {
         this.popup = true;
-        this.min = 0
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
         clearInterval(timer)
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
@@ -564,7 +564,7 @@ createApp({
       }
       else {
         // Exercise Change
-        this.min = 0
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
         this.popup = false;
         clearInterval(timer)
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
@@ -600,7 +600,7 @@ createApp({
         this.title(true)
         this.voiceHasPlayed = false
         this.sirenActive = false
-        this.min = 0
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
       }
       // Finished Change
@@ -608,7 +608,7 @@ createApp({
       {
         this.popup = true;
         this.completed = true;
-        this.min = 0
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
@@ -617,7 +617,7 @@ createApp({
       else if(amrap == "True" && this.workout.round + 1 == this.roundData.length) {
         this.popup = true;
         this.completed = true;
-        this.min = 0
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
@@ -629,7 +629,7 @@ createApp({
         clearInterval(timer)
         this.workout.round = this.workout.round + 1;
         this.workout.exercises = 0
-        this.min = 0
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
         console.log('Armap Condition')
@@ -641,7 +641,7 @@ createApp({
         // Exercise Change
         this.popup = false;
         clearInterval(timer)
-        this.min = 0
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
         console.log('Final Condition')
@@ -652,7 +652,7 @@ createApp({
       else if (amrap == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped == true) {
         // Exercise Change
         this.popup = false;
-        this.min = 0
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1)
         console.log('Final Condition')
         // Calling Custom Animations
@@ -724,7 +724,7 @@ createApp({
 
       if(input == 0)
       {
-        this.min = this.min - 1
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1 - 1
         
         video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
         setTimeout(() => {
@@ -748,7 +748,7 @@ createApp({
       }
       else if(input == 1)
       {
-        this.min = this.min + 1
+        this.min = parseInt(this.startDifficulty[this.workout.exercises]) - 1 + 1
 
         video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
         setTimeout(() => {
@@ -976,8 +976,6 @@ createApp({
 
     // Webflow Animations Reset Called
     this.WebflowAnimations()
-
-
 
     // ID Param removed
     $(document).ready(function () {
