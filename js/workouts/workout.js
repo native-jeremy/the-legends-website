@@ -288,7 +288,7 @@ createApp({
           this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
         }
       }
-      else if(input == -1)
+      /*else if(input == -1)
       {
         this.TempBoolean = true;
         // Change Exercises Number
@@ -303,7 +303,7 @@ createApp({
           this.timerEnded = true;
           this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
         }
-      }
+      }*/
       else if (input == 0)
       {
         // Change Exercises Number
@@ -478,10 +478,22 @@ createApp({
                 video.src = this.exerciseData[this.workout.round][this.amrapData.nextExercise].Video[this.defaultDiffs].url
                 //this.workout.counter = this.workout.exercises + 1
                 this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises + 1]
+                this.timerEnded = false;
+                this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
                 this.$refs.voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises + 1].url
                 this.$refs.voice.pause();
                 this.$refs.voice.currentTime = 0;
                 this.$refs.voice.play();
+                if(this.TempBoolean == true)
+                {
+                  this.timerEnded = true;
+                  this.workout.round = this.workout.round + 1
+                  this.workout.exercises = 0
+                  this.NextExercise();
+                }
+                else {
+                this.TempBoolean = true;
+                }
               }
               else {
               this.NextExercise();
@@ -648,7 +660,7 @@ createApp({
         this.title(false)
         console.log('Amrap Finish Condition')
       }
-      else if(this.amrapActive == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped !== true)
+      else if(this.amrapActive == "True" && this.workout.round + 1 !== this.roundData.length && this.TempBoolean == false)
       {
         this.popup = true;
         clearInterval(timer)
@@ -661,16 +673,6 @@ createApp({
         this.title(true)
         this.voiceHasPlayed = false
         this.sirenActive = false
-      }
-      else if (this.amrapActive == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped == true) {
-        // Exercise Change
-        this.popup = false
-        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, -1, this.$refs.siren)
-        console.log('Final Condition')
-        // Calling Custom Animations
-        this.CustomAnimations(1)
-        this.title(true)
       }
       else {
         // Exercise Change
