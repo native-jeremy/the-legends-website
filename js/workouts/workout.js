@@ -63,11 +63,17 @@ createApp({
     exerciseVoice() {
       return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
     },
+    exercise() {
+      return this.amrapData.nextExercise
+    },
     exerciseMax() {
       return this.exerciseData[this.workout.round][this.workout.exercises].Video.length
     },
     exerciseMin() {
       return this.min
+    },
+    exerciseMinData() {
+      return parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
     },
     exerciseDiffs() {
       return this.amrapData.currentIndices
@@ -110,7 +116,7 @@ createApp({
 
         console.log('Intial Exercise Data', this.exerciseData)
 
-        console.log('startDifficulty', this.startDifficulty)
+        console.log('startDifficulty', this.workout.startDifficulty)
         console.log('Current Round', roundSelected)
         console.log('Round Request', this.roundData)
         console.log('Round Length', this.workout.roundAmount)
@@ -238,6 +244,21 @@ createApp({
       }
     },
 
+    amrapRest()
+    {
+      this.roundData[this.workout.round].Exercise_Title_Linked_Exercises.forEach((value, index) => {
+        if(value.includes('Rest'))
+        {
+          this.amrapData.nextExercise = index
+          this.amrapData.hasRest = true
+          console.log('Value: ', index)
+        }
+        else {
+          this.amrapData.amraps.push(value)
+        }
+      });
+    },
+
     // Custom Animation For Video Loop
     VideoLoopAnimation() {
       anime({
@@ -254,15 +275,28 @@ createApp({
       this.loadedExercise = true;
       if(input == 1)
       {
+        if(this.amrapData.NextExercise > 0)
+        {
+          this.workout.exercises = this.exerciseData.length - 1;
+        }
+        else {
+          this.workout.exercises = this.workout.exercises + 1;
+        }
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        if(this.exerciseType == "Time")
+        {
+          this.timerEnded = false;
+          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        }
+        else {
+          this.timerEnded = true;
+          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        }
+      }
+      else if(input == -1)
+      {
         // Change Exercises Number
-        if(this.amrapActive == 'True' && this.roundSkipped == true)
-        {
-          this.workout.exercises = this.amrapData.nextExercise
-        }
-        else 
-        {
-        this.workout.exercises = this.workout.exercises + 1;
-        }
+        this.workout.exercises = this.amrapData.nextExercise;
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         if(this.exerciseType == "Time")
         {
@@ -314,6 +348,8 @@ createApp({
         this.popup = false;
       }
 
+      this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+
       if(input !== 3)
       {
       // Video & Audio Delay
@@ -348,7 +384,7 @@ createApp({
 
         play.classList.toggle("pause");
         this.loadedExercise = false;
-      },1750)
+      },2000)
       }
       else if(input == 3)
       {
@@ -452,7 +488,10 @@ createApp({
         }
       }
       else {
-      clearInterval(timer);
+        if(this.exerciseType !== "Reps")
+        {
+          clearInterval(timer)
+        }
       }
     },
 
@@ -510,13 +549,11 @@ createApp({
     // Previous Exercise By Click
     PrevExercise()
     {
-      //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
-
       if(this.workout.exercises == 0)
       {
         // Round Change
         this.popup = true;
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2, this.$refs.siren)
         this.CustomAnimations(0)
@@ -526,7 +563,7 @@ createApp({
       else if(this.workout.exercises - 1 == 0)
       {
         this.popup = true;
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         clearInterval(timer)
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
@@ -580,7 +617,7 @@ createApp({
         this.title(true)
         this.voiceHasPlayed = false
         this.sirenActive = false
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
       }
       // Finished Change
@@ -588,7 +625,7 @@ createApp({
       {
         this.popup = true;
         this.completed = true;
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
@@ -597,7 +634,7 @@ createApp({
       else if(amrap == "True" && this.workout.round + 1 == this.roundData.length) {
         this.popup = true;
         this.completed = true;
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
@@ -609,7 +646,7 @@ createApp({
         clearInterval(timer)
         this.workout.round = this.workout.round + 1;
         this.workout.exercises = 0
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
         console.log('Armap Condition')
@@ -617,22 +654,26 @@ createApp({
         this.voiceHasPlayed = false
         this.sirenActive = false
       }
-      else if (this.amrapActive == "False"  && this.roundSkipped !== true) {
+      else if (this.amrapActive == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped == true) {
         // Exercise Change
         this.popup = false;
-        clearInterval(timer)
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1, this.$refs.siren)
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, -1, this.$refs.siren)
         console.log('Final Condition')
         // Calling Custom Animations
         this.CustomAnimations(1)
         this.title(true)
       }
-      else if (this.amrapActive == "True" && this.workout.round + 1 !== this.roundData.length && this.roundSkipped == true) {
+      else {
         // Exercise Change
         this.popup = false;
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        if(this.exerciseType !== "Reps")
+        {
+          clearInterval(timer)
+        }
+        //clearInterval(timer)
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1, this.$refs.siren)
         console.log('Final Condition')
         // Calling Custom Animations
@@ -826,12 +867,13 @@ createApp({
       if(this.amrapActive == 'True' && this.amrapPlayed !== true)
       {
         this.AmrapDiffs()
+        this.amrapRest()
         this.amrapPlayed = true;
         srcIndex = 0;
         trackerTime = 0;
         const index =  this.amrapData.currentIndices[srcIndex]
         video.src = this.exerciseData[this.workout.round][srcIndex].Video[this.amrapData.diff[srcIndex][index]].url
-        this.roundData[this.workout.round].Exercise_Title_Linked_Exercises.forEach((value, index) => {
+        /*this.roundData[this.workout.round].Exercise_Title_Linked_Exercises.forEach((value, index) => {
           if(value.includes('Rest'))
           {
             this.amrapData.nextExercise = index
@@ -841,7 +883,7 @@ createApp({
           else {
             this.amrapData.amraps.push(value)
           }
-        });
+        });*/
         console.log('New Data: ', this.amrapData.amraps)
         videoLoop = setInterval(() => {
         if(this.amrapActive == 'True')
@@ -916,7 +958,7 @@ createApp({
       // Creates Starting Indices For AmrapDiffs
       this.exerciseData[this.workout.round].forEach((item, index) => {
         let convertedNumbers = []
-        let startIndex = 0
+        let startIndex = parseInt(this.workout.startDifficulty[index]) - 1
         item.Diff_Level.forEach((diff) => {
           let stringNumber = parseInt(diff) - 1
           convertedNumbers.push(stringNumber)
