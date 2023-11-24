@@ -63,10 +63,16 @@ createApp({
       }
     },
     exerciseAmount() {
-      if(!this.Rest)
-      return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
+    if(!this.Rest)
+      if(this.exerciseType == "Time")
+      {
+        return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]) + 1
+      }
+      else {
+        return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
+      }
     else {
-      return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[1])
+      return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[1]) + 1
     }
     },
     amrapActive() {
@@ -91,13 +97,17 @@ createApp({
       return this.min
     },
     exerciseMinData() {
-      return parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+      return parseInt(this.workout.startDifficulty[this.exercise]) - 1
     },
     exerciseDiffs() {
       return this.amrapData.currentIndices
     },
+    defaultDiffList()
+    {
+      return this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+    },
     defaultDiffs() {
-      return parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+      return parseInt(this.defaultDiffList[this.exercise]) - 1
     },
     exerciseNext() {
       return this.amrapData.nextExercise
@@ -766,7 +776,7 @@ createApp({
         this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
         }
 
-      this.CustomAnimations(2)
+      //this.CustomAnimations(2)
 
       if(input == 0)
       {
@@ -829,7 +839,7 @@ createApp({
         this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
         }
 
-      this.CustomAnimations(2)
+      //this.CustomAnimations(2)
 
       if(input == 0)
       {
@@ -920,7 +930,7 @@ createApp({
             changeVideo = true;
             if(changeVideo == true)
             {
-              this.VideoLoopAnimation()
+              //this.VideoLoopAnimation()
               srcIndex++;
               if (srcIndex < this.amrapData.amraps.length) {
                 const index = this.amrapData.currentIndices[srcIndex]
