@@ -1,523 +1,677 @@
-//Element Triggers
-const videoContainer = document.getElementById("videoContainer");
-const loaderTrigger = document.getElementById("Trigger");
-const exerciseTitle = document.getElementById("exerciseTitle");
-const exerciseHeader = document.getElementById("exerciseHeader");
-const roundPopup = document.getElementById("roundPopup");
-const roundTitle = document.getElementById("roundTitle");
-const roundNumHeader = document.getElementById("headerNumText");
-const roundText = document.getElementById("roundText");
-const videoChange = document.getElementById("videoChange");
+const { createApp } = Vue
 
-// Element Declarations
-const repText = document.getElementById("repText");
-const timerText = document.getElementById("safeTimerDisplay");
-const currentTest = document.getElementById("current");
-const durationTest = document.getElementById("dur");
-const RoundNumberText = document.getElementById("mainNumText");
-const progressEl = document.querySelector(".wheel");
-let loader = document.getElementById("loader");
-const returnMessage = document.getElementById("return");
-
-// Param Int Set Variables
-let setIntRoundNum;
-let setIntExercisesNum;
-let setIntExerciseNum;
-
-// Param Get Variables
-let getRoundNum;
-let getExercisesNum;
-let getExerciseNum;
-
-// Param Set Variables
-let setRoundNum;
-let setExercisesNum;
-let setExerciseNum;
-
-// Temp Variables
-let exerciseDiffRes;
-let roundRes;
-let roundResIndex;
-let roundLength;
-let exerciseData;
-let roundRealNumber;
-let audioRes;
-let audioIndex;
-let checkAmrapVideo;
-let checkAmrapAudio;
-let exerciseRes;
-let diffLength;
-let diffCurrent;
-let diffRes;
-let minutes;
-let seconds;
-
-const workoutExitButton = document.getElementById("workoutExit");
-
-const siren = document.getElementById("siren");
-const sirenText = document.getElementById("sirenText");
-const sirenAudio = document.getElementById("sirenAudio");
-const sirenToggleOn = document.getElementById("sirenToggleOn");
-
-const voice = document.getElementById("voice");
-const voiceText = document.getElementById("voiceText");
-const voiceAudio = document.getElementById("voiceAudio");
-const voiceToggleOn = document.getElementById("voiceToggleOn");
-
-const playButton = document.getElementById("playButton");
-const nextButton = document.getElementById("nextButton");
-const prevButton = document.getElementById("prevButton");
-const backButton = document.getElementById("backButton");
-
-const returnButton = document.getElementById("returnButton");
-
-const playButtonDisabled = document.getElementById("playButtonDisabled");
-const nextButtonDisabled = document.getElementById("nextButtonDisabled");
-const prevButtonDisabled = document.getElementById("prevButtonDisabled");
-
-const minusBtn = document.getElementById("minusBtn");
-const currentNum = document.getElementById("currentNum");
-const limitNum = document.getElementById("limitNum");
-const plusBtn = document.getElementById("plusBtn");
-let maxLimit;
-let minLimit = 0;
-let amount = 0;
-currentNum.innerHTML = amount;
-
-let refreshNum = 0;
-
-window.onload = async () => {
-  const exercisesParam = await Wized.data.get("n.parameter.exercises");
-  const recoveryParam = await Wized.data.get("n.parameter.recovery");
-  const sirenCookieInt = await Wized.data.get("c.sirenmute");
-  const voiceCookieInt = await Wized.data.get("c.voicemute");
-
-  let params = window.location.href;
-  let url = new URL(params);
-  let checkurl = url.searchParams;
-
-  window.history.replaceState(null, null, url.toString());
-
-  enableDisabledStates();
-
-  Wized.request.await("Load Audio - Recovery", (response) => {
-    console.log("Audio Response", response);
-
-    audioRes = response;
-  });
-
-  if(localStorage.getItem("length") !== undefined)
-  {
-    let Length = localStorage.getItem("length");
-
-    if (parseInt(Length) == parseInt(exercisesParam))
-    {
-      RoundNumberText.innerHTML = "Workout Completed";
-      roundTitle.innerHTML = "Congratulations!";
-      roundNumHeader.innerHTML = "";
-      Wized.data.setVariable("recovery", "completed");
-      returnMessage.click();
-      roundPopup.style.display = "flex";
-      roundText.style.display = "flex";
-
-      returnButton.addEventListener('click', () => {localStorage.removeItem("length")});
+createApp({
+  data() {
+    return {
+      workout: {
+        id: "",
+        finishAudio: "",
+        round: 0,
+        exercises: 0,
+        exercise: 0,
+        roundAmount: 0,
+        exercisesAmount: 0,
+        voiceHasPlayed: false,
+        startDifficulty: [],
+        counter: 0,
+      },
+      roundData: [],
+      exerciseData: [],
+      StatusCode200: false,
+      popup: true,
+      completed: false,
+      loadedExercise: false,
+      min: 0,
+      Debug: false,
+      fullyLoaded: false,
+      type: "",
+      timerEnded: false,
+      sirenActive: false,
+      sirenMuted: "",
+      voiceMuted: "",
     }
-  }
-
-  Wized.request.await("Load Round Info - Recovery",(response) => {
-    RoundNumberText.innerHTML = "Recovery!";
-    roundTitle.innerHTML = "Let's begin your";
-    roundNumHeader.innerHTML = "";
-      let lengthApply = response.data[0].Recovery_Exercise_Selected.length 
-
-      console.log("Overall Data", response)
-
-      let clickNum = 0;
-
-      playButton.addEventListener("click", function () {
-        if (clickNum < 1) {
-          playVoice();
-          //Conditions
-          roundType();
-        }
-        playVideo();
-        clickNum = clickNum + 1;
-      });
-
-      if(localStorage.getItem("length") == undefined)
+  },
+  computed: {
+    // a computed getter
+    exercise() {
+      return this.workout.exercises
+    },
+    exerciseType() {
+      if(!this.Rest)
       {
-        localStorage.setItem("length", lengthApply);
+      return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
       }
-      const dataSrc = response.data[0];
-      const dataSrcIndex = parseInt(exercisesParam);
-      const mainResponse = response;
-      const repDataInt = response;
-      let repAmount;
-      let repType;
-      const singleTitle = document.getElementById("single-title");
-      const displaySingleTitle = document.getElementById("display_single_title");
-      singleTitle.textContent = dataSrc.Exercise_Category[dataSrcIndex];
-      displaySingleTitle.textContent = dataSrc.Exercise_Category[dataSrcIndex];
-
-      if (repDataInt.status === 200) {
-        loaderTrigger.click();
-        videoContainer.style.opacity = "1";
+      else {
+        return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[1]
       }
+    },
+    exerciseAmount() {
+      return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[1]) + 1
+    },
+    exerciseVoice() {
+        return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[1].url
+    },
+    exerciseMax() {
+      return this.exerciseData[this.workout.round][this.workout.exercises].Video.length
+    },
+    exerciseMin() {
+      return this.min
+    },
+    exerciseMinData() {
+      return parseInt(this.workout.startDifficulty[this.exercise]) - 1
+    },
+    defaultDiffList()
+    {
+      return this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+    },
+    defaultDiffs() {
+      return parseInt(this.defaultDiffList[this.exercise]) - 1
+    },
+    exerciseTitle() {
+      return this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
+    },
+    exerciseVideo() {
+      return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.defaultDiffs].url
+    },
+  },
+  methods: {
+    // Intial Request Data Applied To Data Object
+    async intialRequest()
+    {
+      // Workout ID Param Search
+      let workout = new URL(document.location).searchParams;
+      this.workout.id = workout.get("recovery");
 
-      //----------------------------------------------------------------
-      // NEW CODE WEDNESDAY 18 OCT 2023
+      Wized.request.await("Load Round Info - Recovery", (response) => {
+        //console.log('Round Request', response)
+        roundRes = response;
+        roundInfo = roundRes.data[this.workout.round];
+    
+        roundSelected = roundRes.data[this.workout.round].Round_Selection; 
+        this.roundData = roundRes.data
 
-      console.log("---------------------------------------");
-      console.log("All Rounds:", dataSrc);
-      console.log("---------------------------------------");
-      console.log("---------------------------------------");
+        this.workout.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
 
-      let audioSrc = document.getElementById("voiceSrc");
-      let vidSrc = document.getElementById("video");
+        this.workout.roundAmount = roundRes.data.length
+        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
 
-      //if (exerciseData !== undefined) {
-      repAmount = dataSrc.Exercise_Amount[dataSrcIndex];
-      repType = dataSrc.Rep_Type[dataSrcIndex];
+        console.log('Intial Exercise Data', this.exerciseData)
 
-      timerConversion(repAmount);
+        console.log('startDifficulty', this.workout.startDifficulty)
+        console.log('Current Round', roundSelected)
+        console.log('Round Request', this.roundData)
+        console.log('Round Length', this.workout.roundAmount)
+      });
+      
+      Wized.request.await("Load Finished Audio", (response) => {    
+        this.workout.finishAudio = response.data[0].Audio[0].url
+        console.log("Audio Response", response);
+      })
 
-      function timerConversion(time) {
-        minutes = Math.floor(time / 60);
-        seconds = time % 60;
-      }
+     /* Wized.request.await("Load Exercise Diff V2", (response) => {
+        console.log("Exercise DATA", response);
+        this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
+        this.roundData.forEach((r, ri) => {
 
-      let defaultDiff = 1;
-      diffCurrent = defaultDiff - 1;
-      currentNum.innerHTML = defaultDiff;
-
-      diffLength = dataSrc.Diff_Video.length;
-      maxLimit = diffLength;
-      limitNum.innerHTML = maxLimit;
-
-      vidSrc.src = dataSrc.Diff_Video[diffCurrent].url;
-        plusBtn.addEventListener("click", function () {
-          if (diffCurrent + 1 < maxLimit) {
-            diffCurrent++;
-            amount++;
-            localStorage.setItem("diffStart", diffCurrent);
-            currentNum.innerHTML = diffCurrent + 1;
-            enableDisabledStates();
-            playVideoDiff();
-            vidSrc.src = dataSrc.Diff_Video[diffCurrent].url;
-            setTimeout(enableActiveStates, 1500);
-            setTimeout(autoPlayVideo, 2000);
-          } else {
-            return false;
-          }
+          // Added This To Intialise Exercise Data
+          this.exerciseData.push([])
+          
+          r.Diff_ID_Linked_Exercises.forEach((id, index) => {
+            response.data.forEach((e, ei) => {
+              if(e.ID.includes(id))
+              {
+                this.exerciseData[ri].push(e);
+              }
+            });
+          });
         });
 
-        // Diff Decrease Click Controls - Single Exercise
-        minusBtn.addEventListener("click", function () {
-          if (diffCurrent > minLimit) {
-            diffCurrent--;
-            amount--;
-            localStorage.setItem("diffStart", diffCurrent);
-            currentNum.innerHTML = diffCurrent + 1;
-            enableDisabledStates();
-            playVideoDiff();
-            vidSrc.src = dataSrc.Diff_Video[diffCurrent].url;
-            setTimeout(enableActiveStates, 1500);
-            setTimeout(autoPlayVideo, 2000);
-          } else {
-            return false;
-          }
-        });
+        console.log("Exercise Data END!", this.exerciseData)
+        this.StatusCode200 = true;
+        this.loadedExercise = false;
+        this.title(true)
+        this.intialisation
+      })*/
+    },
 
-      audioSrc.src = dataSrc.Audio_Source[0].url;
+    // Data Intialised in Exercise
+    intialisation()
+    {
+      // Turns On Round Popup
+      this.popup = true;
 
-      let clearStates = setTimeout(() => {
-        enableActiveStates();
-        clearTimeout(clearStates);
-      }, 1500);
+      // Checks If Voice Has Played Then Plays If Returns false
+      if(!this.voiceHasPlayed)
+      {
+        // Audio Condtion Play/Pause
+        if (voice.paused) {
+          voice.play();
+        } 
+        else {
+          voice.pause();
+        }
 
-      nextButton.addEventListener("click", updateParams);
-
-      prevButton.addEventListener("click", backTrackParams);
-
-      workoutExitButton.addEventListener("click", exitParams);
-
-      function exitParams() {
-        workoutExitButton.href = "/recovery-overview?recovery=" + recoveryParam;
-        localStorage.removeItem("length");
+        this.voiceHasPlayed = true
       }
 
-      function updateParams() {
-        getExercisesNum = checkurl.get("exercises");
-        getExercisesNum = parseInt(getExercisesNum) + 1;
-        setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
-        window.location.href = url.toString();
-      }
-
-      function backTrackParams() {
-        if (parseInt(exercisesParam) < dataSrc.length - 1) {
-          getExercisesNum = checkurl.get("exercises");
-          getExercisesNum = parseInt(getExercisesNum) - 1;
-          setExercisesNum = checkurl.set("exercises", getExercisesNum.toString());
-          window.location.href = url.toString();
+      // Video Condtion Play/Pause
+      if (video.paused) {
+        video.play();
+        play.classList.toggle("pause");
+        time.classList.remove("pausetime");
+        if(this.exerciseType == "Time")
+        {
+          this.timerEnded = true;
+          // Timer For Exercise
+          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
         }
         else {
-          window.location.href = "/recovery-overview?recovery=" + recoveryParam;
+          this.timerEnded = true;
         }
       }
+    },
 
-      if ((parseInt(exercisesParam) > 0)) 
+    // Webflow Animations Reset
+    WebflowAnimations() {
+      console.log("interaction loaded");
+      window.Webflow && window.Webflow.destroy();
+      window.Webflow && window.Webflow.ready();
+      window.Webflow && window.Webflow.require("ix2").init();
+      document.dispatchEvent(new Event("readystatechange"));
+    },
+
+    // Exercise Change Logic
+    ChangeExercise(play, video, voice, input, siren)
+    {
+      this.loadedExercise = true;
+      if(input == 1)
       {
-        setTimeout(autoPlayVideo, 2000);
-      } else {
-        return false;
-      }
-      
-      {{Sub_Title_Award[index]}}
-      function roundType() {
-        if (repType === "Time") {
-          timer();
-        } else if (repType === "Reps") {
-          repCount();
+        this.workout.exercises = this.workout.exercises + 1;
+        voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        if(this.exerciseType == "Time")
+        {
+          this.timerEnded = false;
+          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
         }
-        console.log("---------------------------------------");
-        console.log(repType, "Applied To The Exercise");
+        else {
+          this.timerEnded = true;
+          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        }
       }
 
-      function timer() {
-        let counter = repAmount;
-        let percentage = (counter / 100) * 100;
-        repText.innerHTML = repType;
-        setProgress(percentage);
-        let timer = setInterval(function () {
-          timerConversion(counter);
-          timerText.innerHTML = minutes + ":" + seconds;
-          if (!timerText.classList.contains("pausetime")) {
-            counter--;
-            setProgress(counter);
-            if (counter < 0) {
-              playSiren();
-              setTimeout(() => {
-                nextButton.click();
-              }, 1000);
+      else if (input == 0)
+      {
+        // Change Exercises Number
+        this.workout.exercises = this.workout.exercises - 1;
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        if(this.exerciseType == "Time")
+        {
+          this.timerEnded = false;
+          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        }
+        else {
+          this.timerEnded = true;
+          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        }
+      }
+      else if (input == 3)
+      {
+        // Change Exercises Number
+        this.workout.exercises = this.workout.exercises - 1;
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        if(this.exerciseType == "Time")
+        {
+          this.timerEnded = false;
+          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        }
+        else {
+          this.timerEnded = true;
+          this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        }
+      }
+      else if (input == 2)
+      {
+        // Change Round Number
+        this.workout.round = this.workout.round - 1;
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        // Change Exercises Number
+        this.workout.exercises = this.exerciseData[this.workout.round].length - 1;
+        this.popup = false;
+      }
+
+      this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+
+      if(input !== 3)
+      {
+      // Video & Audio Delay
+      setTimeout(() => {
+        // Play Icon Condtion Play/Pause
+        if (video.paused) {
+          play.classList.toggle("pause");
+        } else {
+          play.classList.toggle("pause");
+        }
+
+        video.play();
+
+        if(this.voiceMuted !== "off")
+        {
+          voice.play();
+          this.voiceHasPlayed = true
+        }
+        if(this.sirenMuted !== "off")
+        {
+          siren.muted = true;
+          siren.play();
+          this.sirenActive = true
+        }
+
+        play.classList.toggle("pause");
+        this.loadedExercise = false;
+      },0)
+      }
+      else if(input == 3)
+      {
+        this.loadedExercise = false;
+      }
+    },
+
+    // Siren & Voice Enabled
+    LoadedAudioEnabled(SirenText, SirenToggle, VoiceText, VoiceToggle) {
+
+      // Local Storage Audio Values
+      const sirenValue = localStorage.getItem("siren");
+      const voiceValue = localStorage.getItem("voice");
+      this.sirenMuted = sirenValue;
+      this.voiceMuted = voiceValue;
+      
+      // Siren Intialising On
+      if (sirenValue === undefined || sirenValue === null) {
+        localStorage.setItem("siren", "on");
+        SirenText.textContent = "On";
+        SirenToggle.classList.add("on");
+        this.sirenMuted = localStorage.getItem("siren");;
+      }
+      // Siren On
+      else if (sirenValue === "on") {
+        SirenText.textContent = "On";
+        SirenToggle.classList.add("on");
+      }
+      // Siren Off
+      else if (sirenValue === "off") {
+        SirenText.innerHTML = "Off";
+        SirenToggle.classList.remove("on");
+      }
+      // Voice Intialising On
+      if (voiceValue == undefined || voiceValue == null) {
+        localStorage.setItem("voice", "on");
+        VoiceText.textContent = "On";
+        VoiceToggle.classList.add("on");
+        this.voiceMuted = localStorage.getItem("voice");
+      }
+      // Voice On
+      else if (voiceValue == "on") {
+        VoiceText.textContent = "On";
+        VoiceToggle.classList.add("on");
+      }
+      // Voice Off
+      else if (voiceValue == "off") {
+        VoiceText.textContent = "Off";
+        VoiceToggle.classList.remove("on");
+      }
+    },
+
+    setProgress(percent) {
+      let progress = document.querySelector('.progressWheel');
+      let radius = progress.r.baseVal.value;
+      let circumference = radius * 2 * Math.PI;
+      progress.style.strokeDasharray = circumference;
+      progress.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+    },
+
+    TimerConversion(time, text) {
+      minutes = Math.floor(time / 60); 
+      seconds = time % 60;
+      text.innerHTML = minutes + ":" + seconds;
+    },
+
+    Timer(time, video, siren, end)
+    {
+      if(this.exerciseType == "Time")
+      { 
+        if (!time.classList.contains("pausetime") && !end)
+        {
+          timer = setInterval(() => {
+            let percentage = this.workout.counter / 100 * 100;
+            // Progress Wheel Value
+            this.setProgress(percentage);
+            this.workout.counter--;
+            this.TimerConversion(this.workout.counter, time);
+
+            // Condtion To Check If Finished
+            if (this.workout.counter == 0) {
+              siren.currentTime = 0;
+              if(this.sirenMuted !== 'off')
+              {
+              siren.muted = false;
+              siren.play();
+              }
+              video.pause();
+              video.currentTime = 0;
               clearInterval(timer);
-              clearInterval(checkAmrap);
-              console.log("---------------------------------------");
-              console.log("Completed");
+              setTimeout(() => {
+              this.NextExercise();
+              }, 2000);
+            }
+          }, 1000);
+        }
+        else {
+          clearInterval(timer);
+        }
+      }
+      else {
+        if(this.exerciseType !== "Reps")
+        {
+          clearInterval(timer)
+        }
+      }
+    },
+
+    // Play Exercise By Click
+    PlayExercise(time, play, video, voice, siren)
+    {
+      this.popup = false;
+
+    // Checks If Voice Has Played Then Plays If Returns false
+    if(this.voiceMuted !== "off")
+    {
+      if(!this.voiceHasPlayed)
+      {
+        // Voice Audio Condtion Play/Pause
+        voice.play()
+        this.voiceHasPlayed = true
+      }
+    }
+    if(this.sirenMuted !== "off")
+    {
+      if(!this.sirenActive)
+      {
+        // Siren Audio Condtion Play/Pause
+        siren.muted = true;
+        siren.play();
+        this.sirenActive = true
+      }
+    }
+
+      // Video Condtion Play/Pause
+      if (video.paused) {
+        video.play();
+        play.classList.toggle("pause");
+        time.classList.remove("pausetime");
+        if(this.exerciseType == "Time")
+        {
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        }
+      } else {
+        video.pause();
+        play.classList.toggle("pause");
+        time.classList.add("pausetime");
+        if(this.exerciseType == "Time")
+        {
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
+        }
+      }
+    },
+
+    // Previous Exercise By Click
+    PrevExercise()
+    {
+      if(this.workout.exercises == 0)
+      {
+        // Round Change
+        this.popup = true;
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2, this.$refs.siren)
+        this.title(true)
+      }
+      // Round Start
+      else if(this.workout.exercises - 1 == 0)
+      {
+        this.popup = true;
+        clearInterval(timer)
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        this.$refs.play.classList.toggle("pause")
+        this.$refs.time.classList.toggle("pausetime")
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 3, this.$refs.siren)
+        this.title(true)
+        this.voiceHasPlayed = false
+        this.sirenActive = false
+      }
+      else {
+        // Exercise Change
+        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        this.popup = false;
+        clearInterval(timer)
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0, this.$refs.siren)
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        console.log('Final Condition')
+        this.title(true)
+      }
+    },
+
+    // Next Exercise By Click
+    NextExercise(siren)
+    {
+      this.ResetAmrapData()
+      
+      if(this.exerciseType == "Reps")
+      {
+        if(this.sirenMuted !== "off")
+        {
+        siren.play()
+        this.sirenActive = false;
+        }
+      }
+      else {
+        this.sirenActive = false;
+      }
+
+      //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+
+      // Round Change
+      if(this.workout.exercises == this.exerciseData[this.workout.round].length - 1 && this.workout.round + 1 !== this.roundData.length)
+      {
+        this.popup = true;
+        clearInterval(timer)
+        this.workout.round = this.workout.round + 1;
+        this.workout.exercises = 0
+        this.$refs.play.classList.toggle("pause")
+        console.log('First Condition')
+        this.title(true)
+        this.voiceHasPlayed = false
+        this.sirenActive = false
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+      }
+      // Finished Change
+      else if(this.workout.exercises + 1 == this.exerciseData[this.workout.round].length && this.workout.round + 1 == this.roundData.length)
+      {
+        this.popup = true;
+        this.completed = true;
+        clearInterval(timer)
+        this.title(false)
+        console.log('Main Condition')
+      }
+       // Exercise Change
+      else {
+        this.popup = false;
+        if(this.exerciseType !== "Reps")
+        {
+          clearInterval(timer)
+        }
+        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1, this.$refs.siren)
+        console.log('Final Condition')
+        this.title(true)
+      }
+    },
+
+    title(input)
+    {
+      if(input == true) {
+      document.title = this.exerciseTitle
+      }
+      else if (input == false) {
+        document.title = 'Completed Workout!'
+      }
+    },
+
+    // Siren Enabled By Click
+    SirenEnableClick(text, toggle) {
+      if (text.innerHTML === "Off") {
+        localStorage.setItem("siren", "on");
+        this.sirenMuted = localStorage.getItem("siren");
+        sirenSrc.play();
+        text.textContent = "On";
+        toggle.classList.add("on");
+      } 
+      else if (text.textContent === "On") {
+        localStorage.setItem("siren", "off");
+        this.sirenMuted = localStorage.getItem("siren");
+        sirenSrc.pause();
+        sirenSrc.currentTime = "0";
+        text.textContent = "Off";
+        toggle.classList.remove("on");
+      }
+    },
+  
+    // Voice Enabled By Click
+    VoiceEnableClick(text, toggle) {
+      if (text.textContent === "Off") {
+        localStorage.setItem("voice", "on");
+        this.voiceMuted = localStorage.getItem("voice");
+        voiceSrc.play();
+        text.textContent = "On";
+        toggle.classList.add("on");
+      } 
+      else if (voiceText.innerHTML === "On") {
+        localStorage.setItem("voice", "off");
+        this.voiceMuted = localStorage.getItem("voice");
+        voiceSrc.pause();
+        voiceSrc.currentTime = "0";
+        text.textContent = "Off";
+        toggle.classList.remove("on");
+      }
+    },
+
+    // Single Exercise Difficulty Change
+    ChangeDifficulty(input, video) {
+      this.loadedExercise = true
+        video.pause();
+        this.$refs.play.classList.toggle("pause");
+        this.$refs.time.classList.add("pausetime");
+        if(this.type == "Time")
+        { 
+        this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+        }
+
+      if(input == 0)
+      {
+        this.min = this.min - 1
+        
+        video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
+        setTimeout(() => {
+          this.loadedExercise = false;
+       // Video Condtion Play/Pause
+          if (video.paused) {
+            video.play();
+            this.$refs.play.classList.toggle("pause");
+            this.$refs.time.classList.remove("pausetime");
+            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+          } else {
+            video.pause();
+            this.$refs.play.classList.toggle("pause");
+            this.$refs.time.classList.add("pausetime");
+            if(this.type == "Time")
+            { 
+            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
             }
           }
-        }, 1000);
+        }, 1500)
       }
+      else if(input == 1)
+      {
+        this.min = this.min + 1
 
-      function setProgress(percent) {
-        let progress = document.querySelector(".progressWheel");
-        let radius = progress.r.baseVal.value;
-        let circumference = radius * 2 * Math.PI;
-        progress.style.strokeDasharray = circumference;
-        progress.style.strokeDashoffset =
-          circumference - (percent / 100) * circumference;
+        video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
+        setTimeout(() => {
+          this.loadedExercise = false;
+       // Video Condtion Play/Pause
+          if (video.paused) {
+            video.play();
+            this.$refs.play.classList.toggle("pause");
+            this.$refs.time.classList.remove("pausetime");
+            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+          } else {
+            video.pause();
+            this.$refs.play.classList.toggle("pause");
+            this.$refs.time.classList.add("pausetime");
+            if(this.type == "Time")
+            { 
+            this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren);
+            }
+          }
+        }, 1500)
       }
-
-      function repCount() {
-        progressEl.style.display = "none";
-        let counter = repAmount;
-        repText.innerHTML = repType;
-        timerText.innerHTML = counter;
-      }
-
-      function playVideo() {
-        let video = document.getElementById("video");
-        if (video.paused) {
-          video.play();
-          playButton.classList.toggle("pause");
-          timerText.classList.remove("pausetime");
-          console.log("---------------------------------------");
-          console.log("Video Duration", video.duration + "s");
-        } else {
-          video.pause();
-          playButton.classList.toggle("pause");
-          timerText.classList.add("pausetime");
-        }
-      }
-
-      function playVideoDiff() {
-        let video = document.getElementById("video");
-        if (!video.paused) {
-          video.pause();
-          playButton.classList.toggle("pause");
-          timerText.classList.add("pausetime");
-          console.log("---------------------------------------");
-          console.log("Video Duration", video.duration + "s");
-        }
-      }
-
-      function playSiren() {
-        let sirenSrc = document.getElementById("sirenSrc");
-        if (sirenSrc.paused) {
-          sirenSrc.play();
-        } else {
-          sirenSrc.pause();
-        }
-      }
-
-      function playVoice() {
-        let voiceSrc = document.getElementById("voiceSrc");
-        if (voiceSrc.paused) {
-          voiceSrc.play();
-        } else {
-          voiceSrc.pause();
-        }
-      }
-    }
-  );
-
-  //roundEnableLoad();
-  //setTimeout(nextPage, 2000);
-  sirenEnableLoad();
-  voiceEnableLoad();
-
-  siren.addEventListener("click", function () {
-    sirenEnableClick();
-  });
-
-  voice.addEventListener("click", function () {
-    voiceEnableClick();
-  });
-
-  function enableDisabledStates() {
-    playButton.style.display = "none";
-    playButtonDisabled.style.display = "flex";
-    //
-    nextButton.style.display = "none";
-    nextButtonDisabled.style.display = "flex";
-    //
-    prevButton.style.display = "none";
-    prevButtonDisabled.style.display = "flex";
-    progressEl.style.display = "none";
-  }
-
-  function enableActiveStates() {
-    playButton.style.display = "flex";
-    playButtonDisabled.style.display = "none";
-    //
-    nextButton.style.display = "flex";
-    nextButtonDisabled.style.display = "none";
-    //
-    prevButton.style.display = "flex";
-    prevButtonDisabled.style.display = "none";
-    progressEl.style.display = "flex";
-  }
-
-  function autoPlayVideo() {
-    playButton.click();
-  }
-
-  function nextPage() {
-    if (exerciseParam === undefined || exerciseParam === "undefined") {
-      if (refreshNum < 1) {
-        nextButton.click();
-      }
-      playButton.style.display = "none";
-      playButtonDisabled.style.display = "flex";
-      //
-      nextButton.style.display = "none";
-      nextButtonDisabled.style.display = "flex";
-      //
-      prevButton.style.display = "none";
-      prevButtonDisabled.style.display = "flex";
-    }
-    refreshNum = refreshNum + 1;
-  }
-
-  function sirenEnableClick() {
-    if (sirenText.innerHTML === "Off") {
-      Wized.data.setCookie("sirenmute", "on");
-      sirenText.innerHTML = "On";
-      sirenToggleOn.classList.toggle("on");
-    } else if (sirenText.innerHTML === "On") {
-      Wized.data.setCookie("sirenmute", "muted");
-      sirenText.innerHTML = "Off";
-      sirenToggleOn.classList.toggle("on");
-    }
-
-    // Development Purposes (DEBUGGING)
-    let sirenUpdatedCookie = Wized.data.get("c.sirenmute");
-    console.log("---------------------------------------");
-    console.log("mute cookie changed to: ", sirenUpdatedCookie);
-    console.log("---------------------------------------");
-  }
-
-  function voiceEnableClick() {
-    if (voiceText.innerHTML === "Off") {
-      Wized.data.setCookie("voicemute", "on");
-      voiceText.innerHTML = "On";
-      voiceToggleOn.classList.toggle("on");
-    } else if (voiceText.innerHTML === "On") {
-      Wized.data.setCookie("voicemute", "muted");
-      voiceText.innerHTML = "Off";
-      voiceToggleOn.classList.toggle("on");
-    }
-
-    // Development Purposes (DEBUGGING)
-    const voiceUpdatedCookie = Wized.data.get("c.voicemute");
-    console.log("---------------------------------------");
-    console.log("mute cookie changed to: ", voiceUpdatedCookie);
-    console.log("---------------------------------------");
-  }
-
-  function sirenEnableLoad() {
-    // Siren Cookie Intialising On
-    if (sirenCookieInt === "undefined" || sirenCookieInt === undefined) {
-      Wized.data.setCookie("sirenmute", "on");
-      sirenText.innerHTML = "On";
-      sirenToggleOn.classList.toggle("on");
-    }
-    // Siren Cookie On
-    else if (sirenCookieInt === "on") {
-      sirenText.innerHTML = "On";
-      sirenToggleOn.classList.toggle("on");
-    }
-    // Siren Cookie Off
-    else if (sirenCookieInt === "off") {
-      sirenText.innerHTML = "Off";
-      sirenToggleOn.classList.toggle("on");
-    }
-  }
-
-  function voiceEnableLoad() {
-    // Voice Cookie Intialising On
-    if (voiceCookieInt === "undefined" || voiceCookieInt === undefined) {
-      Wized.data.setCookie("voicemute", "on");
-      voiceText.innerHTML = "On";
-      voiceToggleOn.classList.toggle("on");
-    }
-    // Voice Cookie On
-    else if (voiceCookieInt === "on") {
-      voiceText.innerHTML = "On";
-      voiceToggleOn.classList.toggle("on");
-    }
-    // Voice Cookie Off
-    else if (voiceCookieInt === "off") {
-      voiceText.innerHTML = "Off";
-      voiceToggleOn.classList.toggle("on");
-    }
-  }
-
-  $(document).ready(function () {
-    const scrollBtn = $(".panel-button");
-
-    scrollBtn.click(() => {
-      setTimeout(() => {
-        removeHash();
-      }, 0);
+    },
+  },
+  created()
+  {
+    // Intial Data Request Called
+    this.intialRequest()
+  },
+  mounted() {
+    anime({
+      targets: '.path2',
+      strokeDashoffset: [anime.setDashoffset, 0],
+      easing: 'cubicBezier(.5, .05, .1, .3)',
+      duration: 2000,
+      delay: function(el, i) { return i * 250 },
+      direction: 'alternate',
+      loop: true
     });
-    function removeHash() {
-      history.replaceState(
-        "",
-        document.title,
-        window.location.origin +
-          window.location.pathname +
-          window.location.search
-      );
+
+    // Audio Enabled Method Called
+    this.LoadedAudioEnabled(this.$refs.sirenText, this.$refs.sirenToggle, this.$refs.voiceText, this.$refs.voiceToggle)
+
+    // Webflow Animations Reset Called
+    this.WebflowAnimations()
+
+    // ID Param removed
+    $(document).ready(function () {
+      const scrollBtn = $(".panel-button");
+  
+      scrollBtn.click(() => {
+        setTimeout(() => {
+          removeHash();
+        }, 0);
+      });
+      function removeHash() {
+        history.replaceState(
+          "",
+          document.title,
+          window.location.origin +
+            window.location.pathname +
+            window.location.search
+        );
+      }
+    });
+  },
+  updated() {
+    if(this.completed == true)
+    {
+      Wized.data.setVariable("complete", "completed");
     }
-  });
-};
+  },
+}).mount('#app')

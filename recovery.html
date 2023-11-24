@@ -22,63 +22,101 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/native-jeremy/the-legends-config/css/styles-u17.css">
   <!--  Scroll Speed CSS -->
   <style>
-	html { 
-	/*scroll-behavior: smooth !important;*/
-  user-select: none !important;
-}
-.capsule-image-block {
-	background-image: none;
-}
-.nav-button-icon.message_notification {
-    animation: message 0.5s linear 0s infinite alternate forwards;
-}
-.the-legends-dev-banner {
-    margin-bottom: 0px;
-    position: fixed;
-    inset: auto 12px 12px auto;
-    z-index: 2147483647;
-    display: flex;
-    width: 135px;
-    height: auto;
-    padding: 5px;
-    justify-content: center;
-    align-items: center;
-    /* border-radius: 3px; */
-    background-color: #f7f7f7;
-    box-shadow: #f7f7f7 0px 0px 0px 0px;
-}
-	.message-icon-burger {
-    animation: message 0.5s linear 0s infinite alternate forwards;
-}
-/*.app { filter: blur(2px);}*/
-@keyframes message {
-	0% {
-		transform: scale(1);
-	}
-	100% {
-		transform: scale(0.95);
-	}
-}
-</style>
+    html {
+      /*scroll-behavior: smooth !important;*/
+      user-select: none !important;
+    }
+
+    .capsule-image-block {
+      background-image: none;
+    }
+
+    .nav-button-icon.message_notification {
+      animation: message 0.5s linear 0s infinite alternate forwards;
+    }
+
+    .the-legends-dev-banner {
+      margin-bottom: 0px;
+      position: fixed;
+      inset: auto 12px 12px auto;
+      z-index: 2147483647;
+      display: flex;
+      width: 135px;
+      height: auto;
+      padding: 5px;
+      justify-content: center;
+      align-items: center;
+      /* border-radius: 3px; */
+      background-color: #f7f7f7;
+      box-shadow: #f7f7f7 0px 0px 0px 0px;
+    }
+
+    .message-icon-burger {
+      animation: message 0.5s linear 0s infinite alternate forwards;
+    }
+
+    /*.app { filter: blur(2px);}*/
+    @keyframes message {
+      0% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(0.95);
+      }
+    }
+  </style>
   <style>
-	.exercises-headings { 
-  display: flex !important;
+    .waiting {
+      opacity: 0.5;
+      user-select: none;
+      pointer-events: none;
+      cursor: none !important;
+    }
+    .exercises-headings {
+      display: flex !important;
+    }
+
+    .trackWheel {
+      stroke: transparent;
+      stroke-width: 2px;
+      fill: none;
+    }
+
+    .progressWheel {
+      fill: none;
+      stroke: white;
+      stroke-width: 8;
+      transform: rotate(-90deg);
+      transform-origin: center;
+      transition: all 0.25s ease-in-out;
+    }
+    .path {
+    
+    stroke: #397234;
+    stroke-width: 3px;
+    /*animation: dash 15s ease-in-out infinite;*/
+    fill: whitesmoke;
+    }
+
+  .path2 {
+    will-change: transform;
+    stroke: white;
+    stroke-width: 10px;
+    /*animation: dash 15s ease-in-out infinite;*/
+    fill: none;
+  }
+
+  .video-loader {
+    background-color: var(--dark-olive-green);
+    opacity: 1;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .28));
 }
-.trackWheel {
-  stroke: transparent;
-  stroke-width: 2px;
-  fill: none;
-}
-.progressWheel {
-  fill: none;
-  stroke: white;
-  stroke-width: 8;
-  transform: rotate(-90deg);
-  transform-origin: center;
-  transition: all 0.25s ease-in-out;
-}
-</style>
+
+  </style>
+  </style>
 <link rel="manifest" href="manifest.json" />
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
   <div class="global-app-css w-embed">
@@ -147,88 +185,95 @@ overflow-x: hidden;
 }*/
 </style> -->
   </div>
-  <div id="app" w-el="load_app" wized-cloak-custom="Load Round Info, Load Users, Load Exercise Diff" class="app">
-    <div w-el="recovery_exercise_page" class="app-main app-base">
+  <div id="app" w-el="load_app" class="app">
+    <div w-el="exercise_page" class="app-main app-base">
       <div class="app-head current-workout">
         <div class="app-block viewer">
           <div class="banner top-bar"></div>
           <div class="banner bottom-bar"></div>
-          <div id="videoContainer" w-el="workout_video" class="app-fullscreen-video video-embed w-embed"></div>
-          <div id="exerciseHeader" style="display:none;opacity:0" class="header-current animated">
+            <video ref="video" loop preload="auto" v-bind:src="`${exerciseVideo}`" muted webkit-playsinline playsinline class="app-fullscreen-video"
+              style="background-color: #c2c2c2" v-if="StatusCode200 == true">
+              <!--<source src="" type="video/mp4" />-->
+            </video>
+          <div id="exerciseHeader" style="display: none; opacity: 0" class="header-current animated"  v-show="!popup">
             <div class="workout-navigation">
-              <div id="repText" class="generic-text-style-2">Time</div>
-              <div id="safeTimerDisplay" w-el="timer" class="generic-text-style-3">Loading...</div>
+              <div id="repText" class="generic-text-style-2" v-if="StatusCode200 == true">{{exerciseType}}</div>
+              <div v-if="StatusCode200 == true">
+                <div id="safeTimerDisplay" ref="time"  class="generic-text-style-3" v-show="exerciseType !== 'Reps'">
+                </div>
+                <div class="generic-text-style-3" v-show="exerciseType == 'Reps'">
+                  {{exerciseAmount}}
+                  </div>
+              </div>
               <a href="#scroll" class="nav-workout-button panel-button w-inline-block">
                 <div class="nav-cog-icon"></div>
               </a>
             </div>
-            <div id="paramTest" class="text-block">Param Active</div>
-            <div id="paramTestBase" class="text-block">Param Not Yet Set</div>
           </div>
-          <article id="loader" class="loading-workout">
-            <div class="workout-loader w-embed">
-              <?xml version="1.0" encoding="utf-8"?>
-              <!--  Generator: Adobe Illustrator 27.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)   -->
-              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 51 51" style="enable-background:new 0 0 51 51;" xml:space="preserve">
-                <style type="text/css">
-	.st0{fill:currentColor}
-	.st1{opacity:0.5;fill:#FFFFFF;}
-	.st2{opacity:0.5;fill:#2D2D2D;}
-	.st3{opacity:0.6;enable-background:new    ;}
-	.st4{opacity:0.5;fill:#E5E5E5;enable-background:new    ;}
-	.st5{fill:#2C2C2C;}
-	.st6{fill:#397234;}
-	.st7{fill:#E5E5E5;}
-	.st8{clip-path:url(#SVGID_00000108990525427981984240000017916791293283631794_);}
-	.st9{fill:#2D2D2D;}
-	.st10{opacity:0.5;}
-	.st11{fill:#A5A5A5;}
-	.st12{enable-background:new    ;}
-	.st13{clip-path:url(#SVGID_00000044883729532008097830000007788899246430571955_);}
-</style>
-                <path id="Subtraction_8" class="st0" d="M25.5,51c-3.4,0-6.8-0.7-9.9-2C9.5,46.4,4.6,41.5,2,35.4c-1.3-3.1-2-6.5-2-9.9h3.7
-	c0,12,9.8,21.8,21.8,21.8c5.8,0,11.3-2.3,15.4-6.4c8.5-8.5,8.5-22.3,0-30.8C36.8,6,31.3,3.7,25.5,3.7V0c5.1,0,10,1.5,14.3,4.4
-	c1.4,0.9,2.6,2,3.8,3.1c2.3,2.3,4.2,5.1,5.5,8.1c2.7,6.3,2.7,13.5,0,19.9c-1.9,4.6-5.1,8.5-9.2,11.2C35.5,49.5,30.6,51,25.5,51z"></path>
-              </svg>
-            </div>
-            <div id="Trigger" data-w-id="88c3a08d-4e41-ae0e-b174-11915f51768a" class="loading-trigger"></div>
+          <article id="loader" class="loading-workout video-loader" style="background-color: #397234; display: flex !important;" v-if="StatusCode200 !== true">
+            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="200" height="200px" viewBox="0 0 256 256">
+              <defs>
+              </defs>
+              <path class="path2" stroke="#397234" d="m190.4,125.6h-60.1V61.1H61.1v133.7h133.7v-69.3l-4.4.1h0Zm-124.8-60h60.1v59.9h-60.1v-59.9Zm0,64.5h60.1v60.3h-60.1v-60.3Zm124.8,60.3h-60.1v-60.3h60.1v60.3Z"/>
+            </svg>
           </article>
           <div class="app-block-content viewer">
             <div class="info-block-header workout">
-              <div id="exerciseTitle" style="display:none;opacity:0" class="title-text">
+              <div id="exerciseTitle" style="display: none; opacity: 0" class="title-text" v-bind:class="{show_text: !popup}" v-if="!popup">
                 <div class="exercises-headings single_heading_block">
-                  <div id="display_single_title" class="main-heading-style-6 center-align single-title">Single Title</div>
+                  <div class="main-heading-style-6 center-align single-title" v-if="StatusCode200 == true">
+                    {{exerciseTitle}}
+                  </div>
                 </div>
               </div>
-              <div id="roundText" class="round-text">
-                <div id="roundTitle" w-el="workout_round_title" class="main-heading-style-9 center-align">Let&#x27;s begin your</div>
-                <div id="mainNumText" w-el="workout_round_number" class="main-heading-style-4 center-align">Recovery</div>
+              <div id="roundText" class="round-text" v-if="popup">
+                <div id="roundTitle" class="main-heading-style-9 center-align">
+                 <span v-show="workout.round > 0">Round</span>
+                </div>
+                <div id="mainNumText" w-el="workout_round_number" class="main-heading-style-4 center-align">
+                  <span v-show="workout.round > 0">{{workout.round}}</span><span v-show="workout.round == 0">Warm Up</span>
+                </div>
               </div>
             </div>
             <div class="info-block viewer">
-              <div class="workout-player">
+              <div class="workout-player" v-bind:class="{disabled_player: loadedExercise}">
                 <a href="#scroll" class="player-block panel-button w-inline-block">
                   <div class="player-control-button speaker-icon"></div>
                 </a>
-                <div class="player-block main-player-block">
-                  <div id="prevButtonDisabled" w-el="prev_exercise" class="player-control-button disabled">
+                <div class="player-block main-player-block" v-show="!loadedExercise">
+                  <div v-on:click="PrevExercise()" class="player-control-button w-inline-block" v-if="workout.exercises > 0">
                     <div class="play-left-icon"></div>
                   </div>
-                  <a id="prevButton" w-el="prev_exercise" href="#" class="player-control-button w-inline-block">
-                    <div class="play-left-icon"></div>
-                  </a>
+                  <div class="player-control-button w-inline-block" v-if="workout.exercises == 0 ||">
+                    <div class="play-left-icon" style="opacity: 0.6; user-select: none; cursor: default;"></div>
+                  </div>
                   <div id="playEnabled" class="player-control-button play-button">
-                    <div class="wheel w-embed"><svg width="100" height="100" viewbox="1 1 250 250">
+                    <div class="wheel w-embed">
+                      <svg width="100" height="100" viewbox="1 1 250 250">
                         <circle r="100" cx="124" cy="124" class="trackWheel"></circle>
                         <circle r="100" cx="124" cy="124" class="progressWheel"></circle>
-                      </svg></div>
-                    <div id="playButton" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
-                    <div id="playButtonDisabled" class="play-icon disabled"></div>
+                      </svg>
+                    </div>
+                    <div ref="play" v-on:click="PlayExercise(this.$refs.time, this.$refs.play, this.$refs.video, this.$refs.voice,this.$refs.siren)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
                   </div>
-                  <a id="nextButton" w-el="next_exercise" href="#" class="player-control-button w-inline-block">
+                  <div v-on:click="NextExercise(this.$refs.siren, this.amrapActive)" class="player-control-button w-inline-block" ref="Next">
                     <div class="play-right-arrow-icon"></div>
-                  </a>
-                  <div id="nextButtonDisabled" w-el="next_exercise" class="player-control-button disabled">
+                  </div>
+                </div>
+                <div class="player-block main-player-block" v-show="loadedExercise">
+                  <div class="player-control-button w-inline-block">
+                    <div class="play-left-icon"></div>
+                  </div>
+                  <div id="playEnabled" class="player-control-button play-button">
+                    <div class="wheel w-embed">
+                      <svg width="100" height="100" viewbox="1 1 250 250">
+                        <circle r="100" cx="124" cy="124" class="trackWheel"></circle>
+                        <circle r="100" cx="124" cy="124" class="progressWheel"></circle>
+                      </svg>
+                    </div>
+                    <div data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
+                  </div>
+                  <div class="player-control-button w-inline-block">
                     <div class="play-right-arrow-icon"></div>
                   </div>
                 </div>
@@ -239,11 +284,13 @@ overflow-x: hidden;
               <div class="line viewer"></div>
             </div>
           </div>
-          <div id="roundPopup" class="workout-popup">
-            <div id="roundHeader" class="header-current">
+          <div id="roundPopup" class="workout-popup" v-if="popup">
+            <div id="roundHeader" class="header-current" v-if="popup">
               <div class="workout-navigation">
-                <div class="generic-text-style-2">Round</div>
-                <div id="headerNumText" w-el="round-number_header" class="generic-text-style-3">1</div>
+                <div class="generic-text-style-2" ref="roundText"><span v-show="workout.round > 0">Round</span><span v-show="workout.round == 0">Warm Up</span></div>
+                <div id="headerNumText" class="generic-text-style-3">
+                  <span v-show="workout.round > 0">{{workout.round}}</span>
+                </div>
                 <div class="nav-workout-button">
                   <div class="nav-cog-icon"></div>
                 </div>
@@ -251,13 +298,33 @@ overflow-x: hidden;
             </div>
             <div class="app-block-content workout"></div>
           </div>
+          <div class="finish_modal" id="finish" v-if="completed">
+            <div id="recoveryMessage" class="finish_modal_body workout_style">
+              <div class="modal-header">
+                <h2 class="finish_modal_heading">
+                  You have completed your workout!
+                </h2>
+              </div>
+              <div class="modal-content">
+                <p class="modal-body-copy workout_style_copy">
+                  Congratulations! click the button below to start your recovery.
+                </p>
+              </div>
+              <a id="recoveryLink" href="#"
+                class="finish_button margin-top-xsmall w-button">start recovery</a>
+              <a href="program-hub.html"
+                class="finish_button margin-top-xxsmall w-button">go to program hub</a>
+            </div>
+          </div>
         </div>
         <div id="scroll" class="app-panel">
           <div id="top" class="app-body full-height">
             <div class="content full-height">
               <div w-el="workout_controls" class="content-spacer workout-controls">
                 <div class="content-headings style-2">
-                  <h2 id="activeParam" class="main-heading-style-1">Audio Settings</h2>
+                  <h2 id="activeParam" class="main-heading-style-1">
+                    Audio Settings
+                  </h2>
                 </div>
                 <div class="accordion style-1">
                   <div class="accordion-header style-3">
@@ -269,15 +336,12 @@ overflow-x: hidden;
                         </div>
                       </div>
                     </div>
-                    <div id="siren" w-el="siren_toggle" class="toggle-button-trigger">
-                      <div id="sirenText" class="toggle-button-text">Off</div>
+                    <div id="siren" v-on:click="SirenEnableClick(this.$refs.sirenText, this.$refs.sirenToggle)" class="toggle-button-trigger">
+                      <div id="sirenText" ref="sirenText" class="toggle-button-text">Off</div>
                       <div class="toggle-button">
-                        <div id="sirenToggleOn" class="toggle-button-image"></div>
+                        <div id="sirenToggleOn" ref="sirenToggle" class="toggle-button-image"></div>
                       </div>
                     </div>
-                  </div>
-                  <div class="accordion-body style-1 hide">
-                    <p class="body-copy-text-style-1">When signals are on you will hear siren count downs and a half way warnings throughout the workout. This can be changed at any point during the exercise.</p>
                   </div>
                 </div>
                 <div class="accordion style-1">
@@ -290,53 +354,96 @@ overflow-x: hidden;
                         </div>
                       </div>
                     </div>
-                    <div id="voice" w-el="voice_toggle" class="toggle-button-trigger">
-                      <div id="voiceText" class="toggle-button-text">Off</div>
+                    <div id="voice" v-on:click="VoiceEnableClick(this.$refs.voiceText, this.$refs.voiceToggle)" class="toggle-button-trigger">
+                      <div id="voiceText" ref="voiceText" class="toggle-button-text">Off</div>
                       <div class="toggle-button">
-                        <div id="voiceToggleOn" class="toggle-button-image"></div>
+                        <div id="voiceToggleOn" ref="voiceToggle" class="toggle-button-image"></div>
                       </div>
                     </div>
                   </div>
-                  <div class="accordion-body style-1 hide">
-                    <p class="body-copy-text-style-1">When signals are on you will hear voice count downs and a half way warnings throughout the workout. This can be changed at any point during the exercise.</p>
-                  </div>
                 </div>
               </div>
-              <div id="controls" w-el="workout_controls" class="content-spacer workout-controls">
+              <div id="controls" class="content-spacer workout-controls" v-show="StatusCode200 == true && completed !== true && popup !== true" >
                 <div class="content-headings style-2">
                   <h2 class="main-heading-style-1">Difficulty Settings</h2>
+                  <h2 class="main-heading-style-1" v-if="Debug">Round Number {{workout.round}}</h2>
+                  <h2 class="main-heading-style-1" v-if="Debug">Exercise Number {{workout.exercises}}</h2>
                 </div>
-                <div class="accordion style-1 single-diff-controls">
+                <!--Single-->
+                <div class="accordion style-1" v-if="StatusCode200 == true && amrapActive !== 'True'">
                   <div class="accordion-header style-3">
                     <div class="accordion-header-text style-2">
                       <div class="accordion-header-top-content">
-                        <h2 id="single-title" class="main-sub-heading-style-1 single-title">Difficulty Level</h2>
+                        <h2 class="main-sub-heading-style-1" ref="diffControlTitle" v-if="StatusCode200 == true && exerciseTitle !== undefined">
+                          {{exerciseTitle}}
+                        </h2>
                         <div class="accordion-header-arrow">
                           <div class="accordion-arrow-icon hide"></div>
                         </div>
                       </div>
                     </div>
                     <div class="diff-trigger">
-                      <div id="minusBtn" class="counter-btn">
+                      <div class="counter-btn" v-if="StatusCode200 == true && defaultDiffs - 1 == 0" style="cursor: default !important;">
+                      </div>
+                      <div class="counter-btn" v-on:click="ChangeDifficulty(0, this.$refs.video, this.$refs.min)" v-if="StatusCode200 == true && defaultDiffs !== 0 && loadedExercise !== true">
+                        <div class="counter-arrow left"></div>
+                      </div>
+                      <div class="counter-btn" v-if="loadedExercise == true">
                         <div class="counter-arrow left"></div>
                       </div>
                       <div class="counter-num">
-                        <div id="currentNum" class="num current">1</div>
+                        <div class="num current" ref="min" v-if="StatusCode200 == true">{{defaultDiffs}}</div>
                         <div class="num divider">/</div>
-                        <div id="limitNum" class="num limit">5</div>
+                        <div class="num limit" ref="max" v-if="StatusCode200 == true">{{exerciseMax - 1}}</div>
                       </div>
-                      <div id="plusBtn" class="counter-btn">
+                      <div class="counter-btn" v-on:click="ChangeDifficulty(1, this.$refs.video, this.$refs.min)" v-if="StatusCode200 == true && defaultDiffs + 1 !== exerciseMax && loadedExercise !== true">
                         <div class="counter-arrow right"></div>
+                      </div>
+                      <div class="counter-btn" v-if="loadedExercise == true">
+                        <div class="counter-arrow right"></div>
+                      </div>
+                      <div class="counter-btn" v-if="StatusCode200 == true && defaultDiffs + 1 == exerciseMax" style="cursor: default !important;">
                       </div>
                     </div>
                   </div>
-                  <div class="accordion-body style-1 hide">
-                    <p class="body-copy-text-style-1">When signals are on you will hear siren count downs and a half way warnings throughout the workout. This can be changed at any point during the exercise.</p>
+                </div>
+                <!--Amrap-->
+                <div v-if="StatusCode200 == true && amrapActive == 'True'" style="width: 100%; min-width: 100%;">                
+                  <div class="accordion style-1" v-for="(title, index) in amrapData.amraps" :key="title">
+                    <div class="accordion-header style-3">
+                      <div class="accordion-header-text style-2">
+                        <div class="accordion-header-top-content">
+                          <h2 class="main-sub-heading-style-1" ref="diffControlTitle">
+                            {{title}}
+                          </h2>
+                          <div class="accordion-header-arrow">
+                            <div class="accordion-arrow-icon hide"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="diff-trigger">
+                        <div class="counter-btn" v-if="StatusCode200 == true && exerciseDiffs[index] == 0" style="cursor: default !important;">
+                        </div>
+                        <div class="counter-btn" v-on:click="this.amrapData.currentIndices[index]--" v-if="StatusCode200 == true && exerciseDiffs[index] !== 0">
+                          <div class="counter-arrow left"></div>
+                        </div>
+                        <div class="counter-num">
+                          <div class="num current" ref="min" v-if="StatusCode200 == true">{{exerciseDiffs[index]}}</div>
+                          <div class="num divider">/</div>
+                          <div class="num limit" ref="max" v-if="StatusCode200 == true">{{this.exerciseData[this.workout.round][index].Video.length - 1}}</div>
+                        </div>
+                        <div class="counter-btn" v-on:click="this.amrapData.currentIndices[index]++" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 !== this.exerciseData[this.workout.round][index].Video.length">
+                          <div class="counter-arrow right"></div>
+                        </div>
+                        <div class="counter-btn" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 == this.exerciseData[this.workout.round][index].Video.length" style="cursor: default !important;">
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
               <div class="info-block auto-margin">
-                <a href="#" id="workoutExit" class="button-style-3 workout-button-exit w-button">Stop this recovery</a>
+                <a v-bind:href="`/workout-overview.html?workout=${workout.id}`" class="button-style-3 workout-button-exit w-button">Stop this workout</a>
               </div>
             </div>
           </div>
@@ -344,8 +451,8 @@ overflow-x: hidden;
       </div>
     </div>
     <div class="audio">
-      <div id="voiceAudio" w-el="voiceaudio" class="voice-audio w-embed"></div>
-      <div id="sirenAudio" w-el="sirenaudio" class="siren-audio w-embed"></div>
+        <audio id="voiceSrc" ref="voice" v-bind:src="`${exerciseVoice}`" v-if="StatusCode200 == true"></audio>
+        <audio id="sirenSrc" ref="siren" v-bind:src="`${workout.finishAudio}`" v-if="StatusCode200 == true"></audio>
     </div>
   </div>
   <div w-el="execise_notice_modal" class="modal style-2">
@@ -364,6 +471,7 @@ overflow-x: hidden;
   <div id="roundTrigger" class="roundtrigger"></div>
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=6474932b31758d71131214b7" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="js/the-legends-web-app.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="js/other/misc.js" type="text/javascript"></script>
   <script src="js/recoveries/recovery.js" type="text/javascript"></script>
 </body>
