@@ -5,18 +5,20 @@ createApp({
     return {
       workout: {
         id: "",
+        Audio: [],
+        Videos: [],
+        Amounts: [],
+        Category: [],
+        Type: [],
+        Name: [],
         finishAudio: "",
         round: 0,
         exercises: 0,
-        exercise: 0,
         roundAmount: 0,
         exercisesAmount: 0,
-        voiceHasPlayed: false,
         startDifficulty: [],
         counter: 0,
       },
-      roundData: [],
-      exerciseData: [],
       StatusCode200: false,
       popup: true,
       completed: false,
@@ -26,6 +28,7 @@ createApp({
       fullyLoaded: false,
       type: "",
       timerEnded: false,
+      voiceHasPlayed: false,
       sirenActive: false,
       sirenMuted: "",
       voiceMuted: "",
@@ -37,22 +40,16 @@ createApp({
       return this.workout.exercises
     },
     exerciseType() {
-      if(!this.Rest)
-      {
-      return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-      }
-      else {
-        return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[1]
-      }
+      return this.workout.Type[this.exercise]
     },
     exerciseAmount() {
-      return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[1]) + 1
+      return this.workout.counter = parseInt(this.workout.Amounts[this.exercise]) + 1
     },
     exerciseVoice() {
-        return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[1].url
+        return this.workout.Audio[this.exercise].url
     },
     exerciseMax() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Video.length
+      return 1
     },
     exerciseMin() {
       return this.min
@@ -60,18 +57,14 @@ createApp({
     exerciseMinData() {
       return parseInt(this.workout.startDifficulty[this.exercise]) - 1
     },
-    defaultDiffList()
-    {
-      return this.roundData[this.workout.round].Default_Diff_Level.split(", ");
-    },
     defaultDiffs() {
-      return parseInt(this.defaultDiffList[this.exercise]) - 1
+      return 0
     },
     exerciseTitle() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
+      return this.workout.Category[this.exercise]
     },
     exerciseVideo() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.defaultDiffs].url
+      return this.workout.Videos[this.exercise].url
     },
   },
   methods: {
@@ -83,25 +76,21 @@ createApp({
       this.workout.id = workout.get("recovery");
 
       Wized.request.await("Load Round Info - Recovery", (response) => {
-        //console.log('Round Request', response)
-        roundRes = response;
-        roundInfo = roundRes.data[this.workout.round];
-    
-        roundSelected = roundRes.data[this.workout.round].Round_Selection; 
-        this.roundData = roundRes.data
+        console.log('Round Request', response.data[0])
+        roundRes = response.data[0];
+        
+        this.workout.Audio = roundRes.Audio_Source;
+        this.workout.Videos = roundRes.Diff_Video;
+        this.workout.Amounts = roundRes.Exercise_Amount;
+        this.workout.Category = roundRes.Exercise_Category;
+        this.workout.Name = roundRes.Exercise_Name;
+        this.workout.Type = roundRes.Rep_Type;
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
 
-        this.workout.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        //this.workout.roundAmount = roundRes.data.length
+        //this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
 
-        this.workout.roundAmount = roundRes.data.length
-        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-
-        console.log('Intial Exercise Data', this.exerciseData)
-
-        console.log('startDifficulty', this.workout.startDifficulty)
-        console.log('Current Round', roundSelected)
-        console.log('Round Request', this.roundData)
-        console.log('Round Length', this.workout.roundAmount)
+        console.log('Intial Exercise Data', this.workout.Videos[this.workout.exercises].url)
       });
       
       Wized.request.await("Load Finished Audio", (response) => {    
@@ -109,30 +98,10 @@ createApp({
         console.log("Audio Response", response);
       })
 
-     /* Wized.request.await("Load Exercise Diff V2", (response) => {
-        console.log("Exercise DATA", response);
-        this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
-        this.roundData.forEach((r, ri) => {
-
-          // Added This To Intialise Exercise Data
-          this.exerciseData.push([])
-          
-          r.Diff_ID_Linked_Exercises.forEach((id, index) => {
-            response.data.forEach((e, ei) => {
-              if(e.ID.includes(id))
-              {
-                this.exerciseData[ri].push(e);
-              }
-            });
-          });
-        });
-
-        console.log("Exercise Data END!", this.exerciseData)
-        this.StatusCode200 = true;
-        this.loadedExercise = false;
+      console.log("END!", this.workout)
+        
         this.title(true)
         this.intialisation
-      })*/
     },
 
     // Data Intialised in Exercise
@@ -188,8 +157,8 @@ createApp({
       if(input == 1)
       {
         this.workout.exercises = this.workout.exercises + 1;
-        voice.src = this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        //voice.src = this.workout.Audio[this.workout.exercises].url
+        this.workout.counter = this.workout.Amounts[this.workout.exercises]
         if(this.exerciseType == "Time")
         {
           this.timerEnded = false;
@@ -205,7 +174,7 @@ createApp({
       {
         // Change Exercises Number
         this.workout.exercises = this.workout.exercises - 1;
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        this.workout.counter = this.workout.Amounts[this.workout.exercises]
         if(this.exerciseType == "Time")
         {
           this.timerEnded = false;
@@ -220,7 +189,7 @@ createApp({
       {
         // Change Exercises Number
         this.workout.exercises = this.workout.exercises - 1;
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        this.workout.counter = this.workout.Amounts[this.workout.exercises]
         if(this.exerciseType == "Time")
         {
           this.timerEnded = false;
@@ -231,17 +200,8 @@ createApp({
           this.Timer(this.$refs.time, this.$refs.video, this.$refs.siren, this.timerEnded);
         }
       }
-      else if (input == 2)
-      {
-        // Change Round Number
-        this.workout.round = this.workout.round - 1;
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-        // Change Exercises Number
-        this.workout.exercises = this.exerciseData[this.workout.round].length - 1;
-        this.popup = false;
-      }
 
-      this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+      //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
 
       if(input !== 3)
       {
@@ -428,20 +388,12 @@ createApp({
     // Previous Exercise By Click
     PrevExercise()
     {
-      if(this.workout.exercises == 0)
-      {
-        // Round Change
-        this.popup = true;
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-        this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 2, this.$refs.siren)
-        this.title(true)
-      }
       // Round Start
-      else if(this.workout.exercises - 1 == 0)
+      if(this.workout.exercises - 1 == 0)
       {
         this.popup = true;
         clearInterval(timer)
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        this.workout.counter = this.workout.Amounts[this.workout.exercises]
         this.$refs.play.classList.toggle("pause")
         this.$refs.time.classList.toggle("pausetime")
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 3, this.$refs.siren)
@@ -451,7 +403,7 @@ createApp({
       }
       else {
         // Exercise Change
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.popup = false;
         clearInterval(timer)
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0, this.$refs.siren)
@@ -464,8 +416,6 @@ createApp({
     // Next Exercise By Click
     NextExercise(siren)
     {
-      this.ResetAmrapData()
-      
       if(this.exerciseType == "Reps")
       {
         if(this.sirenMuted !== "off")
@@ -479,23 +429,8 @@ createApp({
       }
 
       //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
-
-      // Round Change
-      if(this.workout.exercises == this.exerciseData[this.workout.round].length - 1 && this.workout.round + 1 !== this.roundData.length)
-      {
-        this.popup = true;
-        clearInterval(timer)
-        this.workout.round = this.workout.round + 1;
-        this.workout.exercises = 0
-        this.$refs.play.classList.toggle("pause")
-        console.log('First Condition')
-        this.title(true)
-        this.voiceHasPlayed = false
-        this.sirenActive = false
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
-      }
       // Finished Change
-      else if(this.workout.exercises + 1 == this.exerciseData[this.workout.round].length && this.workout.round + 1 == this.roundData.length)
+      if(this.workout.exercises + 1 == this.workout.Amounts.length)
       {
         this.popup = true;
         this.completed = true;
@@ -510,7 +445,7 @@ createApp({
         {
           clearInterval(timer)
         }
-        this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
+        this.workout.counter = this.workout.Amounts[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1, this.$refs.siren)
         console.log('Final Condition')
         this.title(true)
@@ -632,6 +567,9 @@ createApp({
     this.intialRequest()
   },
   mounted() {
+    this.StatusCode200 = true;
+    this.loadedExercise = false;
+
     anime({
       targets: '.path2',
       strokeDashoffset: [anime.setDashoffset, 0],
@@ -671,7 +609,7 @@ createApp({
   updated() {
     if(this.completed == true)
     {
-      Wized.data.setVariable("complete", "completed");
+      Wized.data.setVariable("recovery", "completed");
     }
   },
 }).mount('#app')

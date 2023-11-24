@@ -186,14 +186,13 @@ overflow-x: hidden;
 </style> -->
   </div>
   <div id="app" w-el="load_app" class="app">
-    <div w-el="exercise_page" class="app-main app-base">
+    <div w-el="recovery_exercise_page" class="app-main app-base">
       <div class="app-head current-workout">
         <div class="app-block viewer">
           <div class="banner top-bar"></div>
           <div class="banner bottom-bar"></div>
             <video ref="video" loop preload="auto" v-bind:src="`${exerciseVideo}`" muted webkit-playsinline playsinline class="app-fullscreen-video"
               style="background-color: #c2c2c2" v-if="StatusCode200 == true">
-              <!--<source src="" type="video/mp4" />-->
             </video>
           <div id="exerciseHeader" style="display: none; opacity: 0" class="header-current animated"  v-show="!popup">
             <div class="workout-navigation">
@@ -244,7 +243,7 @@ overflow-x: hidden;
                   <div v-on:click="PrevExercise()" class="player-control-button w-inline-block" v-if="workout.exercises > 0">
                     <div class="play-left-icon"></div>
                   </div>
-                  <div class="player-control-button w-inline-block" v-if="workout.exercises == 0 ||">
+                  <div class="player-control-button w-inline-block" v-if="workout.exercises == 0">
                     <div class="play-left-icon" style="opacity: 0.6; user-select: none; cursor: default;"></div>
                   </div>
                   <div id="playEnabled" class="player-control-button play-button">
@@ -256,7 +255,7 @@ overflow-x: hidden;
                     </div>
                     <div ref="play" v-on:click="PlayExercise(this.$refs.time, this.$refs.play, this.$refs.video, this.$refs.voice,this.$refs.siren)" data-w-id="50230328-ffa6-09d6-5cbe-0150364f7153" class="play-icon"></div>
                   </div>
-                  <div v-on:click="NextExercise(this.$refs.siren, this.amrapActive)" class="player-control-button w-inline-block" ref="Next">
+                  <div v-on:click="NextExercise(this.$refs.siren)" class="player-control-button w-inline-block" ref="Next">
                     <div class="play-right-arrow-icon"></div>
                   </div>
                 </div>
@@ -302,16 +301,14 @@ overflow-x: hidden;
             <div id="recoveryMessage" class="finish_modal_body workout_style">
               <div class="modal-header">
                 <h2 class="finish_modal_heading">
-                  You have completed your workout!
+                  You have completed your recovery!
                 </h2>
               </div>
               <div class="modal-content">
                 <p class="modal-body-copy workout_style_copy">
-                  Congratulations! click the button below to start your recovery.
+                  Congratulations! return to the program hub via the button below.
                 </p>
               </div>
-              <a id="recoveryLink" href="#"
-                class="finish_button margin-top-xsmall w-button">start recovery</a>
               <a href="program-hub.html"
                 class="finish_button margin-top-xxsmall w-button">go to program hub</a>
             </div>
@@ -369,8 +366,7 @@ overflow-x: hidden;
                   <h2 class="main-heading-style-1" v-if="Debug">Round Number {{workout.round}}</h2>
                   <h2 class="main-heading-style-1" v-if="Debug">Exercise Number {{workout.exercises}}</h2>
                 </div>
-                <!--Single-->
-                <div class="accordion style-1" v-if="StatusCode200 == true && amrapActive !== 'True'">
+                <div class="accordion style-1" v-if="StatusCode200 == true">
                   <div class="accordion-header style-3">
                     <div class="accordion-header-text style-2">
                       <div class="accordion-header-top-content">
@@ -403,40 +399,6 @@ overflow-x: hidden;
                         <div class="counter-arrow right"></div>
                       </div>
                       <div class="counter-btn" v-if="StatusCode200 == true && defaultDiffs + 1 == exerciseMax" style="cursor: default !important;">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!--Amrap-->
-                <div v-if="StatusCode200 == true && amrapActive == 'True'" style="width: 100%; min-width: 100%;">                
-                  <div class="accordion style-1" v-for="(title, index) in amrapData.amraps" :key="title">
-                    <div class="accordion-header style-3">
-                      <div class="accordion-header-text style-2">
-                        <div class="accordion-header-top-content">
-                          <h2 class="main-sub-heading-style-1" ref="diffControlTitle">
-                            {{title}}
-                          </h2>
-                          <div class="accordion-header-arrow">
-                            <div class="accordion-arrow-icon hide"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="diff-trigger">
-                        <div class="counter-btn" v-if="StatusCode200 == true && exerciseDiffs[index] == 0" style="cursor: default !important;">
-                        </div>
-                        <div class="counter-btn" v-on:click="this.amrapData.currentIndices[index]--" v-if="StatusCode200 == true && exerciseDiffs[index] !== 0">
-                          <div class="counter-arrow left"></div>
-                        </div>
-                        <div class="counter-num">
-                          <div class="num current" ref="min" v-if="StatusCode200 == true">{{exerciseDiffs[index]}}</div>
-                          <div class="num divider">/</div>
-                          <div class="num limit" ref="max" v-if="StatusCode200 == true">{{this.exerciseData[this.workout.round][index].Video.length - 1}}</div>
-                        </div>
-                        <div class="counter-btn" v-on:click="this.amrapData.currentIndices[index]++" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 !== this.exerciseData[this.workout.round][index].Video.length">
-                          <div class="counter-arrow right"></div>
-                        </div>
-                        <div class="counter-btn" v-if="StatusCode200 == true && exerciseDiffs[index] + 1 == this.exerciseData[this.workout.round][index].Video.length" style="cursor: default !important;">
-                        </div>
                       </div>
                     </div>
                   </div>
