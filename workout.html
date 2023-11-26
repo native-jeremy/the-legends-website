@@ -274,7 +274,7 @@
                   Congratulations! click the button below to start your recovery.
                 </p>
               </div>
-              <a id="recoveryLink" href="#"
+              <a id="recoveryLink" v-bind:href="`/recovery.html?recovery=${workout.recoveryLink[0]}`"
                 class="finish_button margin-top-xsmall w-button">start recovery</a>
               <a href="program-hub.html"
                 class="finish_button margin-top-xxsmall w-button">go to program hub</a>

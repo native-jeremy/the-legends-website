@@ -64,7 +64,10 @@ createApp({
       return this.workout.Category[this.exercise]
     },
     exerciseVideo() {
-      return this.workout.Videos[this.exercise].url
+      if(this.StatusCode200)
+      {
+        return this.workout.Videos[this.exercise].url
+      }
     },
   },
   methods: {
@@ -76,7 +79,7 @@ createApp({
       this.workout.id = workout.get("recovery");
 
       Wized.request.await("Load Round Info - Recovery", (response) => {
-        console.log('Round Request', response.data[0])
+        //console.log('Round Request', response.data[0])
         roundRes = response.data[0];
         
         this.workout.Audio = roundRes.Audio_Source;
@@ -90,17 +93,16 @@ createApp({
         //this.workout.roundAmount = roundRes.data.length
         //this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
 
-        console.log('Intial Exercise Data', this.workout.Videos[this.workout.exercises].url)
+        //console.log('Intial Exercise Data', this.workout.Videos[this.workout.exercises].url)
       });
       
       Wized.request.await("Load Finished Audio", (response) => {    
         this.workout.finishAudio = response.data[0].Audio[0].url
-        console.log("Audio Response", response);
+        //console.log("Audio Response", response);
       })
 
-      console.log("END!", this.workout)
+      //console.log("END!", this.workout)
         
-        this.title(true)
         this.intialisation
     },
 
@@ -567,8 +569,11 @@ createApp({
     this.intialRequest()
   },
   mounted() {
+    setTimeout(() => {
     this.StatusCode200 = true;
     this.loadedExercise = false;
+    this.title(true)
+  },5000)
 
     anime({
       targets: '.path2',

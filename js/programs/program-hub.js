@@ -106,7 +106,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           window.Webflow && window.Webflow.ready();
           window.Webflow && window.Webflow.require("ix2").init();
           document.dispatchEvent(new Event("readystatechange"));
-          //console.log("Completed Array", this.CompletedWorkouts)
+          console.log("Completed Array", this.CompletedWorkouts)
           //console.log("Next Workout", this.nextWorkoutID)
           //console.log("Progress", this.ProgramCompleted)
           sal({
