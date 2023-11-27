@@ -37,8 +37,9 @@ window.onload = async () => {
 
     //Logging Successful Request Message
     console.log("WORKED!");
-    setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 2000);
 
     //Code Ended || Wized Request Function Ended
   });
 };
+
+setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 6000);
