@@ -25,7 +25,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
     programDone = true;
   }
   // Console.log Request
-  //console.log("User Request:", currentUser);
+  console.log("User Request:", currentUser);
   Wized.request.await("Load Program", (response) => {
       const program = response.data;
       // Console.log Request
@@ -33,7 +33,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
       Wized.request.await("Load weeks - HUB", (response) => {
           const currentProgram = response.data;
           // Console.log Request
-          //console.log("Program Request:", currentProgram);
+          console.log("Program Request:", currentProgram);
           const CompletedAmount = [];
           let nextWorkoutStatic = false;
           let nextWorkoutIDStatic = null;
