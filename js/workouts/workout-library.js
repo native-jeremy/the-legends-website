@@ -98,5 +98,6 @@ setTimeout(() => {
     once: false,
   });
 
-  setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 2000);
+  setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none";  let scroller = sal();
+  scroller.update();}, 2000);
   }, 3000);

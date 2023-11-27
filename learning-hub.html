@@ -321,7 +321,7 @@ overflow-x: hidden;
       <link rel="prerender" href="/messages">
     </div>
   </div>
-  <div id="app" w-el="load_app" wized-cloak-custom="Load Users Program Hub, Load Users, Load Users Program " class="app">
+  <div id="app" w-el="load_app" class="app">
     <div w-el="learn_page" class="app-main app-base">
       <div class="app-head learning-hub">
         <div class="app-block fixed app-hero-image">
@@ -350,12 +350,12 @@ overflow-x: hidden;
               </div>
               <div class="content-block style-4 new">
                 <a v-bind:href="`/guides?guide=${Guide.ID}`" v-for="(Guide, index) in Guides" v-bind:key="Guide" href="#" class="capsule-body style-1 w-inline-block">
-                  <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" v-bind:srcset="`${Guides[index].Slides_Images[0].url}`" alt="" class="full_thumbnail"></div>
+                  <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Guides[index].Slides_Images[0].url}`" alt="" class="full_thumbnail"></div>
                   <div class="capsule-header-content">
                     <div class="capsule-header-text">
                       <h2 class="main-heading-style-1 capsule-title">{{Guide.Name}}</h2>
                     </div>
-                    <div v-bind:class="User.Read_Guide_ID !== undefined &amp;&amp; User.Read_Guide_ID.includes(Guides[index].ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>
+                    <div v-bind:class="User.Read_Guide_ID !== undefined && User.Read_Guide_ID.includes(Guides[index].ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>
                   </div>
                 </a>
               </div>

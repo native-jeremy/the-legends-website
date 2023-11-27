@@ -262,7 +262,7 @@ createApp({
         );
       }, 3000);
     } else {
-      console.log("Render Recipes Pushed", this.RenderRecipes);
+      //console.log("Render Recipes Pushed", this.RenderRecipes);
       /*console.log("User updated", this.User);
       console.log("Filters updated", this.Filters);
       console.log("Breakfast image loaded", this.HeroImage);
@@ -274,6 +274,8 @@ createApp({
       console.log("Recipes Parsed loaded", this.RecipesParsed);*/
       return false;
     }
+    let scroller = sal();
+    scroller.update();
   },
 }).mount("#app");
 // End Vue Intializer

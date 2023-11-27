@@ -13,9 +13,9 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
-      User: null,
+      User: [],
       Page: null,
-      HeroImage: null,
+      HeroImage: [],
       Guides: null,
       Blogs: null,
       Tutorials: null,
@@ -28,6 +28,7 @@ createApp({
   Wized.request.await("Load Page", (response) => {
     this.Page = response.data[0];
     this.HeroImage = response.data[0].Hero_Image[0].url;
+    console.log('Image', response)
   });
   Wized.request.await("Load Guides - LEARN", (response) => {
     this.Guides = response.data;

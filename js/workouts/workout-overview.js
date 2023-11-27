@@ -163,4 +163,5 @@ setTimeout(() => {
    });
 }, 3000);
 
-setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 6000);
+setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"; let scroller = sal();
+scroller.update();}, 6000);

@@ -389,7 +389,7 @@ overflow-x: hidden;
                 <div class="accordion-body style-1">
                   <div v-bind:key="recipe" v-for="(recipe, index) in RenderRecipes[typeIndex]" class="dynamic_show" data-sal="slide-up" data-sal-duration="1000">
                     <a v-bind:href="`/recipe?recipe=${recipe.ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
+                      <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-header-content">
                         <div class="capsule-header-text">
                           <h2 class="main-heading-style-1">{{recipe.Name}}</h2>
