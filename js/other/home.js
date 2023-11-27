@@ -1,5 +1,4 @@
-setTimeout(() =>{
-  anime({
+anime({
     targets: '.path3',
     strokeDashoffset: [anime.setDashoffset, 0],
     easing: 'cubicBezier(.5, .05, .1, .3)',
@@ -8,7 +7,6 @@ setTimeout(() =>{
     direction: 'alternate',
     loop: true
   });
-  }, 2000)
 //----------------------------------------------------------------
 //  HOME PAGE REQUEST | FROM WIZED
 //----------------------------------------------------------------
@@ -134,7 +132,7 @@ Wized.request.await("Load Home Page", (response) => {
               }
             }
           }
-          setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 2000);
+          setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 1000);
       }
   }).mount('#app')
 //----------------------------------------------------------------

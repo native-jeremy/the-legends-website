@@ -1,3 +1,13 @@
+anime({
+  targets: '.path3',
+  strokeDashoffset: [anime.setDashoffset, 0],
+  easing: 'cubicBezier(.5, .05, .1, .3)',
+  duration: 2000,
+  delay: function(el, i) { return i * 250 },
+  direction: 'alternate',
+  loop: true
+});
+
 window.onload = async () => {
   // Checked arrays created to hold data
   let question4CheckedArray = [];
@@ -65,6 +75,8 @@ window.onload = async () => {
     console.log("Question 6 Answers: ", question6Applied); // Console log new value
   });
 };
+
+setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 2000);
 
 //
 $(document).ready(function () {

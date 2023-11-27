@@ -38,11 +38,12 @@ Wized.request.await("Load Users Program Hub", (response) => {
           let nextWorkoutStatic = false;
           let nextWorkoutIDStatic = null;
           currentProgram.forEach((WeekEl, index) => {
-                  CompletedAmount.push({Week: WeekEl.Week, WorkoutName: WeekEl.Workout_Names, WorkoutID: WeekEl.Workouts, AmountCompleted: 0});
+                  CompletedAmount.push({Week: WeekEl.Week, WorkoutName: WeekEl.Workout_Names, WorkoutID: WeekEl.Workouts, ProgramID: WeekEl.Program_ID[0], AmountCompleted: 0});
           });
-          if("Completed_Workout_Week" in currentUser)
+          /*if("Completed_Workout_Week" in currentUser)
           {
               CompletedAmount.forEach((total, index) => {
+                
                   if(currentUser.Completed_Workout_ID.some((id) => CompletedAmount[index].WorkoutID.includes(id)) && currentUser.Completed_Workout_Week.some((item) => CompletedAmount[index].Week.includes(item)))
                   {
                       CompletedAmount[index].AmountCompleted = CompletedAmount[index].AmountCompleted + 1;
@@ -64,7 +65,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
                       });
                   }
               });
-          }
+          }*/
       // Start Vue Intializer
       const { createApp } = Vue
       createApp({
@@ -124,6 +125,16 @@ Wized.request.await("Load Users Program Hub", (response) => {
           value: progressNum,
           textFormat: "percent",
           indeterminateText: 0,
+          });
+          CompletedAmount.forEach((week, index) => {
+            const weeks = document.querySelectorAll(".weeks");
+            const completedIcon = weeks[index].querySelectorAll(".completed-icon");
+            week.WorkoutID.forEach((workout, id) => {
+                if(completedIcon[id].classList.contains("completed"))
+                {
+                    CompletedAmount[index].AmountCompleted++;
+                }
+            })
           });
           setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
           }

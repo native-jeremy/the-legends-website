@@ -4746,7 +4746,8 @@ a {
 }
 
 .utility-page-content {
-  width: 260px;
+  width: 100%;
+  max-width: 400px;
   text-align: center;
   flex-direction: column;
   display: flex;

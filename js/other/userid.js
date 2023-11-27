@@ -1,16 +1,20 @@
 window.onload = async () => {
     const userId = await Wized.data.get('c.userid');
-    console.log('UserID: ', userId);
-    const mainBtn = document.getElementById('mainBtn');
+    //console.log('UserID: ', userId);
+    const mainBtn = document.querySelectorAll('.header_main_secondary_button');
 
     if(userId !== undefined)
     {
-        mainBtn.href = "/program-hub-welcome.html";
-        mainBtn.textContent = "Home";
-        console.log('Home');
+        mainBtn.forEach((button) => {
+            button.href = "/program-hub-welcome.html";
+            button.textContent = "Home";
+            //console.log('Home');
+        });
     }
     else {
-        mainBtn.textContent = "Login";
-        console.log('Login');
+        mainBtn.forEach((button) => {
+            button.textContent = "Login";
+            //console.log('Login');
+        });
     }
   };
