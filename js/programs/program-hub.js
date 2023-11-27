@@ -6,7 +6,7 @@ anime({
     delay: function(el, i) { return i * 250 },
     direction: 'alternate',
     loop: true
-  });
+});
 Wized.request.await("Load Users Program Hub", (response) => {
   const currentUser = response.data;
   let currentWeek;
