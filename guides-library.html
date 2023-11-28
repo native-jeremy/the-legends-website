@@ -344,7 +344,7 @@ overflow-x: hidden;
             </div>
             <div v-if="filteredList.length !== 0 " class="content-block style-2">
               <a v-bind:href="`/guides?guide=${Guide.ID}`" v-for="(Guide, index) in filteredList" v-bind:key="Guide" href="#" class="capsule-body style-1 capsule-filter w-inline-block">
-                <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" v-bind:srcset="`${Guides[index].Slides_Images[0].url}`" alt="" class="full_thumbnail"></div>
+                <div class="capsule-image-block image_src"><img loading="eager" v-bind:srcset="`${Guides[index].Slides_Images[0].url}`" alt="" class="full_thumbnail"></div>
                 <div class="capsule-header-content">
                   <div class="capsule-header-text">
                     <h2 class="main-heading-style-1 capsule-title">{{ Guide.Name }}</h2>
