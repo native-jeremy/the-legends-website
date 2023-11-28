@@ -30,28 +30,28 @@ createApp({
         data.forEach(element => {
           this.Recipes.push(element);
         });
-        console.log('Recipes Page 1', data);
+        //console.log('Recipes Page 1', data);
       });
       Wized.request.await("Load Recipes Page 2", (response) => {
         const data = response.data
         data.forEach(element => {
           this.Recipes.push(element);
         });
-        console.log('Recipes Page 2', data);
+        //console.log('Recipes Page 2', data);
       });
       Wized.request.await("Load Recipes Page 3", (response) => {
         const data = response.data
         data.forEach(element => {
           this.Recipes.push(element);
         });
-        console.log('Recipes Page 3', data);
+        //console.log('Recipes Page 3', data);
       });
       Wized.request.await("Load Recipes Page 4", (response) => {
         const data = response.data
         data.forEach(element => {
           this.Recipes.push(element);
         });
-        console.log('Recipes Page 4', data);
+        //console.log('Recipes Page 4', data);
       });
     }
   },
