@@ -15,6 +15,10 @@ window.onload = async () => {
     const emailErr = document.querySelector(".email_tooltip");
     const emailValid = document.getElementById("emailValid");
     const emailNotValid = document.getElementById("emailNotValid");
+
+    emailValid.addEventListener("click", () => {
+      emailValid.setAttribute("disabled", "true");
+    });
     email.addEventListener("keyup", () => {
       snapshot.forEach((user) => {
         if (snapshot.find((user) => user.Email == email.value)) {
