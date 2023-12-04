@@ -114,6 +114,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
             threshold: 0.5,
             once: false,
           });
+          document.querySelector('.loading-state-v2').style.display = "none"
           if("Completed_Workout_Week" in currentUser)
           {
           // Progress Wheel
@@ -138,7 +139,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
           });
           //setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
           }
-          document.querySelector('.loading-state-v2').style.display = "none"
       },
       }).mount('#app')
       // End Vue Intializer
