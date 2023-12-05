@@ -411,7 +411,7 @@ overflow-x: hidden;
                         </div>
                         <div w-el="complete_filter_week" class="generic-text-style-1 complete-week">HIIT Workout</div>
                       </div>
-                      <div v-bind:class="User.Completed_Workout_ID !== undefined &amp;&amp; User.Completed_Workout_ID.some((id) =&gt; week.Workouts[index].includes(id)) &amp;&amp; User.Completed_Workout_Week.some((id) =&gt; week.Week.includes(id)) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-icon"></div>
+                      <div v-bind:class="User.Completed_Workout_ID !== undefined && User.Completed_Workout_ID.some((id) && week.Workouts[index].includes(id)) && User.Completed_Workout_Week.some((id) && week.Week.includes(id)) ? completed : not_completed" class="completed-icon"></div>
                     </div>
                   </a>
                 </div>
