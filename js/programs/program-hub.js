@@ -118,7 +118,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           if("Completed_Workout_Week" in currentUser)
           {
             // Progress Wheel
-            const workoutEl = document.querySelectorAll(".workouts");
+            /*const workoutEl = document.querySelectorAll(".workouts");
             let progressNum = this.User.Completed_Workouts.length / workoutEl.length * 100;
             const circleProgress = new CircleProgress(".circle-latest");
             circleProgress.attr({
@@ -126,7 +126,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
             value: progressNum,
             textFormat: "percent",
             indeterminateText: 0,
-            });
+            });*/
             CompletedAmount.forEach((week, index) => {
                 const weeks = document.querySelectorAll(".weeks");
                 const completedIcon = weeks[index].querySelectorAll(".completed-icon");
