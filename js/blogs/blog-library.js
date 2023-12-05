@@ -37,7 +37,7 @@ createApp({
     window.Webflow && window.Webflow.ready();
     window.Webflow && window.Webflow.require("ix2").init();
     document.dispatchEvent(new Event("readystatechange"));
-    setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 2000);
+    document.querySelector('.loading-state-v2').style.display = "none"
   },
 }).mount("#app");
 // End Vue Intializer

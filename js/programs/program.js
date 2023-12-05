@@ -37,5 +37,5 @@ setTimeout(() => {
   window.Webflow && window.Webflow.require("ix2").init();
   document.dispatchEvent(new Event("readystatechange"));
 
-  setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 1000);
+  document.querySelector('.loading-state-v2').style.display = "none"
 }, 3000);

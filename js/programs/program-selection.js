@@ -28,7 +28,7 @@ window.onload = async () => {
     let WeeksEl = [];
     let FAQSArray = [];
     let num = 0;
-    /*const value = await Wized.data.get("v.date");
+    const value = await Wized.data.get("v.date");
        // Get current date
       let date = new Date();
       // Add five days to current date
@@ -38,7 +38,7 @@ window.onload = async () => {
       let day = date.getDate();
       let fullDate = year + "/" + month + "/" + day;
       console.log(fullDate);
-      Wized.data.setVariable("date", fullDate);*/
+      Wized.data.setVariable("date", fullDate);
   
     // Program Selection Request
     Wized.request.await("Load Users Program", (response) => {

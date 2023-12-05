@@ -67,7 +67,7 @@ createApp({
   document.dispatchEvent(new Event("readystatechange"));
 
 
-  setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"});
+  document.querySelector('.loading-state-v2').style.display = "none"
   }, 3000);
 
   // Intialisation Of Static Elements

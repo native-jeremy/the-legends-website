@@ -132,7 +132,7 @@ Wized.request.await("Load Home Page", (response) => {
               }
             }
           }
-          setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none";}, 1000);
+          document.querySelector('.loading-state-v2').style.display = "none";
       }
   }).mount('#app')
 //----------------------------------------------------------------
