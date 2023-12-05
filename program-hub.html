@@ -399,7 +399,7 @@ overflow-x: hidden;
                   </div>
                 </div>
                 <div v-bind:class="{hide_accordion : number !== UserWeek }" class="accordion-body style-1 sessions">
-                  <a v-bind:href="`/workout-overview.html?workout=${week.Workouts[index]}&ri=week-${number + 1}`" v-for="(workout, index) in week.Workouts.slice(0, SessionAmount)" v-bind:key="workout" v-bind:class="{disabled: number &gt; UserWeek }" href="#" class="capsule-body style-1 workouts w-inline-block" data-sal="slide-up" data-sal-duration="1000">
+                  <a v-bind:href="`/workout-overview.html?workout=${week.Workouts[index]}&ri=week-${number + 1}`" v-for="(workout, index) in week.Workouts.slice(0, SessionAmount)" v-bind:key="workout" v-bind:class="{disabled: number > UserWeek }" href="#" class="capsule-body style-1 workouts w-inline-block" data-sal="slide-up" data-sal-duration="1000">
                     <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${week.Image[index].url}`" alt="" class="full_thumbnail"></div>
                     <div class="capsule-header-content">
                       <div class="capsule-header-text">
@@ -411,7 +411,7 @@ overflow-x: hidden;
                         </div>
                         <div w-el="complete_filter_week" class="generic-text-style-1 complete-week">HIIT Workout</div>
                       </div>
-                      <div v-bind:class="User.Completed_Workout_ID !== undefined &amp;&amp; User.Completed_Workout_ID.some((id) =&gt; week.Workouts[index].includes(id)) &amp;&amp; User.Completed_Workout_Week.some((id) =&gt; week.Week.includes(id)) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-icon"></div>
+                      <div v-bind:class="User.Completed_Workout_ID !== undefined && User.Completed_Workout_ID.some((id) => week.Workouts[index].includes(id)) && User.Completed_Workout_Week.some((id) => week.Week.includes(id)) ? 'completed' : 'not_completed'" class="completed-icon"></div>
                     </div>
                   </a>
                 </div>
