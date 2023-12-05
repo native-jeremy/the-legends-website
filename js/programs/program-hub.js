@@ -117,27 +117,27 @@ Wized.request.await("Load Users Program Hub", (response) => {
           document.querySelector('.loading-state-v2').style.display = "none"
           if("Completed_Workout_Week" in currentUser)
           {
-          // Progress Wheel
-          const workoutEl = document.querySelectorAll(".workouts");
-          let progressNum = this.User.Completed_Workouts.length / workoutEl.length * 100;
-          const circleProgress = new CircleProgress(".circle-latest");
-          circleProgress.attr({
-          max: 100,
-          value: progressNum,
-          textFormat: "percent",
-          indeterminateText: 0,
-          });
-          CompletedAmount.forEach((week, index) => {
-            const weeks = document.querySelectorAll(".weeks");
-            const completedIcon = weeks[index].querySelectorAll(".completed-icon");
-            week.WorkoutID.forEach((workout, id) => {
-                if(completedIcon[id].classList.contains("completed"))
-                {
-                    CompletedAmount[index].AmountCompleted++;
-                }
-            })
-          });
-          //setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
+            // Progress Wheel
+            const workoutEl = document.querySelectorAll(".workouts");
+            let progressNum = this.User.Completed_Workouts.length / workoutEl.length * 100;
+            const circleProgress = new CircleProgress(".circle-latest");
+            circleProgress.attr({
+            max: 100,
+            value: progressNum,
+            textFormat: "percent",
+            indeterminateText: 0,
+            });
+            CompletedAmount.forEach((week, index) => {
+                const weeks = document.querySelectorAll(".weeks");
+                const completedIcon = weeks[index].querySelectorAll(".completed-icon");
+                week.WorkoutID.forEach((workout, id) => {
+                    if(completedIcon[id].classList.contains("completed"))
+                    {
+                        CompletedAmount[index].AmountCompleted++;
+                    }
+                })
+            });
+            //setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
           }
       },
       }).mount('#app')
