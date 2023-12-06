@@ -124,7 +124,7 @@ createApp({
         }
       });
       Wized.request.await("Load Recipes - Breakfast", (response) => {
-        console.log("Breakfast: " + response)
+        console.log("Breakfast: " + response.data)
         let newArr = response.data.map((item) => {
           return {
             Name: item.Name,
