@@ -42,8 +42,10 @@ window.onload = async () => {
           "PROGRAM",
           snapshot.Program_Name[0]
         );
+        userProgram = userProgram.replace("HYPERLINK", snapshot.Message_Link_Name[i]);
         let personalText = userProgram;
         message[i].innerHTML = personalText;
+        
         // Adding message to "readMessages" array
         message[i].addEventListener("click", () => {
           messageButton.style.display = "none";
