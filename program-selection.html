@@ -68,6 +68,34 @@
 	transition: 1s linear 1s !important;	
 }
 </style>
+<style>
+  [w-el="program_description"] p img { 
+    max-height: 500px;
+  }
+  [w-el="program_description"] h2 {
+    font-size: 22px;
+    line-height: 32px;
+    font-weight: 600;
+  }
+  @media screen and (max-width: 767px) {
+    [w-el="program_description"] p img { 
+          max-height: 400px;
+      }
+      [w-el="program_description"] {
+        font-size: 20px;
+        line-height: 30px;
+      }
+    }
+    @media screen and (max-width: 479px) {
+      [w-el="program_description"] img { 
+         max-height: 300px;
+      }
+      [w-el="program_description"] h2 {
+        font-size: 15px;
+        line-height: 20px;
+      }
+    }
+  </style>
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
   <!-- <style>
