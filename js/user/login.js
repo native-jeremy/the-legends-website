@@ -12,6 +12,10 @@ window.onload = async () => {
   const email = document.getElementById("Email-Login");
   const password = document.getElementById("Password-Login");
   const emailErr = document.querySelector(".email_tooltip");
+  
+  await Wized.data.setCookie('userid', ''); // Set value of "c.accesstoken"
+  await Wized.data.setCookie('authtoken', '');
+
   loginButton.addEventListener("click", () => {
     Wized.request.await("Login user", (response) => {
       if (response.status == 500) {
