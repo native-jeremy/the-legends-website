@@ -19,5 +19,6 @@ for (let i = 0; i < inputField.length; i++) {
             inputIcon[i].classList.add("active_icon");
     });
 }
-
-document.querySelector('.loading-state-v2').style.display = "none"
+setTimeout(() => {
+    document.querySelector('.loading-state-v2').style.display = 'none';
+}, 4000)
