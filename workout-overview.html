@@ -516,7 +516,7 @@ overflow-x: hidden;
                   <div class="generic-text-style-1 hide">Duration: 2 minutes</div>
                 </div>
                 <div class="tile-list">
-                  <a href="tutorial.html" class="tile style-3 w-inline-block" v-for="(exercise, secondIndex) in round.Linked_Exercises" :key="exercise" data-sal="slide-up" data-sal-duration="1000">
+                  <a :href="`tutorial.html?tutorial=${round.Diff_ID_Linked_Exercises[secondIndex]}&base=exercise`" class="tile style-3 w-inline-block" v-for="(exercise, secondIndex) in round.Linked_Exercises" :key="exercise" data-sal="slide-up" data-sal-duration="1000">
                     <div class="tile-header style-3">
                       <div class="tile-header-text style-2">
                         <h2 class="generic-text-style-11">{{round.Display_Name_Front_End[secondIndex]}}</h2>
