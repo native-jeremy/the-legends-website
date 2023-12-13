@@ -321,7 +321,7 @@ overflow-x: hidden;
       <link rel="prerender" href="/messages">
     </div>
   </div>
-  <div id="app" w-el="load_app" wized-cloak-custom="Load Users Program Hub, Load Users, Load Users Program " class="app">
+  <div id="app" w-el="load_app" class="app">
     <div w-el="workouts_load" class="app-main">
       <div class="app-head collection-list-page">
         <div class="app-head-content">
@@ -333,7 +333,8 @@ overflow-x: hidden;
               <div class="content-block-header style-3">
                 <div class="progress-completion-circle">
                   <div class="completion-text">
-                    <div id="workoutsMainComp" class="main-heading-style-10">{{Workouts}}</div>
+                    <div id="workoutsMainComp" v-if="Workouts" class="main-heading-style-10">{{Workouts}}</div>
+                    <div v-else class="main-heading-style-10">0</div>
                     <div class="generic-text-style-15">Workouts complete</div>
                   </div>
                 </div>
@@ -345,56 +346,62 @@ overflow-x: hidden;
               </div>
               <div class="tile-list">
                 <div class="tile style-3">
-                  <div class="tile-header style-4">
+                  <div class="tile-header style-4" style="cursor: default;">
                     <div class="tile-header-text style-2">
                       <h2 class="generic-text-style-11 opacity">Workouts complete</h2>
                     </div>
-                    <div class="generic-text-style-11">{{Workouts}}</div>
+                    <div v-if="Workouts" class="generic-text-style-11">{{Workouts}}</div>
+                    <div v-else class="generic-text-style-11">0</div>
                   </div>
                 </div>
                 <div class="tile style-3">
-                  <div class="tile-header style-4">
+                  <div class="tile-header style-4" style="cursor: default;">
                     <div class="tile-header-text style-2">
                       <h2 class="generic-text-style-11 opacity">Hours of exercise</h2>
                     </div>
-                    <div class="generic-text-style-11">{{Exercise}}</div>
+                    <div v-if="Workouts" class="generic-text-style-11">{{Exercise}}</div>
+                    <div v-else class="generic-text-style-11">0.00</div>
                   </div>
                 </div>
                 <div class="tile style-3">
-                  <div class="tile-header style-4">
+                  <div class="tile-header style-4" style="cursor: default;">
                     <div class="tile-header-text style-2">
                       <h2 class="generic-text-style-11 opacity">Hours of Strength Training</h2>
                     </div>
-                    <div class="generic-text-style-11">{{Strength}}</div>
+                    <div v-if="Workouts" class="generic-text-style-11">{{Strength}}</div>
+                    <div v-else class="generic-text-style-11">0.00</div>
                   </div>
                 </div>
                 <div class="tile style-3">
-                  <div class="tile-header style-4">
+                  <div class="tile-header style-4" style="cursor: default;">
                     <div class="tile-header-text style-2">
                       <h2 class="generic-text-style-11 opacity">Hours of Cardio Sessions</h2>
                     </div>
-                    <div class="generic-text-style-11">{{Cardio}}</div>
+                    <div v-if="Workouts" class="generic-text-style-11">{{Cardio}}</div>
+                    <div v-else class="generic-text-style-11">0.00</div>
                   </div>
                 </div>
                 <div class="tile style-3">
-                  <div class="tile-header style-4">
+                  <div class="tile-header style-4" style="cursor: default;">
                     <div class="tile-header-text style-2">
                       <h2 class="generic-text-style-11 opacity">Hours of Recovery</h2>
                     </div>
-                    <div class="generic-text-style-11">{{Recovery}}</div>
+                    <div v-if="Workouts" class="generic-text-style-11">{{Recovery}}</div>
+                    <div v-else class="generic-text-style-11">0.00</div>
                   </div>
                 </div>
                 <div class="tile style-3">
-                  <div class="tile-header style-4">
+                  <div class="tile-header style-4" style="cursor: default;">
                     <div class="tile-header-text style-2">
                       <h2 class="generic-text-style-11 opacity">Hours of Running</h2>
                     </div>
-                    <div class="generic-text-style-11">{{Running}}</div>
+                    <div v-if="Workouts" class="generic-text-style-11">{{Running}}</div>
+                    <div v-else class="generic-text-style-11">0.00</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div v-if="Awards !== 0" class="content-block awards">
+            <div v-if="Workouts" class="content-block awards">
               <div class="content-block-header awards">
                 <h2 class="main-heading-style-1">Award Badges</h2>
               </div>
@@ -407,7 +414,7 @@ overflow-x: hidden;
                 </div>
               </div>
             </div>
-            <div v-if="completedPrograms !== 0" class="content-block style-3">
+            <div v-if="Workouts" class="content-block style-3">
               <div class="content-block-header">
                 <h2 class="main-heading-style-1">Completed Programs</h2>
               </div>

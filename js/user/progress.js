@@ -8,33 +8,44 @@ anime({
   loop: true
 });
 
-Wized.request.await("Load Users", (response) => {
-  const currentUser = response.data;
-  const WorkoutsCompleted = currentUser.Completed_Workouts.length;
-  const ExerciseProgress = Math.floor(currentUser.Exercise_Progress / 3600);
-  const StrengthProgress = Math.floor(currentUser.Strength_Progress / 3600);
-  const CardioProgress = Math.floor(currentUser.Cardio_Progress / 3600);
-  const RecoveryProgress = Math.floor(currentUser.Recovery_Progress / 3600);
-  const RunningProgress = Math.floor(currentUser.Running_Progress / 3600);
-  const awards = currentUser.Awards;
-  const completedPrograms = currentUser.Programs_Completed;
-  // Console.log Request
-  console.log("User Request:", currentUser);
   // Start Vue Intializer
   const { createApp } = Vue;
   createApp({
     data() {
       return {
-        User: currentUser,
-        Workouts: WorkoutsCompleted,
-        Exercise: ExerciseProgress,
-        Strength: StrengthProgress,
-        Cardio: CardioProgress,
-        Recovery: RecoveryProgress,
-        Running: RunningProgress,
-        Awards: awards,
-        CompletedPrograms: completedPrograms,
+        User: null,
+        Workouts: null,
+        Exercise: null,
+        Strength: null,
+        Cardio: null,
+        Recovery: null,
+        Running: null,
+        Awards: null,
+        CompletedPrograms: null,
       };
+    },
+    methods: {
+        async progressRequest()
+        {
+          Wized.request.await("Load Users", (response) => {
+            const currentUser = response.data;
+            this.User = currentUser
+            if (("Completed_Workouts" in currentUser)) {
+              this.Workouts = currentUser.Completed_Workouts.length;
+              this.Exercise = parseFloat(currentUser.Exercise_Progress / 60).toFixed(2);
+              this.Strength = parseFloat(currentUser.Strength_Progress / 60).toFixed(2);
+              this.Cardio = parseFloat(currentUser.Cardio_Progress / 60).toFixed(2);
+              this.Recovery = parseFloat(currentUser.Recovery_Progress / 60).toFixed(2);
+              this.Running = parseFloat(currentUser.Running_Progress / 60).toFixed(2);
+              this.Awards = currentUser.Awards;
+              this.CompletedPrograms = currentUser.Programs_Completed;
+            }
+          });
+        }
+    },
+    created()
+    {
+      this.progressRequest()
     },
     mounted() {
       console.log("interaction loaded");
@@ -42,8 +53,9 @@ Wized.request.await("Load Users", (response) => {
       window.Webflow && window.Webflow.ready();
       window.Webflow && window.Webflow.require("ix2").init();
       document.dispatchEvent(new Event("readystatechange"));
-      document.querySelector('.loading-state-v2').style.display = "none"
+      setTimeout(() => {
+        document.querySelector('.loading-state-v2').style.display = "none"
+      }, 4000)
     },
   }).mount("#app");
   // End Vue Intializer
-});
