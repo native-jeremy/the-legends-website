@@ -349,7 +349,7 @@ overflow-x: hidden;
                 </a>
               </div>
               <div class="content-block style-4 new">
-                <a v-bind:href="`/guides?guide=${Guide.ID}`" v-for="(Guide, index) in Guides" v-bind:key="Guide" href="#" class="capsule-body style-1 w-inline-block">
+                <a v-bind:href="`/guides.html?guide=${Guide.ID}`" v-for="(Guide, index) in Guides" v-bind:key="Guide" href="#" class="capsule-body style-1 w-inline-block">
                   <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Guides[index].Slides_Images[0].url}`" alt="" class="full_thumbnail"></div>
                   <div class="capsule-header-content">
                     <div class="capsule-header-text">
@@ -366,7 +366,7 @@ overflow-x: hidden;
                 </a>
               </div>
               <div class="content-block style-4 new">
-                <a v-bind:href="`/blog?blog=${Blog.ID}`" v-for="(Blog, index) in Blogs" v-bind:key="Blog" href="#" class="capsule-body style-1 w-inline-block">
+                <a v-bind:href="`/blog.html?blog=${Blog.ID}`" v-for="(Blog, index) in Blogs" v-bind:key="Blog" href="#" class="capsule-body style-1 w-inline-block">
                   <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" v-bind:srcset="`${Blogs[index].image_or_video[0].url}`" alt="" class="full_thumbnail"></div>
                   <div class="capsule-header-content">
                     <div class="capsule-header-text">
@@ -384,7 +384,7 @@ overflow-x: hidden;
                   </a>
                 </div>
                 <div class="tile-list">
-                  <a v-bind:href="`/tutorial?tutorial=${Tutorial.ID}&amp;base=exercise`" v-for="(Tutorial, index) in Tutorials" v-bind:key="Tutorial" href="#" class="tile style-3 w-inline-block">
+                  <a v-bind:href="`/tutorial.html?tutorial=${Tutorial.ID}&amp;base=exercise`" v-for="(Tutorial, index) in Tutorials" v-bind:key="Tutorial" href="#" class="tile style-3 w-inline-block">
                     <div class="tile-header style-4">
                       <div class="tile-header-text">
                         <h2 class="main-heading-style-1 capsule-title">{{Tutorial.Tutorial}}</h2>

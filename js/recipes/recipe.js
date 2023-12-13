@@ -1,3 +1,13 @@
+anime({
+  targets: '.path3',
+  strokeDashoffset: [anime.setDashoffset, 0],
+  easing: 'cubicBezier(.5, .05, .1, .3)',
+  duration: 2000,
+  delay: function(el, i) { return i * 250 },
+  direction: 'alternate',
+  loop: true
+});
+
 window.onload = async () => {
   const favouriteBtn1 = document.getElementById("favourite-button1");
   const favouriteBtn2 = document.getElementById("favourite-button2");
@@ -9,7 +19,6 @@ window.onload = async () => {
     if (snapshot.Stripe == "Not Verified") {
       window.location.href = "/program-selection";
     }
-    console.log(user);
     let params = window.location.href;
     let url = new URL(params);
     let checkurl = url.searchParams;
@@ -78,7 +87,7 @@ window.onload = async () => {
         //protein.innerHTML = foodInfoCol[i]
       }
       clearTimeout(stop);
-      console.log(foodInfoCol);
     }
   });
+  setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 4000);
 };

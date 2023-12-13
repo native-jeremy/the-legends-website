@@ -396,7 +396,8 @@ overflow-x: hidden;
                           <div class="generic-text-style-1">{{recipe.Time}}</div>
                           <div class="generic-text-style-1 filter">{{recipe.Dietary_Require}}</div>
                         </div>
-                        <div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>
+                        <div v-show="typeActive">{{recipe.type}}</div>
+                        <!--<div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>-->
                       </div>
                     </a>
                   </div>

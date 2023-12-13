@@ -64,6 +64,7 @@ createApp({
       RecipesArray: [],
       FavouritesActive: false,
       RenderRecipes: [],
+      typeActive: false,
     };
   },
   methods: {
@@ -124,17 +125,18 @@ createApp({
         }
       });
       Wized.request.await("Load Recipes - Breakfast", (response) => {
-        console.log("Breakfast: " + response.data)
         let newArr = response.data.map((item) => {
           return {
             Name: item.Name,
             ID: item.ID,
+            RecipeGroups: item.Recipe_Group_Names,
+            type: item.Recipe_Group_Names[0],
             Images: item.Images,
             Dietary_Require: item.Dietary_Require,
             Time: item.Time,
           };
         });
-        const recipeType = shuffleArray(newArr, tempFilters);
+        const recipeType = shuffleArray(newArr, tempFilters, 'Breakfast');
         this.RenderRecipes.push(recipeType)
         this.Breakfast = recipeType;
         this.HeroImage = recipeType[0].Images[0].url;
@@ -145,12 +147,14 @@ createApp({
           return {
             Name: item.Name,
             ID: item.ID,
+            RecipeGroups: item.Recipe_Group_Names,
+            type: item.Recipe_Group_Names[0],
             Images: item.Images,
             Dietary_Require: item.Dietary_Require,
             Time: item.Time,
           };
         });
-        const recipeType = shuffleArray(newArr, tempFilters);
+        const recipeType = shuffleArray(newArr, tempFilters, 'Lunch');
         this.RenderRecipes.push(recipeType)
         this.Lunch = recipeType;
         this.RecipesArray.push(recipeType);
@@ -160,12 +164,14 @@ createApp({
           return {
             Name: item.Name,
             ID: item.ID,
+            RecipeGroups: item.Recipe_Group_Names,
+            type: item.Recipe_Group_Names[0],
             Images: item.Images,
             Dietary_Require: item.Dietary_Require,
             Time: item.Time,
           };
         });
-        const recipeType = shuffleArray(newArr, tempFilters);
+        const recipeType = shuffleArray(newArr, tempFilters, 'Dinner');
         this.RenderRecipes.push(recipeType)
         this.Dinner = recipeType;
         this.RecipesArray.push(recipeType);
@@ -175,12 +181,14 @@ createApp({
           return {
             Name: item.Name,
             ID: item.ID,
+            RecipeGroups: item.Recipe_Group_Names,
+            type: item.Recipe_Group_Names[0],
             Images: item.Images,
             Dietary_Require: item.Dietary_Require,
             Time: item.Time,
           };
         });
-        const recipeType = shuffleArray(newArr, tempFilters);
+        const recipeType = shuffleArray(newArr, tempFilters, 'Snacks');
         this.RenderRecipes.push(recipeType)
         this.Snacks = recipeType;
         this.RecipesArray.push(recipeType);
@@ -190,34 +198,52 @@ createApp({
       document.querySelector('.loading-state-v2').style.display = "none";
     },4000)
     // Suffle Feature Code
-    function shuffleArray(array, tempFilters) {
+    function shuffleArray(array, tempFilters, type) {
       let shuffleArray = [];
       let usedIndices = [];
       let i = 0;
       while (i < 7) {
         let randomIndex = Math.floor(Math.random() * array.length);
-        if (tempFilters.length !== 0) {
-          if (
-            !usedIndices.includes(randomIndex) &&
-            array[randomIndex].Dietary_Require.some((name) =>
-              tempFilters.includes(name)
-            )
-          ) {
-            shuffleArray.push(array[randomIndex]);
-            usedIndices.push(randomIndex);
-            i++;
+
+        if(array[randomIndex].type == type)
+        {
+          if (tempFilters.length !== 0) {
+            if (!usedIndices.includes(randomIndex) &&
+              array[randomIndex].Dietary_Require.some((name) =>
+                tempFilters.includes(name)
+              )
+            ) {
+              shuffleArray.push(array[randomIndex]);
+              usedIndices.push(randomIndex);
+              i++;
+            }
+          } else {
+            if (!usedIndices.includes(randomIndex)) {
+              shuffleArray.push(array[randomIndex]);
+              usedIndices.push(randomIndex);
+              i++;
+            }
           }
-        } else {
-          if (!usedIndices.includes(randomIndex)) {
-            shuffleArray.push(array[randomIndex]);
-            usedIndices.push(randomIndex);
-            i++;
-          }
+        }
+        else {
+          randomIndex = Math.floor(Math.random() * array.length);
         }
       }
       console.log("Array Updated", shuffleArray);
       return shuffleArray;
     }
+
+    /*this.Breakfast = this.Snacks;
+    this.Lunch = this.Lunch;
+    this.Dinner = this.Breakfast;
+    this.Snacks = this.Dinner;
+    let recipesOrdered = [];
+    recipesOrdered.push(this.Breakfast)
+    recipesOrdered.push(this.Lunch)
+    recipesOrdered.push(this.Dinner)
+    recipesOrdered.push(this.Snacks)
+
+    this.RenderRecipes = recipesOrdered*/
   },
   mounted() {
     setTimeout(() => {
@@ -226,6 +252,7 @@ createApp({
     window.Webflow && window.Webflow.ready();
     window.Webflow && window.Webflow.require("ix2").init();
     document.dispatchEvent(new Event("readystatechange"));
+
     sal({
       threshold: 0.25,
       once: false,
@@ -248,6 +275,11 @@ createApp({
     }
   },
   updated() {
+    console.log("Breakfast", this.Breakfast)
+    console.log("Lunch", this.Lunch)
+    console.log("Dinner", this.Dinner)
+    console.log("Snacks", this.Snacks)
+
     if (recipesStoredInLocalStorage == null && this.RecipesStored !== true) {
       let recipesSetLocalStorage = localStorage.setItem(
         "recipes_stored",

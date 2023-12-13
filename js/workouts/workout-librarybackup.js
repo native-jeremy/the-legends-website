@@ -8,76 +8,7 @@ anime({
   loop: true
 });
 
-// Start Vue Intializer
-const { createApp } = Vue;
-createApp({
-  data() {
-    return {
-      Workouts: [],
-      Search: '',
-    };
-  },
-  computed: {
-    filteredList() {
-        return this.Workouts.filter(item => 
-          item.Name.toUpperCase().includes(this.Search.toUpperCase()) || item.Type.toUpperCase().includes(this.Search.toUpperCase())
-          )
-    }
-  },
-  methods: {
-    async WorkoutsRequest()
-    {
-      Wized.request.await("Load Workouts - Page 1", (response) => {
-        const data = response.data
-        data.forEach(element => {
-          this.Workouts.push(element);
-        });
-        console.log('Workouts Page 1', data);
-      });
-      Wized.request.await("Load Workouts - Page 2", (response) => {
-        const data = response.data
-        data.forEach(element => {
-          this.Workouts.push(element);
-        });
-        console.log('Workouts Page 2', data);
-      });
-      Wized.request.await("Load Workouts - Page 3", (response) => {
-        const data = response.data
-        data.forEach(element => {
-          this.Workouts.push(element);
-        });
-        console.log('Workouts Page 3', data);
-      });
-      Wized.request.await("Load Workouts - Page 4", (response) => {
-        const data = response.data
-        data.forEach(element => {
-          this.Workouts.push(element);
-        });
-        console.log('Workouts Page 4', data);
-      });
-    }
-  },
-  created() {
-    this.WorkoutsRequest()
-  },
-  mounted() {
-  setTimeout(() => {
-  console.log("interaction loaded");
-  window.Webflow && window.Webflow.destroy();
-  window.Webflow && window.Webflow.ready();
-  window.Webflow && window.Webflow.require("ix2").init();
-  document.dispatchEvent(new Event("readystatechange"));
-
-  sal({
-    threshold: 0.25,
-    once: false,
-  });
-
-  document.querySelector('.loading-state-v2').style.display = "none";  let scroller = sal();
-  scroller.update();
-  }, 3000);
-
-  // Intialisation Of Static Elements
+// Intialisation Of Static Elements
 let check = document.querySelectorAll('[type="checkbox"]');
 let checkCustom = document.querySelectorAll(".w-checkbox-input");
 const form = document.querySelector(".filter-form");
@@ -155,6 +86,18 @@ function filterList() {
     }
   }
 }
-  },
-}).mount("#app");
-// End Vue Intializer
+
+setTimeout(() => {
+  console.log("interaction loaded");
+  window.Webflow && window.Webflow.destroy();
+  window.Webflow && window.Webflow.ready();
+  window.Webflow && window.Webflow.require("ix2").init();
+  document.dispatchEvent(new Event("readystatechange"));
+  sal({
+    threshold: 0.25,
+    once: false,
+  });
+
+  document.querySelector('.loading-state-v2').style.display = "none";  let scroller = sal();
+  scroller.update();
+  }, 3000);

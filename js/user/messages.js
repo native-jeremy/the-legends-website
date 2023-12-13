@@ -29,6 +29,7 @@ window.onload = async () => {
           for (let n = 0; n < messagesRead.length; n++) {
             if (messagesRead[n].includes(messageID[i].textContent)) {
               messageIcon[i].classList.add("not_read");
+              message[i].style.cursor = 'default';
             }
           }
         }
@@ -42,7 +43,6 @@ window.onload = async () => {
           "PROGRAM",
           snapshot.Program_Name[0]
         );
-        userProgram = userProgram.replace("HYPERLINK", snapshot.Message_Link_Name[i]);
         let personalText = userProgram;
         message[i].innerHTML = personalText;
         
@@ -50,9 +50,8 @@ window.onload = async () => {
         message[i].addEventListener("click", () => {
           messageButton.style.display = "none";
           messagesRead.push(messageID[i].textContent);
-          document
-            .querySelectorAll(".message-icon")
-            [i].classList.add("not_read");
+          document.querySelectorAll(".message-icon")[i].classList.add("not_read");
+          message[i].style.cursor = 'default';
           Wized.data.setVariable("messagelist", messagesRead);
           Wized.data.listen("v.messagelist", async () => {
             Wized.data.get("v.messagelist");
@@ -63,5 +62,6 @@ window.onload = async () => {
     }, 1000);
   });
 };
-
+setTimeout(() => {
 document.querySelector('.loading-state-v2').style.display = "none";
+}, 4000)

@@ -83,8 +83,8 @@ window.onload = async () => {
                       this.ID = program.ID;
                       this.Weeks = program.Count_weeks;
                       this.Title = program.Title;
-                      this.Description = program.Description;
-                      this.Key_Points = program.Key_Points;
+                      this.Description = convertMarkdown(program.Description);
+                      this.Key_Points = convertMarkdown(program.Key_Points);
                       this.Image = program.Image[0].url;
                       this.FAQS = program.FAQS;
                       this.Heading_FAQS = program.Heading_FAQS;
@@ -151,9 +151,8 @@ window.onload = async () => {
                                         </div>
                                         <div class="main-heading-style-6 center-align slide-title">${programArray[index].Title}</div>
                                     </div><a data-w-id="5c806ac3-c34a-bc93-6409-9da4edc693c2" href="#"
-                                        class="button-style-1 half w-button">Program Details</a><a href="/questionnaire-update"
+                                        class="button-style-1 half w-button">Program Details</a><a href="/questionnaire-update.html"
                                         class="button-style-4 w-button">Back to Questionnaire</a>
-                                    <link rel="prerender" href="/questionnaire">
                                 </div>
                             </div>
                         </div>
@@ -165,12 +164,13 @@ window.onload = async () => {
                                 <div class="content-headings margin-bottom">
                                     <div class="split-dynamic-text">
                                         <div
-                                            class="generic-text-style-6 margin-right-split-dnyamic-text">${WeeksEl[index]}</div>
+                                            class="generic-text-style-6 margin-right-split-dnyamic-text">${programArray[index].Weeks}</div>
                                         <div class="generic-text-style-6">wEEK program</div>
                                     </div>
                                     <h2 class="main-heading-style-1">${programArray[index].Title}</h2>
+                                    <a w-el="program_add" data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" class="button-style-1 w-button second-cta-button" style="margin-top: 25px;">start this program</a>
                                 </div>
-                                <div class="content-block base-block">
+                                <div class="content-block base-block" style="padding-top: 50px;">
                                     <div class="content-block-header">
                                         <h2 class="main-heading-style-2">Overview</h2>
                                     </div>
@@ -210,13 +210,13 @@ window.onload = async () => {
                                     </div>
                                 </div>-->
                                 <div class="content-block faqs_render">
+                                <a w-el="program_add" data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" class="button-style-1 w-button second-cta-button" style="margin-bottom: 75px;">Let’s get started</a>
                                     <div class="content-block-header">
                                         <h2 class="main-heading-style-2">FAQs</h2>
                                     </div>
                                 </div>
                                 <a data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" w-el="program_add" class="button-style-1 w-button selection_button">Let’s get started</a>
-                                <a href="/questionnaire" class="button-style-5 w-button">back to questionnaire</a>
-                                <link rel="prerender" href="/questionnaire">
+                                <a href="/questionnaire-update.html" class="button-style-5 w-button">back to questionnaire</a>
                             </div>
                         </div>
                     </div>
@@ -227,6 +227,8 @@ window.onload = async () => {
           const renderLength = programArray[0].FAQS.length;
 
           setTimeout(() => {
+            const contentText = document.querySelectorAll('.faqs_render');
+
             const contentWrapper = document.querySelectorAll('.faqs_render');
             contentWrapper.forEach(render => {
                 for (let i = 0; i < renderLength; i++) {
@@ -239,7 +241,7 @@ window.onload = async () => {
                                 <div class="accordion-arrow-icon"></div>
                             </div>
                         </div>
-                        <div class="accordion-body style-2">
+                        <div class="accordion-body style-2 hide_accordion">
                             <p class="body-copy-text-style-1">${FAQSArray[0].Description[i]}</p>
                         </div>
                     </div>`
@@ -313,6 +315,14 @@ window.onload = async () => {
             const programMatch = await Wized.data.get("v.program"); // Get new value
             //console.log("Program Match: ", programMatch); // Console log new value
           });
+        }
+
+        function convertMarkdown(markdown) {
+          var converter = new showdown.Converter(),
+          text = markdown,
+          html = converter.makeHtml(text);
+
+          return html
         }
       });
     });

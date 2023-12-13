@@ -503,7 +503,7 @@ overflow-x: hidden;
             </div>
             <div class="content-block style-3">
               <div class="tile-list">
-                <a v-bind:href="`/tutorial?tutorial=${Tutorial.ID}&amp;base=exercise`" v-for="(Tutorial, index) in filteredList" v-bind:key="Tutorial" href="#" class="tile style-3 w-inline-block">
+                <a v-bind:href="`/tutorial.html?tutorial=${Tutorial.ID}&amp;base=exercise`" v-for="(Tutorial, index) in filteredList" v-bind:key="Tutorial" class="tile style-3 w-inline-block">
                   <div class="tile-header style-4">
                     <div class="tile-header-text">
                       <h2 class="main-heading-style-1 capsule-title">{{Tutorial.Tutorial}}</h2>
@@ -516,8 +516,11 @@ overflow-x: hidden;
                 </a>
               </div>
             </div>
-            <div v-if="filteredList.length == 0 " class="results_message">
+            <div v-if="Loading === false && filteredList.length == 0" class="results_message">
               <h1 class="main-heading-style-11 center-align">No Results found try again...</h1>
+            </div>
+            <div v-if="Loading === true" class="results_message">
+              <h1 class="main-heading-style-11 center-align">Loading Please wait...</h1>
             </div>
             <div class="info-block auto-margin">
               <a href="learning-hub.html" class="button-style-1 w-button">Back to Learning Hub</a>

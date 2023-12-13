@@ -28,7 +28,7 @@ window.onload = async () => {
     TutorialName.textContent = snapshot.Exercise_Name;
     let richTextRes = snapshot.Tutorial_Description;
     const richText = document.getElementById("richText");
-    console.log(response);
+    //console.log(response);
     if (response.status == 200) {
       document.title = snapshot.Exercise_Category[0];
       var converter = new showdown.Converter(),
@@ -37,6 +37,5 @@ window.onload = async () => {
       richText.innerHTML = html;
     }
   });
+  setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 4000);
 };
-
-document.querySelector('.loading-state-v2').style.display = "none"

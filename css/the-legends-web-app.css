@@ -37,6 +37,16 @@ border: none !important;
   display: grid;
 }
 
+.second-cta-button {
+  background: white !important;
+  color: var(--dark-olive-green) !important;
+  border: 2px solid var(--dark-olive-green) !important;
+}
+
+.accordion-body.style-2.hide_accordion {
+  display: none;
+}
+
 .w-backgroundvideo-backgroundvideoplaypausebutton:focus-visible {
   outline-offset: 2px;
   border-radius: 50%;
@@ -1238,6 +1248,12 @@ a {
 }
 
 .body-copy-text-style-1 {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 23px;
+}
+
+.rich_text_message {
   font-size: 12px;
   font-weight: 300;
   line-height: 23px;

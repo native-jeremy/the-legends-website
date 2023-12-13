@@ -319,7 +319,6 @@ overflow-x: hidden;
           <a id="message_button" w-el="messageicon" href="messages.html" aria-current="page" class="nav-button-icon message_notification w-inline-block w--current">
             <div w-el="icon" class="message-icon-burger"></div>
           </a>
-          <link rel="prerender" href="/messages">
         </div>
       </div>
       <div class="app-head collection-list-page">
@@ -329,10 +328,10 @@ overflow-x: hidden;
               <h1 class="main-heading-style-1">Messages</h1>
             </div>
             <div class="messages-list-block style-2">
-              <div w-el="message" class="message">
+              <div w-el="message" class="message" style="cursor: pointer;">
                 <div class="message-block-header style-2">
                   <div class="content-block-header-text">
-                    <h2 w-el="message_date" class="generic-text-style-1">22/02/2023</h2>
+                    <h2 w-el="message_date" class="generic-text-style-1" style="display: none;">22/02/2023</h2>
                     <h2 w-el="message_id" class="id">22/02/2023</h2>
                     <h2 w-el="message_title" class="main-heading-style-2">Notification</h2>
                   </div>
@@ -340,7 +339,7 @@ overflow-x: hidden;
                     <div w-el="message_icon" class="message-icon"></div>
                   </div>
                 </div>
-                <div w-el="message_body" class="message-body">
+                <div w-el="message_body" class="message-body rich_text_message">
                   <p w-el="message_description" class="body-copy-text-style-1">A. When signals are on you will hear siren count downs and a half way warnings throughout the workout. This can be changed at any point during the exercise.</p>
                 </div>
                 <div w-el="message_post_request" class="message-post"></div>

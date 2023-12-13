@@ -42,4 +42,4 @@ window.onload = async () => {
   });
 };
 
-document.querySelector('.loading-state-v2').style.display = "none"
+setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 4000);
