@@ -15,6 +15,7 @@ createApp({
     return {
       Recipes: [],
       Search: '',
+      Loading: true,
     };
   },
   computed: {
@@ -30,6 +31,7 @@ createApp({
         data.forEach(element => {
           this.Recipes.push(element);
         });
+        this.Loading = false;
         //console.log('Recipes Page 1', data);
       });
       Wized.request.await("Load Recipes Page 2", (response) => {

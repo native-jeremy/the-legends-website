@@ -15,6 +15,7 @@ createApp({
     return {
       Workouts: [],
       Search: '',
+      Loading: true,
     };
   },
   computed: {
@@ -32,28 +33,50 @@ createApp({
         data.forEach(element => {
           this.Workouts.push(element);
         });
-        console.log('Workouts Page 1', data);
+        this.Loading = false;
+        //console.log('Workouts Page 1', data);
       });
       Wized.request.await("Load Workouts - Page 2", (response) => {
         const data = response.data
         data.forEach(element => {
           this.Workouts.push(element);
         });
-        console.log('Workouts Page 2', data);
+        //console.log('Workouts Page 2', data);
       });
       Wized.request.await("Load Workouts - Page 3", (response) => {
         const data = response.data
         data.forEach(element => {
           this.Workouts.push(element);
         });
-        console.log('Workouts Page 3', data);
+        //console.log('Workouts Page 3', data);
       });
       Wized.request.await("Load Workouts - Page 4", (response) => {
         const data = response.data
         data.forEach(element => {
           this.Workouts.push(element);
         });
-        console.log('Workouts Page 4', data);
+        //console.log('Workouts Page 4', data);
+      });
+      Wized.request.await("Load Workouts - Page 5", (response) => {
+        const data = response.data
+        data.forEach(element => {
+          this.Workouts.push(element);
+        });
+        //console.log('Workouts Page 5', data);
+      });
+      Wized.request.await("Load Workouts - Page 6", (response) => {
+        const data = response.data
+        data.forEach(element => {
+          this.Workouts.push(element);
+        });
+        //console.log('Workouts Page 6', data);
+      });
+      Wized.request.await("Load Workouts - Page 7", (response) => {
+        const data = response.data
+        data.forEach(element => {
+          this.Workouts.push(element);
+        });
+        //console.log('Workouts Page 7', data);
       });
     }
   },
@@ -68,13 +91,7 @@ createApp({
   window.Webflow && window.Webflow.require("ix2").init();
   document.dispatchEvent(new Event("readystatechange"));
 
-  sal({
-    threshold: 0.25,
-    once: false,
-  });
-
-  document.querySelector('.loading-state-v2').style.display = "none";  let scroller = sal();
-  scroller.update();
+  document.querySelector('.loading-state-v2').style.display = "none";
   }, 3000);
 
   // Intialisation Of Static Elements
