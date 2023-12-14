@@ -28,22 +28,6 @@ background: #397234;
 border: none !important;
 }
 
-/* */
-.scrollable_base {
-  padding: 5vw !important;
-}
-
-.scrollable_base > .content {
-  width: 100%;
-  height: auto;
-  max-width: none !important;
-  flex-direction: column;
-  align-items: center;
-  display: flex;
-  position: relative;
-}
-/* */
-
 .w-layout-grid {
   grid-row-gap: 16px;
   grid-column-gap: 16px;
@@ -5344,20 +5328,51 @@ a {
   margin-top: 25px;
 }
 
+.app-section.scrollable_base {
+	padding: 5vw 0vw 5vw 0vw !important;
+}
+
 .card_scroll_content {
   width: 100vw;
   justify-content: flex-start;
   align-items: stretch;
   margin-left: 0;
-  padding: 50px 125px 50px 0;
+  padding: 50px 5vw 50px 5vw !important;
   display: flex;
   overflow: scroll;
+}
+
+.app-section.scrollable_base .content {
+  width: 100%;
+  height: auto;
+  max-width: none !important;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+.app-section.scrollable_base .content .content-headings {
+	width: 100%;
+	padding-left: 5vw;
+}
+
+.app-section.scrollable_bottom {
+  padding: 0vw !important;
+}
+
+.content.spaced {
+	flex-direction: row;
+  max-width: none !important;
+	justify-content: space-between;
+	padding: 0vw 5vw 5vw 5vw !important;
 }
 
 .card_scroll_content.scrollable {
   width: 100%;
   max-width: none;
   overflow: visible;
+  padding: 50px 0vw 50px 5vw !important;
 }
 
 .grid {
