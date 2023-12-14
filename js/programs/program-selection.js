@@ -234,6 +234,8 @@ window.onload = async () => {
             const contentText = document.querySelectorAll('.faqs_render');
 
             const contentWrapper = document.querySelectorAll('.faqs_render');
+            const appSlide = document.querySelectorAll('.app-body');
+
             contentWrapper.forEach(render => {
                 for (let i = 0; i < renderLength; i++) {
                     let createElement = document.createElement("div");
@@ -256,7 +258,8 @@ window.onload = async () => {
           }, 2000);
   
           setTimeout(() => {
-            let selectionButton = document.querySelectorAll(".selection_button");
+            appSlide.forEach((program, index) => { 
+            let selectionButton = appSlide[index].querySelectorAll(".selection_button");
             selectionButton.forEach((button, num) => {
               button.addEventListener("click", () => {
                 //console.log("Clicked This Button!", button + " " + num);
@@ -265,7 +268,8 @@ window.onload = async () => {
                   //console.log("Selected Program id", checkSelection);
               });
             });
-          }, 3000);
+            });
+          }, 2000);
   
           Wized.data.listen("v.programid", async () => {
             const changedId = await Wized.data.get("v.programid");
