@@ -168,9 +168,7 @@ window.onload = async () => {
                                         <div class="generic-text-style-6">wEEK program</div>
                                     </div>
                                     <h2 class="main-heading-style-1">${programArray[index].Title}</h2>
-                                    <a data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" w-el="program_add" class="button-style-1 w-button selection_button" style="margin-top: 25px; background: white !important;
-  color: var(--dark-olive-green) !important;
-  border: 2px solid var(--dark-olive-green) !important;">start this program</a>
+                                    <a data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" w-el="program_add" class="button-style-1 w-button selection_button1 second-cta-button" style="margin-top: 25px;">start this program</a>
                                 </div>
                                 <div class="content-block base-block" style="padding-top: 50px;">
                                     <div class="content-block-header">
@@ -212,14 +210,12 @@ window.onload = async () => {
                                     </div>
                                 </div>-->
                                 <div class="content-block faqs_render">
-                                <a data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" w-el="program_add" class="button-style-1 w-button selection_button" style="margin-bottom: 75px; background: white !important;
-  color: var(--dark-olive-green) !important;
-  border: 2px solid var(--dark-olive-green) !important;">Let’s get started</a>
+                                <a data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" w-el="program_add" class="button-style-1 w-button selection_button2 second-cta-button" style="margin-bottom: 75px;">Let’s get started</a>
                                     <div class="content-block-header">
                                         <h2 class="main-heading-style-2">FAQs</h2>
                                     </div>
                                 </div>
-                                <a data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" w-el="program_add" class="button-style-1 w-button selection_button">Let’s get started</a>
+                                <a data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" w-el="program_add" class="button-style-1 w-button selection_button3">Let’s get started</a>
                                 <a href="/questionnaire-update.html" class="button-style-5 w-button">back to questionnaire</a>
                             </div>
                         </div>
@@ -234,7 +230,6 @@ window.onload = async () => {
             const contentText = document.querySelectorAll('.faqs_render');
 
             const contentWrapper = document.querySelectorAll('.faqs_render');
-
             contentWrapper.forEach(render => {
                 for (let i = 0; i < renderLength; i++) {
                     let createElement = document.createElement("div");
@@ -257,19 +252,34 @@ window.onload = async () => {
           }, 2000);
   
           setTimeout(() => {
-            const appSlide = document.querySelectorAll('.app-body');
-            appSlide.forEach((program, index) => { 
-            //let selectionButton = program.querySelectorAll(".selection_button");
-            program.querySelectorAll(".selection_button").forEach((button, num) => {
+            let selectionButton1 = document.querySelectorAll(".selection_button");
+            let selectionButton2 = document.querySelectorAll(".selection_button");
+            let selectionButton3 = document.querySelectorAll(".selection_button");
+            selectionButton1.forEach((button, num) => {
               button.addEventListener("click", () => {
                 //console.log("Clicked This Button!", button + " " + num);
                 Wized.data.setVariable("programid", `${programArray[num].ID}`);
                 const checkSelection = Wized.data.get("v.program");
-                  console.log("Selected Program id", checkSelection);
+                  //console.log("Selected Program id", checkSelection);
               });
             });
+            selectionButton2.forEach((button, num) => {
+              button.addEventListener("click", () => {
+                //console.log("Clicked This Button!", button + " " + num);
+                Wized.data.setVariable("programid", `${programArray[num].ID}`);
+                const checkSelection = Wized.data.get("v.program");
+                  //console.log("Selected Program id", checkSelection);
+              });
             });
-          }, 2000);
+            selectionButton3.forEach((button, num) => {
+              button.addEventListener("click", () => {
+                //console.log("Clicked This Button!", button + " " + num);
+                Wized.data.setVariable("programid", `${programArray[num].ID}`);
+                const checkSelection = Wized.data.get("v.program");
+                  //console.log("Selected Program id", checkSelection);
+              });
+            });
+          }, 1000);
   
           Wized.data.listen("v.programid", async () => {
             const changedId = await Wized.data.get("v.programid");
