@@ -168,7 +168,9 @@ window.onload = async () => {
                                         <div class="generic-text-style-6">wEEK program</div>
                                     </div>
                                     <h2 class="main-heading-style-1">${programArray[index].Title}</h2>
-                                    <a w-el="program_add" data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" class="button-style-1 w-button selection_button second-cta-button" style="margin-top: 25px;">start this program</a>
+                                    <a data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" w-el="program_add" class="button-style-1 w-button selection_button" style="margin-top: 25px; background: white !important;
+  color: var(--dark-olive-green) !important;
+  border: 2px solid var(--dark-olive-green) !important;">start this program</a>
                                 </div>
                                 <div class="content-block base-block" style="padding-top: 50px;">
                                     <div class="content-block-header">
@@ -210,7 +212,9 @@ window.onload = async () => {
                                     </div>
                                 </div>-->
                                 <div class="content-block faqs_render">
-                                <a w-el="program_add" data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" class="button-style-1 w-button selection_button second-cta-button" style="margin-bottom: 75px;">Let’s get started</a>
+                                <a data-w-id="318dd5d4-e2e9-7095-276c-a871128f0341" href="#" w-el="program_add" class="button-style-1 w-button selection_button" style="margin-bottom: 75px; background: white !important;
+  color: var(--dark-olive-green) !important;
+  border: 2px solid var(--dark-olive-green) !important;">Let’s get started</a>
                                     <div class="content-block-header">
                                         <h2 class="main-heading-style-2">FAQs</h2>
                                     </div>
@@ -261,7 +265,7 @@ window.onload = async () => {
                   //console.log("Selected Program id", checkSelection);
               });
             });
-          }, 1000);
+          }, 3000);
   
           Wized.data.listen("v.programid", async () => {
             const changedId = await Wized.data.get("v.programid");
