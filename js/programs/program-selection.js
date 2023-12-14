@@ -252,9 +252,9 @@ window.onload = async () => {
           }, 2000);
   
           setTimeout(() => {
-            let selectionButton1 = document.querySelectorAll(".selection_button");
-            let selectionButton2 = document.querySelectorAll(".selection_button");
-            let selectionButton3 = document.querySelectorAll(".selection_button");
+            let selectionButton1 = document.querySelectorAll(".selection_button1");
+            let selectionButton2 = document.querySelectorAll(".selection_button2");
+            let selectionButton3 = document.querySelectorAll(".selection_button3");
             selectionButton1.forEach((button, num) => {
               button.addEventListener("click", () => {
                 //console.log("Clicked This Button!", button + " " + num);
