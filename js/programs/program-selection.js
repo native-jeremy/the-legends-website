@@ -234,7 +234,6 @@ window.onload = async () => {
             const contentText = document.querySelectorAll('.faqs_render');
 
             const contentWrapper = document.querySelectorAll('.faqs_render');
-            const appSlide = document.querySelectorAll('.app-body');
 
             contentWrapper.forEach(render => {
                 for (let i = 0; i < renderLength; i++) {
@@ -258,14 +257,15 @@ window.onload = async () => {
           }, 2000);
   
           setTimeout(() => {
+            const appSlide = document.querySelectorAll('.app-body');
             appSlide.forEach((program, index) => { 
-            let selectionButton = appSlide[index].querySelectorAll(".selection_button");
-            selectionButton.forEach((button, num) => {
+            //let selectionButton = program.querySelectorAll(".selection_button");
+            program.querySelectorAll(".selection_button").forEach((button, num) => {
               button.addEventListener("click", () => {
                 //console.log("Clicked This Button!", button + " " + num);
                 Wized.data.setVariable("programid", `${programArray[num].ID}`);
                 const checkSelection = Wized.data.get("v.program");
-                  //console.log("Selected Program id", checkSelection);
+                  console.log("Selected Program id", checkSelection);
               });
             });
             });
