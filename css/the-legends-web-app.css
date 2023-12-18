@@ -5623,7 +5623,7 @@ a {
   width: 100%;
   height: auto;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   margin-top: 15px;
 }
@@ -5663,9 +5663,9 @@ a {
   margin-top: auto;
   margin-bottom: 0;
   padding-left: 0;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 600;
-  line-height: 25px;
+  line-height: 35px;
   display: grid;
 }
 
@@ -5708,7 +5708,7 @@ a {
 
 .display_trainer_cell.v-middle {
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   display: flex;
 }
@@ -8298,10 +8298,10 @@ a {
   .display_phone_navigation {
     grid-column-gap: 100px;
     grid-template-rows: auto auto;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto;
     align-content: center;
-    justify-content: center;
-  }
+    justify-content: flex-start;
+}
 
   .display_phone_navigation_button {
     margin-left: 0;
@@ -8311,9 +8311,15 @@ a {
     margin-right: 5px;
   }
 
-  .main-heading-style-15 {
+  /*.main-heading-style-15 {
     font-size: 26px;
     line-height: 38px;
+  }*/
+
+  .main-heading-style-15 {
+    font-size: 20px;
+    line-height: 30px;
+    margin-top: 25px;
   }
 
   .display_trainer_cell {
@@ -9097,7 +9103,7 @@ a {
   }
 
   .generic-text-style-11.mt_mid {
-    margin-top: 25px;
+    margin-top: 5px;
   }
 
   .filter-form {
@@ -9355,7 +9361,11 @@ a {
   }
 
   .display_phone_cell {
-    justify-content: center;
+    justify-content: flex-start;
+  }
+
+  .display_phone_cell .v-middle ._1 {
+    margin-top: 25px;
   }
 
   .iphone_mockup_block {
@@ -9363,14 +9373,14 @@ a {
   }
 
   .display_phone_navigation {
-    grid-column-gap: 25px;
+    grid-column-gap: 10px;
     grid-row-gap: 10px;
   }
 
   .display_phone_navigation_button {
     margin-left: 0;
-    font-size: 13px;
-    line-height: 13px;
+    font-size: 16px;
+    line-height: 22px;
   }
 
   .display_phone_navigation_text.number {
