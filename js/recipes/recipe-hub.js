@@ -68,16 +68,22 @@ createApp({
       RenderRecipes: [],
       typeActive: false,
       AllRecipes : [],
+      stored: false,
     };
   },
   methods: {
     clearFilters() {
-      window.location.href = "/recipe-hub.html";
       Wized.data.setVariable("complete", true);
+      localStorage.removeItem("RecipeFilters");
+      setTimeout(() => {
+        window.location.href = "/recipe-hub.html";
+      }, 3000)
     },
     shuffleNewRecipes() {
-      //window.location.href = window.location.href;
       Wized.data.setVariable("complete", true);
+      setTimeout(() => {
+        window.location.href = window.location.href;
+      }, 3000)
     },
   },
   created() {
@@ -174,12 +180,15 @@ createApp({
       });
     } 
     else {
+      this.stored = true;
         //let tempBreakfast = [];
         //let tempLunch = [];
         //let tempDinner = [];
         //let tempSnacks = [];
         //this.RecipesParsed = JSON.parse(response.data.RecipeLinker);
         console.log("Recipes From Airtable", response.data.RecipeLinker);
+        let randomHeroImage = Math.floor(Math.random() * response.data.Images_RecipeLinker.length);
+        this.HeroImage = response.data.Images_RecipeLinker[randomHeroImage].url;
         response.data.RecipeLinker.forEach((recipeData, index) => {
           if(response.data.Recipe_Type_RecipeLinker[index] == 'Breakfast')
           {
@@ -188,6 +197,7 @@ createApp({
               Images: response.data.Images_RecipeLinker[index], 
               Time: response.data.Time_RecipeLinker[index],    
               ID: response.data.RecipeLinker[index],
+              Name: response.data.Name_RecipeLinker[index],
       
             })
           }
@@ -198,6 +208,7 @@ createApp({
               Images: response.data.Images_RecipeLinker[index], 
               Time: response.data.Time_RecipeLinker[index],    
               ID: response.data.RecipeLinker[index],
+              Name: response.data.Name_RecipeLinker[index],
       
             })
           }
@@ -208,6 +219,7 @@ createApp({
               Images: response.data.Images_RecipeLinker[index], 
               Time: response.data.Time_RecipeLinker[index],    
               ID: response.data.RecipeLinker[index],
+              Name: response.data.Name_RecipeLinker[index],
             })
           }
           if(response.data.Recipe_Type_RecipeLinker[index] == 'Snacks')
@@ -217,6 +229,7 @@ createApp({
               Images: response.data.Images_RecipeLinker[index], 
               Time: response.data.Time_RecipeLinker[index],    
               ID: response.data.RecipeLinker[index],
+              Name: response.data.Name_RecipeLinker[index],
             })
           }
         });
@@ -234,6 +247,26 @@ createApp({
         console.log("Lunch loaded", this.Lunch);
         console.log("Dinner loaded", this.Dinner);
         console.log("Snacks loaded", this.Snacks);
+
+        if(this.RenderRecipes.length == 0)
+        {
+          this.RenderRecipes.push(this.Breakfast)
+        }
+        if(this.RenderRecipes.length == 1)
+        {
+          this.RenderRecipes.push(this.Lunch)
+        }
+        if(this.RenderRecipes.length == 2)
+        {
+          this.RenderRecipes.push(this.Dinner)
+        }
+        if(this.RenderRecipes.length == 3)
+        {
+          this.RenderRecipes.push(this.Snacks)
+        }
+
+        console.log("Added Recipes", this.RenderRecipes);
+
 
       console.log("Types", response.data.Recipe_Type_RecipeLinker) 
       console.log("Images",response.data.Images_RecipeLinker) 
@@ -307,10 +340,10 @@ createApp({
     window.Webflow && window.Webflow.require("ix2").init();
     document.dispatchEvent(new Event("readystatechange"));
 
-    sal({
+    /*sal({
       threshold: 0.25,
       once: false,
-    });
+    });*/
     }, 3000);
     // Matching filters to checkboxes
     let check = document.querySelectorAll('[type="checkbox"]');

@@ -340,7 +340,6 @@ overflow-x: hidden;
       <a id="message_button" w-el="messageicon" href="messages.html" class="nav-button-icon message_notification w-inline-block">
         <div w-el="icon" class="message-icon-burger"></div>
       </a>
-      <link rel="prerender" href="/messages">
     </div>
   </div>
   <div id="app" w-el="load_app" class="app">
@@ -387,9 +386,10 @@ overflow-x: hidden;
                   </div>
                 </div>
                 <div class="accordion-body style-1">
-                  <div v-bind:key="recipe" v-for="(recipe, index) in RenderRecipes[typeIndex]" class="dynamic_show" data-sal="slide-up" data-sal-duration="1000">
-                    <a v-bind:href="`/recipe?recipe=${recipe.ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
+                  <div v-bind:key="recipe" v-for="(recipe, index) in RenderRecipes[typeIndex]" class="dynamic_show">
+                    <a v-bind:href="`/recipe.html?recipe=${recipe.ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
+                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
+                      <div class="capsule-image-block image_src"v-if="stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images.url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-header-content">
                         <div class="capsule-header-text">
                           <h2 class="main-heading-style-1">{{recipe.Name}}</h2>
@@ -415,7 +415,7 @@ overflow-x: hidden;
                   </div>
                 </div>
                 <div class="accordion-body style-1">
-                  <a v-for="(recipe, index) in Favourites" v-bind:href="`/recipe?recipe=${User.Favourites_ID[index]}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block" style="will-change: transform;" data-sal="slide-up" data-sal-duration="1000">
+                  <a v-for="(recipe, index) in Favourites" v-bind:href="`/recipe.html?recipe=${User.Favourites_ID[index]}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block" style="will-change: transform;">
                     <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="lazy" v-bind:srcset="`${User.FR_Images[index].url}`" alt="" class="full_thumbnail"></div>
                     <div class="capsule-header-content">
                       <div class="capsule-header-text">
@@ -423,7 +423,7 @@ overflow-x: hidden;
                         <div class="generic-text-style-1">{{User.FR_Time[index]}}</div>
                         <div class="generic-text-style-1 filter">{{User.FR_Dietary_Require[index]}}</div>
                       </div>
-                      <div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>
+                      <!--<div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>-->
                     </div>
                   </a>
                 </div>
@@ -456,7 +456,7 @@ overflow-x: hidden;
             </div>
             <div class="content-block columns">
               <div class="filter-form-block w-form">
-                <form id="filters" name="wf-form-filters" data-name="filters" action="/recipe-hub" method="get" class="filter-form" data-wf-page-id="652de2d2a39d12c64b3d8911" data-wf-element-id="73061464-46e8-2753-1baa-b5b9729db83f">
+                <form id="filters" name="wf-form-filters" data-name="filters" action="/recipe-hub.html" method="get" class="filter-form" data-wf-page-id="652de2d2a39d12c64b3d8911" data-wf-element-id="73061464-46e8-2753-1baa-b5b9729db83f">
                   <div class="filter-column-content w-row">
                     <div class="filter-column w-col w-col-6">
                       <div class="filter-list">
