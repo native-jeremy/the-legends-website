@@ -18,8 +18,6 @@ let parameters = params.keys();
 let paramsArray = [];
 let recipeData;
 let recipeNumberCheck = [];
-let data;
-let checkData;
 // Checking For Parameters
 if (url.includes("?")) {
   console.log("Params", parameters);
@@ -67,17 +65,16 @@ createApp({
       FavouritesActive: false,
       RenderRecipes: [],
       typeActive: false,
-      AllRecipes : [],
     };
   },
   methods: {
     clearFilters() {
-      window.location.href = "/recipe-hub.html";
-      Wized.data.setVariable("complete", true);
+      localStorage.removeItem("RecipeFilters");
+      window.location.href = "/recipe-hub";
     },
     shuffleNewRecipes() {
-      //window.location.href = window.location.href;
-      Wized.data.setVariable("complete", true);
+      window.location.href = window.location.href;
+      localStorage.removeItem("recipes_stored");
     },
   },
   created() {
@@ -89,16 +86,44 @@ createApp({
     } else {
       tempFilters = [];
     }
-    Wized.request.await("Load Users Recipes", (response) => {
-      this.User = response.data;
-      // Favourites Getter
-      if (!("Favourite_Recipes" in response.data)) {
-        this.FavouritesActive = false;
-      } else {
-        this.Favourites = response.data.Favourite_Recipes;
-        this.FavouritesActive = true;
-      }
-    if (this.User.Stored_Recipes == "False") {
+    if (recipesStoredInLocalStorage !== null) {
+      Wized.request.await("Load Users Recipes", (response) => {
+        this.User = response.data;
+        // Favourites Getter
+        if (!("Favourite_Recipes" in response.data)) {
+          this.FavouritesActive = false;
+        } else {
+          this.Favourites = response.data.Favourite_Recipes;
+          this.FavouritesActive = true;
+        }
+        // Recipe Getter
+        if (recipesStoredInLocalStorage !== null) {
+          let tempRecipes = JSON.parse(response.data.Recipes_Stored);
+          this.RecipesParsed = JSON.parse(response.data.Recipes_Stored);
+          console.log("Recipes From Airtable", tempRecipes);
+          tempRecipes.forEach((type) => {
+            this.RenderRecipes.push(type)
+          });
+          this.Breakfast = tempRecipes[0];
+          this.HeroImage = this.Breakfast[0].Images[0].url.toString();
+          this.Lunch = tempRecipes[1];
+          this.Dinner = tempRecipes[2];
+          this.Snacks = tempRecipes[3];
+        } else {
+          this.RecipesStored = true;
+        }
+      });
+    } else {
+      Wized.request.await("Load Users Recipes", (response) => {
+        this.User = response.data;
+        // Favourites Getter
+        if (!("Favourite_Recipes" in response.data)) {
+          this.FavouritesActive = false;
+        } else {
+          this.Favourites = response.data.Favourite_Recipes;
+          this.FavouritesActive = true;
+        }
+      });
       Wized.request.await("Load Recipes - Breakfast", (response) => {
         let newArr = response.data.map((item) => {
           return {
@@ -116,7 +141,6 @@ createApp({
         this.Breakfast = recipeType;
         this.HeroImage = recipeType[0].Images[0].url;
         this.RecipesArray.push(recipeType);
-        this.AllRecipes.push(recipeType);
       });
       Wized.request.await("Load Recipes - Lunch", (response) => {
         let newArr = response.data.map((item) => {
@@ -134,7 +158,6 @@ createApp({
         this.RenderRecipes.push(recipeType)
         this.Lunch = recipeType;
         this.RecipesArray.push(recipeType);
-        this.AllRecipes.push(recipeType);
       });
       Wized.request.await("Load Recipes - Dinner", (response) => {
         let newArr = response.data.map((item) => {
@@ -152,7 +175,6 @@ createApp({
         this.RenderRecipes.push(recipeType)
         this.Dinner = recipeType;
         this.RecipesArray.push(recipeType);
-        this.AllRecipes.push(recipeType);
       });
       Wized.request.await("Load Recipes - Snacks", (response) => {
         let newArr = response.data.map((item) => {
@@ -170,96 +192,8 @@ createApp({
         this.RenderRecipes.push(recipeType)
         this.Snacks = recipeType;
         this.RecipesArray.push(recipeType);
-        this.AllRecipes.push(recipeType);
       });
-    } 
-    else {
-        //let tempBreakfast = [];
-        //let tempLunch = [];
-        //let tempDinner = [];
-        //let tempSnacks = [];
-        //this.RecipesParsed = JSON.parse(response.data.RecipeLinker);
-        console.log("Recipes From Airtable", response.data.RecipeLinker);
-        response.data.RecipeLinker.forEach((recipeData, index) => {
-          if(response.data.Recipe_Type_RecipeLinker[index] == 'Breakfast')
-          {
-            this.Breakfast.push({
-              type: response.data.Recipe_Type_RecipeLinker[index],  
-              Images: response.data.Images_RecipeLinker[index], 
-              Time: response.data.Time_RecipeLinker[index],    
-              ID: response.data.RecipeLinker[index],
-      
-            })
-          }
-          if(response.data.Recipe_Type_RecipeLinker[index] == 'Lunch')
-          {
-            this.Lunch.push({
-              type: response.data.Recipe_Type_RecipeLinker[index],  
-              Images: response.data.Images_RecipeLinker[index], 
-              Time: response.data.Time_RecipeLinker[index],    
-              ID: response.data.RecipeLinker[index],
-      
-            })
-          }
-          if(response.data.Recipe_Type_RecipeLinker[index] == 'Dinner')
-          {
-            this.Dinner.push({
-              type: response.data.Recipe_Type_RecipeLinker[index],  
-              Images: response.data.Images_RecipeLinker[index], 
-              Time: response.data.Time_RecipeLinker[index],    
-              ID: response.data.RecipeLinker[index],
-            })
-          }
-          if(response.data.Recipe_Type_RecipeLinker[index] == 'Snacks')
-          {
-            this.Snacks.push({
-              type: response.data.Recipe_Type_RecipeLinker[index],  
-              Images: response.data.Images_RecipeLinker[index], 
-              Time: response.data.Time_RecipeLinker[index],    
-              ID: response.data.RecipeLinker[index],
-            })
-          }
-        });
-        /*this.Breakfast = 
-        function removeDuplicates(arr) {
-          let unique = arr.reduce(function (acc, curr) {
-              if (!acc.includes(curr))
-                  acc.push(curr);
-              return acc;
-          }, []);
-          return unique;
-      }*/
-
-        console.log("Breakfast loaded", this.Breakfast);
-        console.log("Lunch loaded", this.Lunch);
-        console.log("Dinner loaded", this.Dinner);
-        console.log("Snacks loaded", this.Snacks);
-
-      console.log("Types", response.data.Recipe_Type_RecipeLinker) 
-      console.log("Images",response.data.Images_RecipeLinker) 
-      console.log("Time",response.data.Time_RecipeLinker)   
-      console.log("ID", response.data.RecipeLinker)
-
-        /*tempRecipes.forEach((type) => {
-          this.RenderRecipes.push(type)
-        });*/
-     
-
-        // Linked Recipes
-        //ßlet dataType = response.data.Recipe_Type_RecipeLinker;  
-        //let dataImage = response.data.Images_RecipeLinker; 
-        //let dataTime = response.data.Time_RecipeLinker;
-        //let dataTags = response.data.Recipe_Tags_RecipeLinker;
-        //let dataDietry = response.data.Dietary_Require_RecipeLinker;     
-        //let data = response.data.RecipeLinker;
-
-        //this.Breakfast = response.data.RecipeLinker;
-        //this.HeroImage = this.Breakfast[0].Images[0].url.toString();
-        //this.Lunch = tempRecipes[1];
-        //this.Dinner = tempRecipes[2];
-        //this.Snacks = tempRecipes[3];
     }
-    });
     setTimeout(() => {
       document.querySelector('.loading-state-v2').style.display = "none";
     },4000)
@@ -298,6 +232,18 @@ createApp({
       console.log("Array Updated", shuffleArray);
       return shuffleArray;
     }
+
+    /*this.Breakfast = this.Snacks;
+    this.Lunch = this.Lunch;
+    this.Dinner = this.Breakfast;
+    this.Snacks = this.Dinner;
+    let recipesOrdered = [];
+    recipesOrdered.push(this.Breakfast)
+    recipesOrdered.push(this.Lunch)
+    recipesOrdered.push(this.Dinner)
+    recipesOrdered.push(this.Snacks)
+
+    this.RenderRecipes = recipesOrdered*/
   },
   mounted() {
     setTimeout(() => {
@@ -329,25 +275,36 @@ createApp({
     }
   },
   updated() {
-    if (this.User.Stored_Recipes == "False") {
+    console.log("Breakfast", this.Breakfast)
+    console.log("Lunch", this.Lunch)
+    console.log("Dinner", this.Dinner)
+    console.log("Snacks", this.Snacks)
+
+    if (recipesStoredInLocalStorage == null && this.RecipesStored !== true) {
+      let recipesSetLocalStorage = localStorage.setItem(
+        "recipes_stored",
+        "true"
+      );
+      JSON.stringify(recipesSetLocalStorage);
       setTimeout(() => {
-        let itemsArray = [];
-        this.AllRecipes.forEach((item, index) => {
-          item.forEach((itemID, i) => { 
-          itemsArray.push(itemID.ID)
-          });
-        });
-        //console.log("Recipes IDs:", items)
-        Wized.data.setVariable(
-          "array",
-          JSON.stringify(itemsArray)
-          )
+        // Setting recipes
+        //const recipes = [this.Breakfast, this.Lunch, this.Dinner, this.Snacks]
         Wized.data.setVariable(
           "recipestored",
-          'True'
+          JSON.stringify(this.RecipesArray)
         );
-      }, 10000);
+      }, 3000);
     } else {
+      //console.log("Render Recipes Pushed", this.RenderRecipes);
+      /*console.log("User updated", this.User);
+      console.log("Filters updated", this.Filters);
+      console.log("Breakfast image loaded", this.HeroImage);
+      console.log("Breakfast loaded", this.Breakfast);
+      console.log("Lunch loaded", this.Lunch);
+      console.log("Dinner loaded", this.Dinner);
+      console.log("Snacks loaded", this.Snacks);
+      console.log("Recipes Array loaded", this.RecipesArray);
+      console.log("Recipes Parsed loaded", this.RecipesParsed);*/
       return false;
     }
     let scroller = sal();
