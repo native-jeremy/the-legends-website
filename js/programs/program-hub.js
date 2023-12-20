@@ -82,6 +82,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           nextWorkout: false,
           nextWorkoutID: null,
           programPop: programDone,
+          completed: 0,
           }
       },
       created() {
@@ -114,12 +115,19 @@ Wized.request.await("Load Users Program Hub", (response) => {
             threshold: 0.5,
             once: false,
           });
+          const completedCheck = document.querySelectorAll(".completed-icon");
+          completedCheck.forEach((week, index) => {
+                if(week.classList.contains("completed"))
+                {
+                    this.completed = this.completed + 1;
+                }
+            })
           document.querySelector('.loading-state-v2').style.display = "none"
           if("Completed_Workout_Week" in currentUser)
           {
           // Progress Wheel
           const workoutEl = document.querySelectorAll(".workouts");
-          let progressNum = this.User.Completed_Workouts.length / workoutEl.length * 100;
+          let progressNum = this.completed / workoutEl.length * 100;
           const circleProgress = new CircleProgress(".circle-latest");
           circleProgress.attr({
           max: 100,
@@ -127,7 +135,8 @@ Wized.request.await("Load Users Program Hub", (response) => {
           textFormat: "percent",
           indeterminateText: 0,
           });
-          CompletedAmount.forEach((week, index) => {
+          
+          /*CompletedAmount.forEach((week, index) => {
             const weeks = document.querySelectorAll(".weeks");
             const completedIcon = weeks[index].querySelectorAll(".completed-icon");
             week.WorkoutID.forEach((workout, id) => {
@@ -136,7 +145,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
                     CompletedAmount[index].AmountCompleted++;
                 }
             })
-          });
+          });*/
           //setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
           }
       },

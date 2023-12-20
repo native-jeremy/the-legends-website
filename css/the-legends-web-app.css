@@ -7640,7 +7640,8 @@ a {
   }
 
   .progress-badge-icon {
-    padding-top: 54px;
+    padding-top: 0px;
+    max-width: 200px;
   }
 
   .generic-text-style-16 {
@@ -8146,9 +8147,9 @@ a {
   }
 
   .progress-badge-icon {
-    padding-top: 50px;
+    padding-top: 25px;
+    max-width: 100px;
   }
-
   .guide-slider-body {
     padding: 30px;
   }
@@ -9208,7 +9209,8 @@ a {
   }
 
   .progress-badge-icon {
-    padding-top: 55px;
+    padding-top: 25px;
+    max-width: 100px;
   }
 
   .generic-text-style-16 {
