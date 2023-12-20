@@ -1248,9 +1248,9 @@ a {
 }
 
 .body-copy-text-style-1 {
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 23px;
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 28px;
 }
 
 .rich_text_message {
@@ -7735,7 +7735,7 @@ a {
   }
 
   .display_trainer_cell {
-    height: 600px;
+    height: 650px;
   }
 
   .display_trainer_image {
@@ -8789,8 +8789,8 @@ a {
 
   .body-copy-text-style-1.mt_sml {
     margin-top: 15px;
-    font-size: 10px;
-    line-height: 18px;
+    font-size: 12px;
+    line-height: 24px;
   }
 
   .body-copy-text-style-3.program-hub-secondary {
@@ -9415,7 +9415,7 @@ a {
   }
 
   .display_trainer_cell {
-    height: 500px;
+    height: 550px;
   }
 
   .display_trainer_grid {
