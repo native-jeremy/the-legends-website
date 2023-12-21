@@ -181,11 +181,6 @@ createApp({
     } 
     else {
       this.stored = true;
-        //let tempBreakfast = [];
-        //let tempLunch = [];
-        //let tempDinner = [];
-        //let tempSnacks = [];
-        //this.RecipesParsed = JSON.parse(response.data.RecipeLinker);
         console.log("Recipes From Airtable", response.data.RecipeLinker);
         let randomHeroImage = Math.floor(Math.random() * response.data.Images_RecipeLinker.length);
         this.HeroImage = response.data.Images_RecipeLinker[randomHeroImage].url;
@@ -233,15 +228,6 @@ createApp({
             })
           }
         });
-        /*this.Breakfast = 
-        function removeDuplicates(arr) {
-          let unique = arr.reduce(function (acc, curr) {
-              if (!acc.includes(curr))
-                  acc.push(curr);
-              return acc;
-          }, []);
-          return unique;
-      }*/
 
         console.log("Breakfast loaded", this.Breakfast);
         console.log("Lunch loaded", this.Lunch);
@@ -272,25 +258,6 @@ createApp({
       console.log("Images",response.data.Images_RecipeLinker) 
       console.log("Time",response.data.Time_RecipeLinker)   
       console.log("ID", response.data.RecipeLinker)
-
-        /*tempRecipes.forEach((type) => {
-          this.RenderRecipes.push(type)
-        });*/
-     
-
-        // Linked Recipes
-        //ßlet dataType = response.data.Recipe_Type_RecipeLinker;  
-        //let dataImage = response.data.Images_RecipeLinker; 
-        //let dataTime = response.data.Time_RecipeLinker;
-        //let dataTags = response.data.Recipe_Tags_RecipeLinker;
-        //let dataDietry = response.data.Dietary_Require_RecipeLinker;     
-        //let data = response.data.RecipeLinker;
-
-        //this.Breakfast = response.data.RecipeLinker;
-        //this.HeroImage = this.Breakfast[0].Images[0].url.toString();
-        //this.Lunch = tempRecipes[1];
-        //this.Dinner = tempRecipes[2];
-        //this.Snacks = tempRecipes[3];
     }
     });
     setTimeout(() => {
@@ -322,6 +289,7 @@ createApp({
               usedIndices.push(randomIndex);
               i++;
             }
+            console.log("Check Filters", array[randomIndex].Dietary_Require)
           }
         }
         else {
@@ -339,11 +307,6 @@ createApp({
     window.Webflow && window.Webflow.ready();
     window.Webflow && window.Webflow.require("ix2").init();
     document.dispatchEvent(new Event("readystatechange"));
-
-    /*sal({
-      threshold: 0.25,
-      once: false,
-    });*/
     }, 3000);
     // Matching filters to checkboxes
     let check = document.querySelectorAll('[type="checkbox"]');
