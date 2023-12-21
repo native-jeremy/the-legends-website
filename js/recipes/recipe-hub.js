@@ -181,7 +181,7 @@ createApp({
     } 
     else {
       this.stored = true;
-        console.log("Recipes From Airtable", response.data.RecipeLinker);
+        //console.log("Recipes From Airtable", response.data.RecipeLinker);
         let randomHeroImage = Math.floor(Math.random() * response.data.Images_RecipeLinker.length);
         this.HeroImage = response.data.Images_RecipeLinker[randomHeroImage].url;
         response.data.RecipeLinker.forEach((recipeData, index) => {
@@ -229,10 +229,10 @@ createApp({
           }
         });
 
-        console.log("Breakfast loaded", this.Breakfast);
-        console.log("Lunch loaded", this.Lunch);
-        console.log("Dinner loaded", this.Dinner);
-        console.log("Snacks loaded", this.Snacks);
+       // console.log("Breakfast loaded", this.Breakfast);
+        //console.log("Lunch loaded", this.Lunch);
+        //console.log("Dinner loaded", this.Dinner);
+        //console.log("Snacks loaded", this.Snacks);
 
         if(this.RenderRecipes.length == 0)
         {
@@ -251,13 +251,13 @@ createApp({
           this.RenderRecipes.push(this.Snacks)
         }
 
-        console.log("Added Recipes", this.RenderRecipes);
+        //console.log("Added Recipes", this.RenderRecipes);
 
 
-      console.log("Types", response.data.Recipe_Type_RecipeLinker) 
-      console.log("Images",response.data.Images_RecipeLinker) 
-      console.log("Time",response.data.Time_RecipeLinker)   
-      console.log("ID", response.data.RecipeLinker)
+      //console.log("Types", response.data.Recipe_Type_RecipeLinker) 
+      //console.log("Images",response.data.Images_RecipeLinker) 
+      //console.log("Time",response.data.Time_RecipeLinker)   
+      //console.log("ID", response.data.RecipeLinker)
     }
     });
     setTimeout(() => {
@@ -274,6 +274,7 @@ createApp({
         if(array[randomIndex].type == type)
         {
           if (tempFilters.length !== 0) {
+
             if (!usedIndices.includes(randomIndex) &&
               array[randomIndex].Dietary_Require.some((name) =>
                 tempFilters.includes(name)
@@ -289,7 +290,6 @@ createApp({
               usedIndices.push(randomIndex);
               i++;
             }
-            console.log("Check Filters", array[randomIndex].Dietary_Require)
           }
         }
         else {
