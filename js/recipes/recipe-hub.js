@@ -296,7 +296,7 @@ createApp({
           randomIndex = Math.floor(Math.random() * array.length);
         }
       }
-      console.log("Array Updated", shuffleArray);
+      //console.log("Array Updated", shuffleArray);
       return shuffleArray;
     }
   },
