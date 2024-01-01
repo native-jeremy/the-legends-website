@@ -20,9 +20,13 @@ createApp({
   },
   computed: {
     filteredList() {
-        return this.Workouts.filter(item => 
-          item.Name.toUpperCase().includes(this.Search.toUpperCase()) || item.Type.toUpperCase().includes(this.Search.toUpperCase()) && item.Workout_Visible == 'Visible'
-          )
+        return this.Workouts.filter(item => {
+          if(item.Workout_Visible.includes('Visible'))
+          {
+            item.Name.toUpperCase().includes(this.Search.toUpperCase()) || item.Type.toUpperCase().includes(this.Search.toUpperCase())
+          }
+        }
+        )
     }
   },
   methods: {
