@@ -32,11 +32,11 @@ createApp({
             html = converter.makeHtml(text);
           richText.innerHTML = html;
         }
-        console.log("Workout Res", snapshot);
+        //console.log("Workout Res", snapshot);
       });
 
       Wized.request.await("Load Round Info", (response) => {
-        console.log("Round Request", response.data);
+        //console.log("Round Request", response.data);
         this.Rounds = response.data;
       });
     },

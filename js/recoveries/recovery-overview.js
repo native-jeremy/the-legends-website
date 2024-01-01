@@ -46,7 +46,7 @@ window.onload = async () => {
         html = converter.makeHtml(text);
       richText.innerHTML = html;
     }
-    console.log("Workout Res", snapshot);
+    //console.log("Workout Res", snapshot);
   });
 
   // Siren & Voice Functionailty Setup
