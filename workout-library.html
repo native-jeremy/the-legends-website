@@ -354,7 +354,7 @@ c0-0.1,0-0.2,0-0.3L1.8,14C0.7,12.5,0,10.7,0,8.8C0,3.9,4.2,0,9.4,0s9.4,3.9,9.4,8.
             </div>
             <div class="content-block style-2">
               <div v-for="(Workout, index) in filteredList" v-bind:key="Workout" >
-              <a :href="`workout-overview.html?workout=${Workout.ID}`" class="capsule-body style-1 capsule-filter w-inline-block" v-if="Workout.Workout_Visible == 'Visible'">
+              <a :href="`workout-overview.html?workout=${Workout.ID}`" class="capsule-body style-1 capsule-filter w-inline-block">
                 <div class="capsule-image-block image_src"><img loading="lazy" v-bind:srcset="`${Workout.Image[0].url}`" alt="" class="full_thumbnail"></div>
                 <div class="capsule-header-content">
                   <div class="capsule-header-text">
