@@ -20,10 +20,9 @@ createApp({
   },
   computed: {
     filteredList() {
-        return this.Workouts.filter(item => {
+        return this.Workouts.filter(item => 
           item.Name.toUpperCase().includes(this.Search.toUpperCase()) || item.Type.toUpperCase().includes(this.Search.toUpperCase())
-        }
-        )
+          )
     }
   },
   methods: {
