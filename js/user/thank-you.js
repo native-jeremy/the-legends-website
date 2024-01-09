@@ -20,6 +20,14 @@ window.onload = async () => {
     tap('create', '47544-528ca5', { integration: "stripe" });
     tap('trial', `${user.Stripe_ID}`);
 
+    setTimeout(() => {
+      const text = document.querySelector('p')
+      text.textContent = "Redirecting to home page...";
+    }, 5000);
+
+    setTimeout(() => {
+      window.location.href = "/program-hub-welcome.html";
+    }, 10000);
 });
 };
  
