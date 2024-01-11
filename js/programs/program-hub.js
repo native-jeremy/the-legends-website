@@ -136,7 +136,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           indeterminateText: 0,
           });
           
-          /*CompletedAmount.forEach((week, index) => {
+          CompletedAmount.forEach((week, index) => {
             const weeks = document.querySelectorAll(".weeks");
             const completedIcon = weeks[index].querySelectorAll(".completed-icon");
             week.WorkoutID.forEach((workout, id) => {
@@ -145,7 +145,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
                     CompletedAmount[index].AmountCompleted++;
                 }
             })
-          });*/
+          });
           //setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
           }
       },
