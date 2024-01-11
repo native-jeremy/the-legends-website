@@ -60,15 +60,25 @@
 	}
 }
 
-</style>
-<script>
-  if('serviceWorker' in navigator)
-  {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register('/sw.js')
-    });
-  }
-</script>
+  </style>
+  <!--Tapfiliate JavaScript-->
+  <script src="https://script.tapfiliate.com/tapfiliate.js" type="text/javascript" async></script>
+  <script type="text/javascript">
+      (function(t,a,p){t.TapfiliateObject=a;t[a]=t[a]||function(){
+      (t[a].q=t[a].q||[]).push(arguments)}})(window,'tap');
+
+      tap('create', '47544-528ca5', { integration: "stripe" });
+      tap('detect');
+  </script>
+  <!--Tapfiliate JavaScript-->
+  <script>
+    if('serviceWorker' in navigator)
+    {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register('/sw.js')
+      });
+    }
+  </script>
 <link rel="manifest" href="manifest.json" />
 <script src="js/other/userid.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>

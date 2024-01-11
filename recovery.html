@@ -115,8 +115,18 @@
 
   </style>
   </style>
-<link rel="manifest" href="manifest.json" />
-<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <!--Tapfiliate JavaScript-->
+  <script src="https://script.tapfiliate.com/tapfiliate.js" type="text/javascript" async></script>
+  <script type="text/javascript">
+      (function(t,a,p){t.TapfiliateObject=a;t[a]=t[a]||function(){
+      (t[a].q=t[a].q||[]).push(arguments)}})(window,'tap');
+
+      tap('create', '47544-528ca5', { integration: "stripe" });
+      tap('detect');
+  </script>
+  <!--Tapfiliate JavaScript-->
+  <link rel="manifest" href="manifest.json" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
 <body>
   <div class="global-app-css w-embed">
