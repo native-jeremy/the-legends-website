@@ -84,7 +84,7 @@
   </script>
   <!--Tapfiliate JavaScript-->
   <link rel="manifest" href="manifest.json" />
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   
 </head>
 <body>
@@ -421,7 +421,11 @@ overflow-x: hidden;
                         </div>
                         <div w-el="complete_filter_week" class="generic-text-style-1 complete-week">HIIT Workout</div>
                       </div>
-                      <div v-bind:class="User.Completed_Workout_ID !== undefined && User.Completed_Workout_ID.some((id) => week.Workouts[index].includes(id)) && User.Completed_Workout_Week.some((id) => week.Week.includes(id)) && User.Completed_Workouts_Program.some((id) => week.Program.includes(id)) ? 'completed' : 'not_completed'" class="completed-icon"></div>
+                      <div v-bind:class="User.Completed_Workout_ID !== undefined 
+                      && User.Completed_Workouts_Program.includes(week.Program[0])
+                      && User.Completed_Workout_ID.some((id) => week.Workouts[index].includes(id)) 
+                      && User.Completed_Workout_Week.includes(week.Week)
+                      ? 'completed' : 'not_completed'" class="completed-icon"></div>
                     </div>
                   </a>
                 </div>

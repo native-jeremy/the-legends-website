@@ -1,46 +1,51 @@
 anime({
-    targets: '.path3',
-    strokeDashoffset: [anime.setDashoffset, 0],
-    easing: 'cubicBezier(.5, .05, .1, .3)',
-    duration: 2000,
-    delay: function(el, i) { return i * 250 },
-    direction: 'alternate',
-    loop: true
+  targets: ".path3",
+  strokeDashoffset: [anime.setDashoffset, 0],
+  easing: "cubicBezier(.5, .05, .1, .3)",
+  duration: 2000,
+  delay: function (el, i) {
+    return i * 250;
+  },
+  direction: "alternate",
+  loop: true,
 });
 Wized.request.await("Load Users Program Hub", (response) => {
   const currentUser = response.data;
   let currentWeek;
   let programDone;
-  if(currentUser.User_Week_Tracker > currentUser.Count_weeks[0])
-  {
+  if (currentUser.User_Week_Tracker > currentUser.Count_weeks[0]) {
     //currentWeek = currentUser.Count_weeks[0]
-    currentWeek = currentUser.Program_Week_Tracker
-  }
-  else {
+    currentWeek = currentUser.Program_Week_Tracker;
+  } else {
     //currentWeek = currentUser.User_Week_Tracker
-    currentWeek = currentUser.Program_Week_Tracker
+    currentWeek = currentUser.Program_Week_Tracker;
   }
-  if(currentUser.Program_Tracker_Percentage == '100%')
-  {
+  if (currentUser.Program_Tracker_Percentage == "100%") {
     programDone = true;
   }
   // Console.log Request
   //console.log("User Request:", currentUser);
   Wized.request.await("Load Program", (response) => {
-      const program = response.data;
+    const program = response.data;
+    // Console.log Request
+    //console.log("Current Program Request:", program);
+    Wized.request.await("Load weeks - HUB", (response) => {
+      const currentProgram = response.data;
       // Console.log Request
-      //console.log("Current Program Request:", program);
-      Wized.request.await("Load weeks - HUB", (response) => {
-          const currentProgram = response.data;
-          // Console.log Request
-          //console.log("Program Request:", currentProgram);
-          const CompletedAmount = [];
-          let nextWorkoutStatic = false;
-          let nextWorkoutIDStatic = null;
-          currentProgram.forEach((WeekEl, index) => {
-                  CompletedAmount.push({Week: WeekEl.Week, WorkoutName: WeekEl.Workout_Names, WorkoutID: WeekEl.Workouts, ProgramID: WeekEl.Program_ID[0], AmountCompleted: 0});
-          });
-          /*if("Completed_Workout_Week" in currentUser)
+      //console.log("Program Request:", currentProgram);
+      const CompletedAmount = [];
+      let nextWorkoutStatic = false;
+      let nextWorkoutIDStatic = null;
+      currentProgram.forEach((WeekEl, index) => {
+        CompletedAmount.push({
+          Week: WeekEl.Week,
+          WorkoutName: WeekEl.Workout_Names,
+          WorkoutID: WeekEl.Workouts,
+          ProgramID: WeekEl.Program_ID[0],
+          AmountCompleted: 0,
+        });
+      });
+      /*if("Completed_Workout_Week" in currentUser)
           {
               CompletedAmount.forEach((total, index) => {
                 
@@ -97,9 +102,9 @@ Wized.request.await("Load Users Program Hub", (response) => {
               return data;
           }
           getData().then(data => console.log('Loaded'));
-          /*Wized.request.await("Load Recoveries", (response) => {    
+          Wized.request.await("Load Recoveries", (response) => {    
               this.Recoveries = response.data
-          });*/
+          });
       },
       mounted() {
         // console.log('Recoveries', this.Recoveries)
@@ -151,6 +156,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
       },
       }).mount('#app')
       // End Vue Intializer
-      });
+    });
   });
 });
