@@ -2710,7 +2710,20 @@ a {
   width: 65vw;
   height: 100%;
   background-color: #c2c2c2;
-  position: relative;
+    position: relative;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
 }
 
 .app-block.current-modal {
@@ -3209,14 +3222,16 @@ a {
 
 .app-fullscreen-video {
   width: 100%;
+  min-width: 100%;
   height: 100%;
+  min-height: 100%;
   object-fit: cover;
   position: absolute;
-  top: 0%;
+  /*top: 0%;
   bottom: 0%;
   left: 0%;
   right: 0%;
-  will-change: transform;
+  will-change: transform;*/
 }
 
 .app-fullscreen-video.scroll {
