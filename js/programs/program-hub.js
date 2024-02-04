@@ -65,8 +65,6 @@ const initializeVue = (currentUser, currentProgram, CompletedAmount) => {
       };
     },
     created() {
-      const programLoader = document.getElementById("programLoading");
-      programLoader.classList.add("hide_program_loader");
 
       const getData = async () => {
         let data = await Wized.data.get("v.response");
@@ -81,6 +79,8 @@ const initializeVue = (currentUser, currentProgram, CompletedAmount) => {
       });
     },
     mounted() {
+      const programLoader = document.getElementById("programLoading");
+      programLoader.classList.add("hide_program_loader");
       console.log("interaction loaded");
       window.Webflow && window.Webflow.destroy();
       window.Webflow && window.Webflow.ready();
