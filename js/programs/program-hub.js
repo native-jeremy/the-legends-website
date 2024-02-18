@@ -45,7 +45,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
         });
       });
 
-      console.log("Current Completed:", workoutsCompleted);
+      //console.log("Current Completed:", workoutsCompleted);
 
 
       // New Code 12/02/2024 - Fixing the progress on program hub
@@ -65,7 +65,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
             completedCount: 0
           });
         });
-        console.log("ProgramData:", programData);
+        //console.log("ProgramData:", programData);
 
         // User Completed Data loop
         currentUser.Completed_Workouts.forEach((w, index) => {
@@ -76,7 +76,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
             programWorkout: currentUser.Completed_Workout_ID[index]
           });
         });
-        console.log("CompletedData:", completedData);
+        //console.log("CompletedData:", completedData);
 
         programData.forEach((w, index) => {
           completedData.forEach((wc, ii) => {
@@ -88,7 +88,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
                 {
                   if(w.programWorkouts.includes(wc.programWorkout))
                   {
-                    console.log("It has this workout", "Week:", w.programWeek, "Program Workout:", w.programWorkouts.indexOf(wc.programWorkout), "Completed Workout:", wc.programWorkout);
+                    //console.log("It has this workout", "Week:", w.programWeek, "Program Workout:", w.programWorkouts.indexOf(wc.programWorkout), "Completed Workout:", wc.programWorkout);
                      // Find index of wc.programWorkout in w.completeIndices
                     const workoutIndex = w.programWorkouts.indexOf(wc.programWorkout);
                     // Set the value at workoutIndex to true
@@ -164,7 +164,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           window.Webflow && window.Webflow.ready();
           window.Webflow && window.Webflow.require("ix2").init();
           document.dispatchEvent(new Event("readystatechange"));
-          console.log("Completed Array", this.CompletedWorkouts)
+          //console.log("Completed Array", this.CompletedWorkouts)
           //console.log("Next Workout", this.nextWorkoutID)
           //console.log("Progress", this.ProgramCompleted)
           sal({
