@@ -39,9 +39,9 @@ Wized.request.await("Load Users Program Hub", (response) => {
       currentProgram.forEach((w, index) => {
         workoutsCompleted.push(
           {
-            programs: currentUser.Completed_Workouts_ID_Program[index], 
-            workouts: currentUser.Completed_Workouts[index],
-            weeks: currentUser.Completed_Workout_Week[index]
+            programs: currentUser.Completed_Workouts_ID_Program[index] ? currentUser.Completed_Workouts_ID_Program[index] : null, 
+            workouts: currentUser.Completed_Workouts[index] ? currentUser.Completed_Workout_Week[index] : null,
+            weeks: currentUser.Completed_Workout_Week[index] ? currentUser.Completed_Workout_Week[index] : null,
         });
       });
 
