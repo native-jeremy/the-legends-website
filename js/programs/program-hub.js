@@ -35,14 +35,26 @@ Wized.request.await("Load Users Program Hub", (response) => {
       let workouts = [];
       let weeks = [];
       let workoutsCompleted = [];
+      let nonPrograms
 
       currentProgram.forEach((w, index) => {
+      if('Completed_Workouts_ID_Program' in currentUser)
+      {
         workoutsCompleted.push(
           {
-            programs: currentUser.Completed_Workouts_ID_Program[index] ? currentUser.Completed_Workouts_ID_Program[index] : null, 
-            workouts: currentUser.Completed_Workouts[index] ? currentUser.Completed_Workout_Week[index] : null,
-            weeks: currentUser.Completed_Workout_Week[index] ? currentUser.Completed_Workout_Week[index] : null,
+            programs: currentUser.Completed_Workouts_ID_Program[index], 
+            workouts: currentUser.Completed_Workouts[index],
+            weeks: currentUser.Completed_Workout_Week[index]
         });
+      }
+      else {
+        workoutsCompleted.push(
+          {
+            programs: false, 
+            workouts: false,
+            weeks: false
+        });
+      }
       });
 
       //console.log("Current Completed:", workoutsCompleted);
