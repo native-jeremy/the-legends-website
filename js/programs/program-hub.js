@@ -37,28 +37,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
       let workoutsCompleted = [];
       let nonPrograms
 
-      currentProgram.forEach((w, index) => {
-      if('Completed_Workouts_ID_Program' in currentUser)
-      {
-        workoutsCompleted.push(
-          {
-            programs: currentUser.Completed_Workouts_ID_Program[index], 
-            workouts: currentUser.Completed_Workouts[index],
-            weeks: currentUser.Completed_Workout_Week[index]
-        });
-      }
-      else {
-        workoutsCompleted.push(
-          {
-            programs: false, 
-            workouts: false,
-            weeks: false
-        });
-      }
-      });
-
-      //console.log("Current Completed:", workoutsCompleted);
-
 
       // New Code 12/02/2024 - Fixing the progress on program hub
       function checkProgress ()
@@ -80,6 +58,8 @@ Wized.request.await("Load Users Program Hub", (response) => {
         //console.log("ProgramData:", programData);
 
         // User Completed Data loop
+        if('Completed_Workouts_ID_Program' in currentUser)
+        {
         currentUser.Completed_Workouts.forEach((w, index) => {
           completedData.push({
             programName: currentUser.Completed_Workouts_Title_Program[index],
@@ -88,6 +68,15 @@ Wized.request.await("Load Users Program Hub", (response) => {
             programWorkout: currentUser.Completed_Workout_ID[index]
           });
         });
+        }
+        else {
+          completedData.push({
+            programName: false,
+            programID: false,
+            programWeek: false,
+            programWorkout: false
+          });
+        }
         //console.log("CompletedData:", completedData);
 
         programData.forEach((w, index) => {
