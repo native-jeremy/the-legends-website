@@ -105,12 +105,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
 
         return programData;
       }
-
-      Wized.request.await("Load Recoveries Vue", (response) => {   
-        console.log("Load Recoveries Vue", response)
-        recoveries = response.data
-        console.log("Load Recoveries Vue - RES", recoveries)
-    });
       
 
       // Console.log Request
@@ -155,6 +149,13 @@ Wized.request.await("Load Users Program Hub", (response) => {
           //this.CompletedWorkouts = CompletedAmount;
           this.nextWorkout = nextWorkoutStatic;
           this.nextWorkoutID = nextWorkoutIDStatic;
+          this.Recoveries = Wized.request.await("Load Recoveries Vue", (response) => {   
+            console.log("Load Recoveries Vue", response)
+            recoveries = response.data
+            console.log("Load Recoveries Vue - RES", recoveries)
+    
+            return recoveries
+          });
           /*const getData = async () => {
               let data = await Wized.data.get("v.response");
               this.Recoveries = data;
@@ -172,8 +173,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
           window.Webflow && window.Webflow.ready();
           window.Webflow && window.Webflow.require("ix2").init();
           document.dispatchEvent(new Event("readystatechange"));
-          this.Recoveries = recoveries;
-          console.log("Recoveries", this.Recoveries);
           //console.log("Completed Array", this.CompletedWorkouts)
           //console.log("Next Workout", this.nextWorkoutID)
           //console.log("Progress", this.ProgramCompleted)
