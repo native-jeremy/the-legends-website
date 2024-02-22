@@ -135,7 +135,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           SessionAmount: currentUser.Q7[0],
           UserWeek: currentWeek,
           CurrentProgram: program,
-          Recoveries: null,
+          Recoveries: recoveries,
           CompletedWorkouts: completedWorkouts,
           nextWorkout: false,
           nextWorkoutID: null,
@@ -149,17 +149,13 @@ Wized.request.await("Load Users Program Hub", (response) => {
           //this.CompletedWorkouts = CompletedAmount;
           this.nextWorkout = nextWorkoutStatic;
           this.nextWorkoutID = nextWorkoutIDStatic;
-          async function recoveryRes(){
           Wized.request.await("Load Recoveries Vue", (response) => {   
             console.log("Load Recoveries Vue", response)
-            this.Recoveries = response.data
+            recoveries = response.data
             console.log("Load Recoveries Vue - RES", recoveries)
     
-            return this.Recoveries
+            return recoveries
           });
-
-          recoveryRes();
-        }
           /*const getData = async () => {
               let data = await Wized.data.get("v.response");
               this.Recoveries = data;
