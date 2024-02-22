@@ -31,12 +31,33 @@ Wized.request.await("Load Users Program Hub", (response) => {
     //console.log("Current Program Request:", program);
     Wized.request.await("Load weeks - HUB", (response) => {
       const currentProgram = response.data;
-      let recoveries;
       let programs = [];
       let workouts = [];
       let weeks = [];
       let workoutsCompleted = [];
       let nonPrograms
+
+      currentProgram.forEach((w, index) => {
+      if('Completed_Workouts_ID_Program' in currentUser)
+      {
+        workoutsCompleted.push(
+          {
+            programs: currentUser.Completed_Workouts_ID_Program[index], 
+            workouts: currentUser.Completed_Workouts[index],
+            weeks: currentUser.Completed_Workout_Week[index]
+        });
+      }
+      else {
+        workoutsCompleted.push(
+          {
+            programs: false, 
+            workouts: false,
+            weeks: false
+        });
+      }
+      });
+
+      //console.log("Current Completed:", workoutsCompleted);
 
 
       // New Code 12/02/2024 - Fixing the progress on program hub
@@ -59,8 +80,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
         //console.log("ProgramData:", programData);
 
         // User Completed Data loop
-        if('Completed_Workouts_ID_Program' in currentUser)
-        {
         currentUser.Completed_Workouts.forEach((w, index) => {
           completedData.push({
             programName: currentUser.Completed_Workouts_Title_Program[index],
@@ -69,15 +88,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
             programWorkout: currentUser.Completed_Workout_ID[index]
           });
         });
-        }
-        else {
-          completedData.push({
-            programName: false,
-            programID: false,
-            programWeek: false,
-            programWorkout: false
-          });
-        }
         //console.log("CompletedData:", completedData);
 
         programData.forEach((w, index) => {
@@ -135,7 +145,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           SessionAmount: currentUser.Q7[0],
           UserWeek: currentWeek,
           CurrentProgram: program,
-          Recoveries: recoveries,
+          Recoveries: null,
           CompletedWorkouts: completedWorkouts,
           nextWorkout: false,
           nextWorkoutID: null,
@@ -143,30 +153,21 @@ Wized.request.await("Load Users Program Hub", (response) => {
           completed: 0,
           }
       },
-      methods: {
-        async loadData() {
-          try {
-              const response = await Wized.request.await("Load Recoveries");
-              console.log("Load Recoveries Vue", response);
-  
-              const recoveries = response.data;
-              console.log("Load Recoveries Vue - RES", recoveries);
-  
-              // Assign the data to the component property
-              this.Recoveries = recoveries;
-              console.log("Recovered data:", this.Recoveries);
-          } catch (error) {
-              console.error("Error fetching data:", error);
-          }
-      }
-      },
       created() {
           const programLoader = document.getElementById("programLoading");
           programLoader.classList.add("hide_program_loader")
           //this.CompletedWorkouts = CompletedAmount;
           this.nextWorkout = nextWorkoutStatic;
           this.nextWorkoutID = nextWorkoutIDStatic;
-          this.loadData();
+          const getData = async () => {
+              let data = await Wized.data.get("v.response");
+              this.Recoveries = data;
+              return data;
+          }
+          getData().then(data => console.log('Loaded'));
+          /*Wized.request.await("Load Recoveries", (response) => {    
+              this.Recoveries = response.data
+          });*/
       },
       mounted() {
         // console.log('Recoveries', this.Recoveries)
