@@ -143,28 +143,30 @@ Wized.request.await("Load Users Program Hub", (response) => {
           completed: 0,
           }
       },
+      methods: {
+        async loadData() {
+          try {
+              const response = await Wized.request.await("Load Recoveries Vue");
+              console.log("Load Recoveries Vue", response);
+  
+              const recoveries = response.data;
+              console.log("Load Recoveries Vue - RES", recoveries);
+  
+              // Assign the data to the component property
+              this.Recoveries = recoveries;
+              console.log("Recovered data:", this.Recoveries);
+          } catch (error) {
+              console.error("Error fetching data:", error);
+          }
+      }
+      },
       created() {
           const programLoader = document.getElementById("programLoading");
           programLoader.classList.add("hide_program_loader")
           //this.CompletedWorkouts = CompletedAmount;
           this.nextWorkout = nextWorkoutStatic;
           this.nextWorkoutID = nextWorkoutIDStatic;
-          Wized.request.await("Load Recoveries Vue", (response) => {   
-            console.log("Load Recoveries Vue", response)
-            recoveries = response.data
-            console.log("Load Recoveries Vue - RES", recoveries)
-    
-            return recoveries
-          });
-          /*const getData = async () => {
-              let data = await Wized.data.get("v.response");
-              this.Recoveries = data;
-              return data;
-          }
-          getData().then(data => console.log('Loaded'));
-          Wized.request.await("Load Recoveries", (response) => {    
-              this.Recoveries = response.data
-          });*/
+          this.loadData();
       },
       mounted() {
         // console.log('Recoveries', this.Recoveries)
