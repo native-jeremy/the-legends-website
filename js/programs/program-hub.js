@@ -141,7 +141,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           SessionAmount: currentUser.Q7[0],
           UserWeek: currentWeek,
           CurrentProgram: program,
-          Recoveries: recoveries,
+          Recoveries: null,
           CompletedWorkouts: completedWorkouts,
           nextWorkout: false,
           nextWorkoutID: null,
@@ -172,6 +172,8 @@ Wized.request.await("Load Users Program Hub", (response) => {
           window.Webflow && window.Webflow.ready();
           window.Webflow && window.Webflow.require("ix2").init();
           document.dispatchEvent(new Event("readystatechange"));
+          this.Recoveries = recoveries;
+          console.log("Recoveries", this.Recoveries);
           //console.log("Completed Array", this.CompletedWorkouts)
           //console.log("Next Workout", this.nextWorkoutID)
           //console.log("Progress", this.ProgramCompleted)
