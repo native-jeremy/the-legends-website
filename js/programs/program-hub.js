@@ -103,13 +103,13 @@ Wized.request.await("Load Users Program Hub", (response) => {
           });
         });
 
-        Wized.request.await("Load Recoveries Vue", (response) => {   
-          console.log("Load Recoveries Vue", response)
-          this.Recoveries = response.data
-      });
-
         return programData;
       }
+
+      Wized.request.await("Load Recoveries Vue", (response) => {   
+        console.log("Load Recoveries Vue", response)
+        recoveries = response.data
+    });
       
 
       // Console.log Request
