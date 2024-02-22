@@ -149,13 +149,24 @@ Wized.request.await("Load Users Program Hub", (response) => {
           //this.CompletedWorkouts = CompletedAmount;
           this.nextWorkout = nextWorkoutStatic;
           this.nextWorkoutID = nextWorkoutIDStatic;
-          this.Recoveries = Wized.request.await("Load Recoveries Vue", (response) => {   
-            console.log("Load Recoveries Vue", response)
-            recoveries = response.data
-            console.log("Load Recoveries Vue - RES", recoveries)
-    
-            return recoveries
-          });
+          async function fetchData() {
+            try {
+                const response = await Wized.request.await("Load Recoveries Vue");
+                console.log("Load Recoveries Vue", response);
+        
+                const recoveries = response.data;
+                console.log("Load Recoveries Vue - RES", recoveries);
+        
+                this.Recoveries = recoveries;
+                console.log("Recovered data:", this.Recoveries);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        
+        // Call the function to fetch data
+        fetchData();
+        
           /*const getData = async () => {
               let data = await Wized.data.get("v.response");
               this.Recoveries = data;
