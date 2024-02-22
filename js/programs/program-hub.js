@@ -146,7 +146,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
       methods: {
         async loadData() {
           try {
-              const response = Wized.request.await("Load Recoveries Vue");
+              const response = await Wized.request.await("Load Recoveries");
               console.log("Load Recoveries Vue", response);
   
               const recoveries = response.data;
