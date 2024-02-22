@@ -109,6 +109,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
       Wized.request.await("Load Recoveries Vue", (response) => {   
         console.log("Load Recoveries Vue", response)
         recoveries = response.data
+        console.log("Load Recoveries Vue - RES", recoveries)
     });
       
 
