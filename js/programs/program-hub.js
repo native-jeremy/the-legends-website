@@ -63,6 +63,8 @@ Wized.request.await("Load Users Program Hub", (response) => {
       // New Code 12/02/2024 - Fixing the progress on program hub
       function checkProgress ()
       {
+        if("Completed_Workout_Week" in currentUser)
+        {
         let programData = []
         let completedData = []
 
@@ -112,8 +114,13 @@ Wized.request.await("Load Users Program Hub", (response) => {
             }
           });
         });
-
+        
         return programData;
+        }
+        else {
+            this.startedNone = true;
+            return false;
+        }
       }
       
 
@@ -151,6 +158,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           nextWorkoutID: null,
           programPop: programDone,
           completed: 0,
+          startedNone: false,
           }
       },
       created() {

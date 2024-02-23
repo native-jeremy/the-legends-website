@@ -84,7 +84,7 @@
   </script>
   <!--Tapfiliate JavaScript-->
   <link rel="manifest" href="manifest.json" />
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   
 </head>
 <body>
@@ -401,7 +401,8 @@ overflow-x: hidden;
                       </div>
                     </div>
                     <div class="split-dynamic-text">
-                      <div class="generic-text-style-1 complete-amount">{{CompletedWorkouts[number].completedCount}}</div>
+                      <div class="generic-text-style-1 complete-amount" v-if="CompletedWorkouts.length > 1">{{CompletedWorkouts[number].completedCount}}</div>
+                      <div class="generic-text-style-1 complete-amount"v-else>0</div>
                       <div class="generic-text-style-1">/</div>
                       <div class="generic-text-style-1 week-1-length">{{User.Q7[0]}}</div>
                       <div class="generic-text-style-1 left-complete-margin">Complete</div>
@@ -421,7 +422,7 @@ overflow-x: hidden;
                         </div>
                         <div w-el="complete_filter_week" class="generic-text-style-1 complete-week">HIIT Workout</div>
                       </div>
-                      <div v-bind:class="User.Completed_Workout_ID !== undefined 
+                      <div v-bind:class="User.Completed_Workout_ID !== undefined && !startedNone
                       && CompletedWorkouts[number].completeIndices[index] === true
                       ? 'completed' : 'not_completed'" class="completed-icon"></div>
                     </div>
