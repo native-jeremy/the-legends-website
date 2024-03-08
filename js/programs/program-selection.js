@@ -57,6 +57,7 @@ window.onload = async () => {
           //console.log("Selected!")
       }
       else {
+        console.log("EMAIL: ", user.Email)
         checkoutButton.addEventListener("click", function () {
           // Create a new Checkout Session using the server-side endpoint you
           // created in step 3.

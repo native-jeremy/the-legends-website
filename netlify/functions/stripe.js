@@ -17,8 +17,8 @@ exports.handler = async (event, context) => {
       trial_period_days: 14,
     },
     customer_email: `${email}`,
-    success_url: `${process.env.STRIPE_SUCCESS}?success&session_id={CHECKOUT_SESSION_ID}&userverified=${email}`,
-    cancel_url: `${process.env.STRIPE_CANCEL}`,
+    success_url: `thelegendsprogram.com.au/thank-you.html?success&session_id={CHECKOUT_SESSION_ID}&userverified=${email}`,
+    cancel_url: `thelegendsprogram.com.au/program-selection.html"`,
   });
 
   return {
