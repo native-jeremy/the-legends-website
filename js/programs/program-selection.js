@@ -84,17 +84,17 @@ window.onload = async () => {
 
     quarterlyButton.addEventListener("click", function () {
       // Create a new Checkout Session using the server-side endpoint you
-      stripePost(monthly)
+      stripePost(quarterly)
     });
 
     yearlyButton.addEventListener("click", function () {
       // Create a new Checkout Session using the server-side endpoint you
-      stripePost(monthly)
+      stripePost(yearly)
     });
 
     function stripePost(data)
     {
-      const stripeBody = JSON.stringify(data);
+      //const stripeBody = JSON.stringify(data);
       fetch("/api/stripe", {
         method: "POST",
         //body: stripeBody
