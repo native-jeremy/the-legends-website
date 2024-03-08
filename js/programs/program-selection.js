@@ -9,37 +9,8 @@ window.onload = async () => {
     loop: true
 });
 
-    // New Stripe Setup
-    let stripe = Stripe(
-      "pk_test_51MbG9BBV1W2mjCG5QN8s7AylZVu9IRRjtnXMWz3XpCUqYCgcz2J6BOEMvHUTapTJWmv3ApodZObxopkXm3RW9UKl00aBDTKIgK"
-    );
-    let checkoutButton = document.getElementById("stripe");
 
-    checkoutButton.addEventListener("click", function () {
-      // Create a new Checkout Session using the server-side endpoint you
-      // created in step 3.
-      fetch("/api/stripe", {
-        method: "POST",
-        body: "morganbrown756@gmail.com"
-      })
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (session) {
-          return stripe.redirectToCheckout({ sessionId: session.id });
-        })
-        .then(function (result) {
-          // If `redirectToCheckout` fails due to a browser or network
-          // error, you should display the localized error message to your
-          // customer using `error.message`.
-          if (result.error) {
-            alert(result.error.message);
-          }
-        })
-        .catch(function (error) {
-          console.error("Error:", error);
-        });
-    });
+    //let checkoutButton = document.getElementById("stripe");
 
     //Element Variables
     const sliderControls = document.querySelector(".slider-controls");
@@ -81,6 +52,39 @@ window.onload = async () => {
           errorModal.style.display = "flex";
           //console.log("Selected!")
       }
+      
+    // New Stripe Setup
+    let stripe = Stripe(
+      "pk_test_51MbG9BBV1W2mjCG5QN8s7AylZVu9IRRjtnXMWz3XpCUqYCgcz2J6BOEMvHUTapTJWmv3ApodZObxopkXm3RW9UKl00aBDTKIgK"
+    );
+    let checkoutButton = document.getElementById("stripe");
+        console.log("EMAIL: ", user.Email)
+        checkoutButton.addEventListener("click", function () {
+          // Create a new Checkout Session using the server-side endpoint you
+          // created in step 3.
+          fetch("/api/stripe", {
+            method: "POST",
+            body: `${user.Email}`
+          })
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (session) {
+              return stripe.redirectToCheckout({ sessionId: session.id });
+            })
+            .then(function (result) {
+              // If `redirectToCheckout` fails due to a browser or network
+              // error, you should display the localized error message to your
+              // customer using `error.message`.
+              if (result.error) {
+                alert(result.error.message);
+              }
+            })
+            .catch(function (error) {
+              console.error("Error:", error);
+            });
+        });
+      
   
       Wized.request.await("Load Program Selection", (response) => {
         programData = response.data;
