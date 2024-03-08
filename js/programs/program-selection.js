@@ -13,7 +13,7 @@ window.onload = async () => {
  let stripe = Stripe(
   "pk_test_51MbG9BBV1W2mjCG5QN8s7AylZVu9IRRjtnXMWz3XpCUqYCgcz2J6BOEMvHUTapTJWmv3ApodZObxopkXm3RW9UKl00aBDTKIgK"
 );
-let checkoutButton = document.getElementById("checkout-button");
+let checkoutButton = document.getElementById("stripe");
 
 checkoutButton.addEventListener("click", function () {
   // Create a new Checkout Session using the server-side endpoint you
