@@ -3,7 +3,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 exports.handler = async (event, context) => {
   const email = event.body;
-  //console.log('Email: ',email);
+  console.log('Email: ',email);
 
   // Stripe Checkout Session | V2 Server-Client Integration
   const session = await stripe.checkout.sessions.create({
@@ -16,9 +16,9 @@ exports.handler = async (event, context) => {
     subscription_data: {
       trial_period_days: 14,
     },
-    //customer_email: `${email}`,
+    customer_email: `${email}`,
     success_url: `thelegendsprogram.com.au/thank-you.html?success&session_id={CHECKOUT_SESSION_ID}&userverified=${email}`,
-    cancel_url: `thelegendsprogram.com.au/program-selection.html`,
+    cancel_url: `thelegendsprogram.com.au/program-selection.html"`,
   });
 
   return {
