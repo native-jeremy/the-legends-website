@@ -55,22 +55,22 @@ window.onload = async () => {
       
     // New Stripe Setup
     let stripe = Stripe(
-      "pk_test_51MbG9BBV1W2mjCG5QN8s7AylZVu9IRRjtnXMWz3XpCUqYCgcz2J6BOEMvHUTapTJWmv3ApodZObxopkXm3RW9UKl00aBDTKIgK"
+      "pk_live_dcnrdZcLun4T6LSrHwLFLaxV00fVz5SsqQ"
     );
 
     const monthly = {
       Email: user.Email,
-      SubscriptionID: "price_1OPcLpIZH9zc1qV7NRXgQ8lQ"
+      ID: "price_1OPcLpIZH9zc1qV7NRXgQ8lQ"
     }
 
     const quarterly = {
       Email: user.Email,
-      SubscriptionID: "price_1OPcOFIZH9zc1qV7hTFb9KmQ"
+      ID: "price_1OPcOFIZH9zc1qV7hTFb9KmQ"
     }
 
     const yearly = {
       Email: user.Email,
-      SubscriptionID: "price_1OPcPAIZH9zc1qV7HHJUMQXZ"
+      ID: "price_1OPcPAIZH9zc1qV7HHJUMQXZ"
     }
 
     let monthlyButton = document.getElementById("stripeMonthly");
