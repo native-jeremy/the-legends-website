@@ -17,8 +17,8 @@ exports.handler = async (event, context) => {
       trial_period_days: 14,
     },
     customer_email: `${email}`,
-    success_url: `http://localhost:8888/success.html?success&session_id={CHECKOUT_SESSION_ID}&userverfied=${email}`,
-    cancel_url: "http://localhost:8888/",
+    success_url: `${process.env.STRIPE_SUCCESS}?success&session_id={CHECKOUT_SESSION_ID}&userverified=${email}`,
+    cancel_url: `${process.env.STRIPE_CANCEL}`,
   });
 
   return {
