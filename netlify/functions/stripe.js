@@ -18,7 +18,7 @@ exports.handler = async (event, context) => {
     },
     customer_email: `${email}`,
     success_url: `https://thelegendsprogram.com.au/thank-you.html?success&session_id={CHECKOUT_SESSION_ID}&userverified=${email}`,
-    cancel_url: `https://thelegendsprogram.com.au/program-selection.html"`,
+    cancel_url: `https://thelegendsprogram.com.au/program-selection.html`,
   });
 
   return {
