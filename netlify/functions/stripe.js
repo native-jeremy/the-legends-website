@@ -3,8 +3,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 exports.handler = async (event, context) => {
   //const data = JSON.parse(event.body);
-  const { Email, ID} = data;
-  console.log("Data", data);
+  //const { Email, ID} = data;
+  //console.log("Data", data);
   //const email = Email;
   //console.log('Email: ',email);
 
