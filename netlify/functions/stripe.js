@@ -2,10 +2,10 @@ require('dotenv').config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 exports.handler = async (event, context) => {
-  const data = JSON.parse(event.body);
+  //const data = JSON.parse(event.body);
   const { Email, ID} = data;
   console.log("Data", data);
-  const email = Email;
+  //const email = Email;
   //console.log('Email: ',email);
 
   // Stripe Checkout Session | V2 Server-Client Integration
@@ -19,7 +19,7 @@ exports.handler = async (event, context) => {
     subscription_data: {
       trial_period_days: 14,
     },
-    customer_email: `${email}`,
+    //customer_email: `${email}`,
     success_url: `https://thelegendsprogram.com.au/thank-you.html?success&session_id={CHECKOUT_SESSION_ID}&userverified=${email}`,
     cancel_url: `https://thelegendsprogram.com.au/program-selection.html`,
   });

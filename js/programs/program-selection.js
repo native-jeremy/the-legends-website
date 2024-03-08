@@ -97,7 +97,7 @@ window.onload = async () => {
       const stripeBody = JSON.stringify(data);
       fetch("/api/stripe", {
         method: "POST",
-        body: stripeBody
+        //body: stripeBody
       })
         .then(function (response) {
           return response.json();
