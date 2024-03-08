@@ -21,12 +21,6 @@ exports.handler = async (event, context) => {
     cancel_url: "http://localhost:8888/",
   });
 
-  // Create Customer
-  /*const customer = await stripe.customers.create({
-    name: 'Morgan Kenneth Brown',
-    email: `${email}`,
-  });*/
-
   return {
     statusCode: 200,
     body: JSON.stringify({
