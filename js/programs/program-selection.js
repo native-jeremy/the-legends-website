@@ -64,7 +64,7 @@ window.onload = async () => {
           // created in step 3.
           fetch("/api/stripe", {
             method: "POST",
-            body: `${user.Email}`
+            //body: `${user.Email}`
           })
             .then(function (response) {
               return response.json();
