@@ -19,6 +19,7 @@ exports.handler = async (event, context) => {
     subscription_data: {
       trial_period_days: 14,
     },
+    allow_promotion_codes: true,
     //customer_email: `${email}`,
     success_url: `https://thelegendsprogram.com.au/thank-you.html?success&session_id={CHECKOUT_SESSION_ID}&userverified=${email}`,
     cancel_url: `https://thelegendsprogram.com.au/program-selection.html`,
