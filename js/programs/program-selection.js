@@ -63,15 +63,15 @@ window.onload = async () => {
     let checkoutButtonYearly = document.getElementById("stripeYearly");
 
       checkoutButtonMonthly.addEventListener("click", function () {
-        sendCheckout(user.Email, "price_1Noy84IZH9zc1qV7iUq2KKvO");
+        sendCheckout(user.Email, "price_1OPcLpIZH9zc1qV7NRXgQ8lQ");
       });
 
       checkoutButtonQuarterly.addEventListener("click", function () {
-        sendCheckout(user.Email, "price_1Noy84IZH9zc1qV7RoeHR91u");
+        sendCheckout(user.Email, "price_1OPcOFIZH9zc1qV7hTFb9KmQ");
       });
 
       checkoutButtonYearly.addEventListener("click", function () {
-        sendCheckout(user.Email, "price_1Noy84IZH9zc1qV7Ri98guWz");
+        sendCheckout(user.Email, "price_1OPcPAIZH9zc1qV7HHJUMQXZ");
       });
 
       function sendCheckout(email, id)
