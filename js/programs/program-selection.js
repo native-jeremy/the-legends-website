@@ -84,7 +84,10 @@ window.onload = async () => {
           // created in step 3.
           fetch("/api/stripe", {
             method: "POST",
-            body: `${user.Email}`
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: data
           })
             .then(function (response) {
               return response.json();
@@ -111,7 +114,10 @@ window.onload = async () => {
           // created in step 3.
           fetch("/api/stripe", {
             method: "POST",
-            body: `${user.Email}`
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: data
           })
             .then(function (response) {
               return response.json();
@@ -138,7 +144,10 @@ window.onload = async () => {
           // created in step 3.
           fetch("/api/stripe", {
             method: "POST",
-            body: `${user.Email}`
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: data
           })
             .then(function (response) {
               return response.json();
