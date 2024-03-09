@@ -81,6 +81,7 @@ window.onload = async () => {
         const stringify = JSON.stringify(data);
         document.querySelector('.loading-state-v2').style.display = "flex"
 
+        setTimeout(() => {
         // Post To Stripe
         fetch("/api/stripe", {
           method: "POST",
@@ -107,6 +108,7 @@ window.onload = async () => {
             document.querySelector('.loading-state-v2').style.display = "none"
             console.error("Error:", error);
           });
+        }, 3000);
       }
 
       Wized.request.await("Load Program Selection", (response) => {
