@@ -79,9 +79,7 @@ window.onload = async () => {
         let data = [];
         data.push({ Email: user.Email, ID: id });
         const stringify = JSON.stringify(data);
-        //localStorage.setItem("checkout", JSON.stringify(data));
-
-        //console.log("Checkout", data);
+        document.querySelector('.loading-state-v2').style.display = "flex"
 
         // Post To Stripe
         fetch("/api/stripe", {
@@ -106,6 +104,7 @@ window.onload = async () => {
             }
           })
           .catch(function (error) {
+            document.querySelector('.loading-state-v2').style.display = "none"
             console.error("Error:", error);
           });
       }
