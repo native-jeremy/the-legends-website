@@ -58,9 +58,82 @@ window.onload = async () => {
       "pk_live_dcnrdZcLun4T6LSrHwLFLaxV00fVz5SsqQ"
     );
     
-    let checkoutButton = document.getElementById("stripeMonthly");
+    let checkoutButtonMonthly = document.getElementById("stripeMonthly");
+    let checkoutButtonQuarterly = document.getElementById("stripeQuarterly");
+    let checkoutButtonYearly = document.getElementById("stripeYearly");
+
+    const monthly = {
+      Email: `${user.Email}`,
+      ID: `price_1Noy84IZH9zc1qV7iUq2KKvO`
+    }
+
+    const quarterly = {
+      Email: `${user.Email}`,
+      ID: `price_1Noy84IZH9zc1qV7RoeHR91u`
+    }
+
+    const yearly = {
+      Email: `${user.Email}`,
+      ID: `price_1Noy84IZH9zc1qV7Ri98guWz`
+    }
+
         //console.log("EMAIL: ", user.Email)
-        checkoutButton.addEventListener("click", function () {
+        checkoutButtonMonthly.addEventListener("click", function () {
+          const data = JSON.stringify(monthly)
+          // Create a new Checkout Session using the server-side endpoint you
+          // created in step 3.
+          fetch("/api/stripe", {
+            method: "POST",
+            body: `${user.Email}`
+          })
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (session) {
+              return stripe.redirectToCheckout({ sessionId: session.id });
+            })
+            .then(function (result) {
+              // If `redirectToCheckout` fails due to a browser or network
+              // error, you should display the localized error message to your
+              // customer using `error.message`.
+              if (result.error) {
+                alert(result.error.message);
+              }
+            })
+            .catch(function (error) {
+              console.error("Error:", error);
+            });
+        });
+
+        checkoutButtonQuarterly.addEventListener("click", function () {
+          const data = JSON.stringify(quarterly)
+          // Create a new Checkout Session using the server-side endpoint you
+          // created in step 3.
+          fetch("/api/stripe", {
+            method: "POST",
+            body: `${user.Email}`
+          })
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (session) {
+              return stripe.redirectToCheckout({ sessionId: session.id });
+            })
+            .then(function (result) {
+              // If `redirectToCheckout` fails due to a browser or network
+              // error, you should display the localized error message to your
+              // customer using `error.message`.
+              if (result.error) {
+                alert(result.error.message);
+              }
+            })
+            .catch(function (error) {
+              console.error("Error:", error);
+            });
+        });
+
+        checkoutButtonYearly.addEventListener("click", function () {
+          const data = JSON.stringify(yearly)
           // Create a new Checkout Session using the server-side endpoint you
           // created in step 3.
           fetch("/api/stripe", {
