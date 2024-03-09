@@ -63,22 +63,22 @@ window.onload = async () => {
     let checkoutButtonYearly = document.getElementById("stripeYearly");
 
       checkoutButtonMonthly.addEventListener("click", function () {
-        sendCheckout("price_1Noy84IZH9zc1qV7iUq2KKvO");
+        sendCheckout(user.Email, "price_1Noy84IZH9zc1qV7iUq2KKvO");
       });
 
       checkoutButtonQuarterly.addEventListener("click", function () {
-        sendCheckout("price_1Noy84IZH9zc1qV7RoeHR91u");
+        sendCheckout(user.Email, "price_1Noy84IZH9zc1qV7RoeHR91u");
       });
 
       checkoutButtonYearly.addEventListener("click", function () {
-        sendCheckout("price_1Noy84IZH9zc1qV7Ri98guWz");
+        sendCheckout(user.Email, "price_1Noy84IZH9zc1qV7Ri98guWz");
       });
 
-      function sendCheckout(id)
+      function sendCheckout(email, id)
       {
         let data = [];
 
-        data.push({ Email: user.email, ID: id });
+        data.push({ Email: user.Email, ID: id });
         localStorage.setItem("checkout", JSON.stringify(data));
 
         console.log("Checkout", data);

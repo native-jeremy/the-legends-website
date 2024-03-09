@@ -4,10 +4,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 exports.handler = async (event, context) => {
   const checkout = JSON.parse(event.body);
   const data = checkout[0];
-  const {Email, ID} = data;
-  //console.log("Data", data);
-  const email = Email;
-  const product = ID;
+  const email = data.Email;
+  const product = data.ID;
   console.log('Checkout: ',data);
 
   // Stripe Checkout Session | V2 Server-Client Integration
