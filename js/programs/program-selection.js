@@ -77,11 +77,11 @@ window.onload = async () => {
       function sendCheckout(email, id)
       {
         let data = [];
-
         data.push({ Email: user.Email, ID: id });
-        localStorage.setItem("checkout", JSON.stringify(data));
+        const stringify = JSON.stringify(data);
+        //localStorage.setItem("checkout", JSON.stringify(data));
 
-        console.log("Checkout", data);
+        //console.log("Checkout", data);
 
         // Post To Stripe
         fetch("/api/stripe", {
@@ -89,7 +89,7 @@ window.onload = async () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: localStorage.getItem("checkout")
+          body: stringify
         })
           .then(function (response) {
             return response.json();
