@@ -346,7 +346,7 @@ overflow-x: hidden;
     </div>
   </div>
   <div style="display:none;opacity:0" class="modal">
-    <div class="modal-body">
+    <div class="modal-body" id="checkoutModal">
       <div class="modal-header">
         <h2 class="modal-heading">Well done on choosing a program</h2>
       </div>
@@ -354,19 +354,15 @@ overflow-x: hidden;
         <div class="modal-content">
           <p class="modal-body-copy">Finish setting up your account by proceeding to Stripe for payment details. You won't be charged until the end of your free trial, cancel at any time.<br></p>
         </div>
-        
-        <a href="#" style="display: none;" id="stripeMonthly" data-w-id="d405c2e7-6ff4-d74f-4efe-4e3013ecf2dc" class="button-style-1 margin-top-xsmall w-button">New Monthly</a>
-        <a href="#" style="display: none;" id="stripeQuarterly" data-w-id="d405c2e7-6ff4-d74f-4efe-4e3013ecf2dc" class="button-style-1 margin-top-xsmall w-button">New Quarterly</a>
-        <a href="#" style="display: none;" id="stripeYearly" data-w-id="d405c2e7-6ff4-d74f-4efe-4e3013ecf2dc" class="button-style-1 margin-top-xsmall w-button">New Yearly</a>
 
         <div class="value_box mt_sml">
-          <a href="#" id="annualBuyLink" w-el="program_add_anually" data-w-id="ca66fbe8-a045-f33b-4715-0a9e548f00f9" class="button-style-1 no-margin w-button">$119.88 annually</a>
+          <a href="#" id="stripeYearly" w-el="program_add_anually" data-w-id="ca66fbe8-a045-f33b-4715-0a9e548f00f9" class="button-style-1 no-margin w-button">$119.88 annually</a>
           <div class="value_circle_badge">
             <div class="value_text_style">Best <br>Value</div>
           </div>
         </div>
-        <a href="#" id="quarterlyBuyLink" w-el="program_add_quarterly" data-w-id="00139255-0b59-53b4-ab69-24047717006e" class="button-style-1 margin-top-xsmall w-button">$47.99 quarterly</a>
-        <a href="#" id="monthlyBuyLink" w-el="program_add_monthly" data-w-id="d405c2e7-6ff4-d74f-4efe-4e3013ecf2dc" class="button-style-1 margin-top-xsmall w-button">$19.99 monthly</a>
+        <a href="#" id="stripeQuarterly" w-el="program_add_quarterly" data-w-id="00139255-0b59-53b4-ab69-24047717006e" class="button-style-1 margin-top-xsmall w-button">$47.99 quarterly</a>
+        <a href="#" id="stripeMonthly" w-el="program_add_monthly" data-w-id="d405c2e7-6ff4-d74f-4efe-4e3013ecf2dc" class="button-style-1 margin-top-xsmall w-button">$19.99 monthly</a>
       </div>
       <div w-el="program_update_button" class="modal_box">
         <div class="modal-content">
