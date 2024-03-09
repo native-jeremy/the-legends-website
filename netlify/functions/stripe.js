@@ -2,17 +2,18 @@ require('dotenv').config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 exports.handler = async (event, context) => {
-  //const data = JSON.parse(event.body);
-  //const { Email, ID} = data;
+  const data = JSON.parse(event.body);
+  const {Email, ID} = data;
   //console.log("Data", data);
-  const email = "nativedev@gmail.com";
+  const email = Email;
+  const product = ID;
   //console.log('Email: ',email);
 
   // Stripe Checkout Session | V2 Server-Client Integration
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     line_items: [{
-      price: 'price_1OPcLpIZH9zc1qV7NRXgQ8lQ',
+      price: `${product}`,
       quantity: 1,
     }],
     mode: 'subscription',
