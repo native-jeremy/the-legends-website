@@ -62,113 +62,54 @@ window.onload = async () => {
     let checkoutButtonQuarterly = document.getElementById("stripeQuarterly");
     let checkoutButtonYearly = document.getElementById("stripeYearly");
 
-    const monthly = {
-      Email: `${user.Email}`,
-      ID: `price_1Noy84IZH9zc1qV7iUq2KKvO`
-    }
+      checkoutButtonMonthly.addEventListener("click", function () {
+        sendCheckout("price_1Noy84IZH9zc1qV7iUq2KKvO");
+      });
 
-    const quarterly = {
-      Email: `${user.Email}`,
-      ID: `price_1Noy84IZH9zc1qV7RoeHR91u`
-    }
+      checkoutButtonQuarterly.addEventListener("click", function () {
+        sendCheckout("price_1Noy84IZH9zc1qV7RoeHR91u");
+      });
 
-    const yearly = {
-      Email: `${user.Email}`,
-      ID: `price_1Noy84IZH9zc1qV7Ri98guWz`
-    }
+      checkoutButtonYearly.addEventListener("click", function () {
+        sendCheckout("price_1Noy84IZH9zc1qV7Ri98guWz");
+      });
 
-        //console.log("EMAIL: ", user.Email)
-        checkoutButtonMonthly.addEventListener("click", function () {
-          const data = JSON.stringify(monthly)
-          // Create a new Checkout Session using the server-side endpoint you
-          // created in step 3.
-          fetch("/api/stripe", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: data
+      function sendCheckout(id)
+      {
+        let data = [];
+
+        data.push({ Email: user.email, ID: id });
+        localStorage.setItem("checkout", JSON.stringify(data));
+
+        console.log("Checkout", data);
+
+        // Post To Stripe
+        fetch("/api/stripe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: localStorage.getItem("checkout")
+        })
+          .then(function (response) {
+            return response.json();
           })
-            .then(function (response) {
-              return response.json();
-            })
-            .then(function (session) {
-              return stripe.redirectToCheckout({ sessionId: session.id });
-            })
-            .then(function (result) {
-              // If `redirectToCheckout` fails due to a browser or network
-              // error, you should display the localized error message to your
-              // customer using `error.message`.
-              if (result.error) {
-                alert(result.error.message);
-              }
-            })
-            .catch(function (error) {
-              console.error("Error:", error);
-            });
-        });
-
-        checkoutButtonQuarterly.addEventListener("click", function () {
-          const data = JSON.stringify(quarterly)
-          // Create a new Checkout Session using the server-side endpoint you
-          // created in step 3.
-          fetch("/api/stripe", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: data
+          .then(function (session) {
+            return stripe.redirectToCheckout({ sessionId: session.id });
           })
-            .then(function (response) {
-              return response.json();
-            })
-            .then(function (session) {
-              return stripe.redirectToCheckout({ sessionId: session.id });
-            })
-            .then(function (result) {
-              // If `redirectToCheckout` fails due to a browser or network
-              // error, you should display the localized error message to your
-              // customer using `error.message`.
-              if (result.error) {
-                alert(result.error.message);
-              }
-            })
-            .catch(function (error) {
-              console.error("Error:", error);
-            });
-        });
-
-        checkoutButtonYearly.addEventListener("click", function () {
-          const data = JSON.stringify(yearly)
-          // Create a new Checkout Session using the server-side endpoint you
-          // created in step 3.
-          fetch("/api/stripe", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: data
+          .then(function (result) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, you should display the localized error message to your
+            // customer using `error.message`.
+            if (result.error) {
+              alert(result.error.message);
+            }
           })
-            .then(function (response) {
-              return response.json();
-            })
-            .then(function (session) {
-              return stripe.redirectToCheckout({ sessionId: session.id });
-            })
-            .then(function (result) {
-              // If `redirectToCheckout` fails due to a browser or network
-              // error, you should display the localized error message to your
-              // customer using `error.message`.
-              if (result.error) {
-                alert(result.error.message);
-              }
-            })
-            .catch(function (error) {
-              console.error("Error:", error);
-            });
-        });
-      
-  
+          .catch(function (error) {
+            console.error("Error:", error);
+          });
+      }
+
       Wized.request.await("Load Program Selection", (response) => {
         programData = response.data;
         //console.log(programData);

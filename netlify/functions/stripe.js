@@ -2,12 +2,13 @@ require('dotenv').config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 exports.handler = async (event, context) => {
-  const data = JSON.parse(event.body);
+  const checkout = JSON.parse(event.body);
+  const data = checkout[0];
   const {Email, ID} = data;
   //console.log("Data", data);
   const email = Email;
   const product = ID;
-  //console.log('Email: ',email);
+  console.log('Checkout: ',data);
 
   // Stripe Checkout Session | V2 Server-Client Integration
   const session = await stripe.checkout.sessions.create({
