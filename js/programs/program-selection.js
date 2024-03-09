@@ -57,8 +57,7 @@ window.onload = async () => {
     let stripe = Stripe(
       "pk_live_dcnrdZcLun4T6LSrHwLFLaxV00fVz5SsqQ"
     );
-
-    const checkoutModal = document.getElementById("checkoutModal");
+    
     const checkoutButtonMonthly = document.getElementById("stripeMonthly");
     const checkoutButtonQuarterly = document.getElementById("stripeQuarterly");
     const checkoutButtonYearly = document.getElementById("stripeYearly");
@@ -81,13 +80,10 @@ window.onload = async () => {
         data.push({ Email: user.Email, ID: id });
         const stringify = JSON.stringify(data);
         //localStorage.setItem("checkout", JSON.stringify(data));
-        checkoutModal.innerHTML = `
-        <div class="modal-header">
-          <h2 class="modal-heading">Proceeding to checkout...</h2>
-        </div>`
+
         //console.log("Checkout", data);
-        setTimeout(() => {
-                  // Post To Stripe
+
+        // Post To Stripe
         fetch("/api/stripe", {
           method: "POST",
           headers: {
@@ -112,7 +108,6 @@ window.onload = async () => {
           .catch(function (error) {
             console.error("Error:", error);
           });
-        }, 3000)
       }
 
       Wized.request.await("Load Program Selection", (response) => {
