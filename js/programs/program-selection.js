@@ -355,19 +355,22 @@ window.onload = async () => {
           }, 1000);
   
           setTimeout(() => {
+            const swiperSlides = document.querySelectorAll('.swiper-slide');
+            const randomSlide = Math.random(0, swiperSlides.length);
             /////////////////////////////////////////
             //console.log("Programs", programArray)
   
             const swiper = new Swiper(".swiper", {
               // Optional parameters
               speed: 1000,
-              rewind: true,
+              //rewind: true,
+              loop: true,
               observer: true,
               observeParents: true,
               slidesPerView: 1,
               shortSwipes: true,
               watchSlidesProgress: true,
-              initialSlide: 0,
+              initialSlide: randomSlide,
               // Navigation arrows
               navigation: {
                 nextEl: ".right-slide-arrow-button",
