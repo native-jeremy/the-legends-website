@@ -12,7 +12,7 @@ exports.handler = async (event, context) => {
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     line_items: [{
-      price: `${product}`,
+      price: product,
       quantity: 1,
     }],
     mode: 'subscription',
@@ -20,7 +20,7 @@ exports.handler = async (event, context) => {
       trial_period_days: 14,
     },
     allow_promotion_codes: true,
-    customer_email: `${email}`,
+    customer_email: email,
     success_url: `https://thelegendsprogram.com.au/thank-you.html?success&session_id={CHECKOUT_SESSION_ID}&userverified=${email}`,
     cancel_url: `https://thelegendsprogram.com.au/program-selection.html`,
   });
