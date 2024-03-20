@@ -131,7 +131,7 @@ createApp({
       // Workout ID Param Search
       let workout = new URL(document.location).searchParams;
       this.workout.id = workout.get("workout");
-      this.workout.recoveryLink = workout.get("recovery");
+      this.recoveryLink = this.workout.id = workout.get("recovery");
 
       Wized.request.await("Load Round Info", (response) => {
         //console.log('Round Request', response)
