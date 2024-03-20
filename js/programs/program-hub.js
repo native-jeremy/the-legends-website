@@ -184,6 +184,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           }
       
           console.log("Program: ", programProgress);
+          console.log("Program Finished Status: ", this.programPop)
         }
         // console.log('Recoveries', this.Recoveries)
           console.log("interaction loaded");
