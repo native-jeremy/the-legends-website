@@ -20,16 +20,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
     //currentWeek = currentUser.User_Week_Tracker
     currentWeek = currentUser.Program_Week_Tracker;
   }
-  if ('Program_Tracker_Percentage' in currentUser) {
-    const programProgress = parseInt(currentUser.Program_Tracker_Percentage)
-
-    if(programProgress >= 100)
-    {
-      programDone = true;
-    }
-
-    console.log("Program: ", programProgress);
-  }
   // Console.log Request
   console.log("User Request:", currentUser);
   Wized.request.await("Load Program", (response) => {
@@ -163,7 +153,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           CompletedWorkouts: completedWorkouts,
           nextWorkout: false,
           nextWorkoutID: null,
-          programPop: programDone,
+          programPop: null,
           completed: 0,
           startedNone: false,
           }
@@ -185,6 +175,16 @@ Wized.request.await("Load Users Program Hub", (response) => {
           });*/
       },
       mounted() {
+        if ('Program_Tracker_Percentage' in currentUser) {
+          const programProgress = parseInt(currentUser.Program_Tracker_Percentage)
+      
+          if(programProgress >= 100)
+          {
+            this.programPop = true;
+          }
+      
+          console.log("Program: ", programProgress);
+        }
         // console.log('Recoveries', this.Recoveries)
           console.log("interaction loaded");
           window.Webflow && window.Webflow.destroy();
