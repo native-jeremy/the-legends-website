@@ -182,7 +182,7 @@ createApp({
           });
         });
 
-        console.log("Exercise Data END!", this.exerciseData)
+        //console.log("Exercise Data END!", this.exerciseData)
         this.StatusCode200 = true;
         this.loadedExercise = false;
         this.title(true)
@@ -928,7 +928,7 @@ createApp({
             this.amrapData.amraps.push(value)
           }
         });*/
-        console.log('New Data: ', this.amrapData.amraps)
+       // console.log('New Data: ', this.amrapData.amraps)
         videoLoop = setInterval(() => {
         if(this.amrapActive == 'True')
         {

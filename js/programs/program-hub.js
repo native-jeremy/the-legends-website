@@ -21,7 +21,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
     currentWeek = currentUser.Program_Week_Tracker;
   }
   // Console.log Request
-  console.log("User Request:", currentUser);
+  //console.log("User Request:", currentUser);
   Wized.request.await("Load Program", (response) => {
     const program = response.data;
     // Console.log Request
@@ -185,8 +185,8 @@ Wized.request.await("Load Users Program Hub", (response) => {
             this.programPop = true;
           }
       
-          console.log("Program: ", programProgress);
-          console.log("Program Finished Status: ", this.programPop)
+          //console.log("Program: ", programProgress);
+          //console.log("Program Finished Status: ", this.programPop)
         }
         // console.log('Recoveries', this.Recoveries)
           console.log("interaction loaded");
