@@ -131,7 +131,7 @@ createApp({
       // Workout ID Param Search
       let workout = new URL(document.location).searchParams;
       this.workout.id = workout.get("workout");
-      this.recoveryLink = this.workout.id = workout.get("recovery");
+      this.workout.recoveryLink = workout.get("recovery");
 
       Wized.request.await("Load Round Info", (response) => {
         //console.log('Round Request', response)
@@ -182,7 +182,7 @@ createApp({
           });
         });
 
-        console.log("Exercise Data END!", this.exerciseData)
+        //console.log("Exercise Data END!", this.exerciseData)
         this.StatusCode200 = true;
         this.loadedExercise = false;
         this.title(true)
@@ -928,7 +928,7 @@ createApp({
             this.amrapData.amraps.push(value)
           }
         });*/
-        console.log('New Data: ', this.amrapData.amraps)
+       // console.log('New Data: ', this.amrapData.amraps)
         videoLoop = setInterval(() => {
         if(this.amrapActive == 'True')
         {
