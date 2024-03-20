@@ -149,23 +149,23 @@ createApp({
         this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
         this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
 
-        console.log("Workout Data: ", this.workout)
+        //console.log("Workout Data: ", this.workout)
 
-        console.log('Intial Exercise Data', this.exerciseData)
+        //console.log('Intial Exercise Data', this.exerciseData)
 
-        console.log('startDifficulty', this.workout.startDifficulty)
-        console.log('Current Round', roundSelected)
-        console.log('Round Request', this.roundData)
-        console.log('Round Length', this.workout.roundAmount)
+        //console.log('startDifficulty', this.workout.startDifficulty)
+        //console.log('Current Round', roundSelected)
+        //console.log('Round Request', this.roundData)
+        //console.log('Round Length', this.workout.roundAmount)
       });
       
       Wized.request.await("Load Finished Audio", (response) => {    
         this.workout.finishAudio = response.data[0].Audio[0].url
-        console.log("Audio Response", response);
+        //console.log("Audio Response", response);
       })
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
-        console.log("Exercise DATA", response);
+        //console.log("Exercise DATA", response);
         //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
         this.roundData.forEach((r, ri) => {
 
