@@ -159,6 +159,12 @@ Wized.request.await("Load Users Program Hub", (response) => {
           recomendedProgram: null,
           }
       },
+      methods: {
+        popupOff()
+        {
+          this.programPop = !this.programPop;
+        }
+      },
       created() {
           const programLoader = document.getElementById("programLoading");
           programLoader.classList.add("hide_program_loader")
