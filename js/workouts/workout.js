@@ -54,10 +54,10 @@ createApp({
     exercise() {
       return this.workout.exercises
     },
-    recoveryLink()
+    /*recoveryLink()
     {
       this.workout.recoveryLink = this.roundData[this.workout.round].ID_Recovery
-    },
+    },*/
     exerciseType() {
       if(!this.Rest)
       {
