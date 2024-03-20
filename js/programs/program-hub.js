@@ -156,6 +156,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           programPop: null,
           completed: 0,
           startedNone: false,
+          recomendedProgram: null,
           }
       },
       created() {
@@ -175,6 +176,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           });*/
       },
       mounted() {
+        this.recomendedProgram = program.Recommend_Program_ID
         if ('Program_Tracker_Percentage' in currentUser) {
           const programProgress = parseInt(currentUser.Program_Tracker_Percentage)
       
