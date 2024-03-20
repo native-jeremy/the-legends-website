@@ -54,10 +54,10 @@ createApp({
     exercise() {
       return this.workout.exercises
     },
-    recoveryLink()
+    /*recoveryLink()
     {
       this.workout.recoveryLink = this.roundData[this.workout.round].ID_Recovery
-    },
+    },*/
     exerciseType() {
       if(!this.Rest)
       {
@@ -131,6 +131,7 @@ createApp({
       // Workout ID Param Search
       let workout = new URL(document.location).searchParams;
       this.workout.id = workout.get("workout");
+      this.recoveryLink = this.workout.id = workout.get("recovery");
 
       Wized.request.await("Load Round Info", (response) => {
         //console.log('Round Request', response)
@@ -147,6 +148,8 @@ createApp({
         this.workout.roundAmount = roundRes.data.length
         this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
         this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
+
+        console.log("Workout Data: ", this.workout)
 
         console.log('Intial Exercise Data', this.exerciseData)
 
