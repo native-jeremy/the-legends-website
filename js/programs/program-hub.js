@@ -20,8 +20,15 @@ Wized.request.await("Load Users Program Hub", (response) => {
     //currentWeek = currentUser.User_Week_Tracker
     currentWeek = currentUser.Program_Week_Tracker;
   }
-  if (currentUser.Program_Tracker_Percentage == "100%") {
-    programDone = true;
+  if ('Program_Tracker_Percentage' in currentUser) {
+    const programProgress = parseInt(currentUser.Program_Tracker_Percentage)
+
+    if(programProgress >= 100)
+    {
+      programDone = true;
+    }
+
+    console.log("Program: ", programProgress);
   }
   // Console.log Request
   console.log("User Request:", currentUser);
