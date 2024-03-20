@@ -54,10 +54,10 @@ createApp({
     exercise() {
       return this.workout.exercises
     },
-    /*recoveryLink()
+    recoveryLink()
     {
       this.workout.recoveryLink = this.roundData[this.workout.round].ID_Recovery
-    },*/
+    },
     exerciseType() {
       if(!this.Rest)
       {
@@ -134,7 +134,7 @@ createApp({
       this.workout.recoveryLink = workout.get("recovery");
 
       Wized.request.await("Load Round Info", (response) => {
-        //console.log('Round Request', response)
+        console.log('Round Request', response)
         roundRes = response;
         roundInfo = roundRes.data[this.workout.round];
         
