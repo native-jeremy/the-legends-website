@@ -102,7 +102,6 @@ createApp({
   mounted() {
     // Webflow Animations Reset Called
     this.WebflowAnimations();
-    this.isWorkoutCompleted();
 
     // Converted Times Called
     setTimeout(() => {
@@ -112,6 +111,7 @@ createApp({
       threshold: 0.5,
       once: false,
     });
+    this.isWorkoutCompleted();
   }, 5000)
 
     // Siren & Voice Functionailty Setup
