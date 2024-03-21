@@ -50,13 +50,17 @@ createApp({
     isWorkoutCompleted() {
       let workout = new URL(document.location).searchParams;
       let currentWorkout = workout.get("workout");
+      const warmup = document.getElementById("warm");
+      const start = document.getElementById("start");
       this.Workouts.forEach((workout) => {
         if(workout.Completed_Record_ID === currentWorkout)
         {
-          Wized.data.setVariable("done", "true");
+          warmup.href += `&done="true"`
+          start.href += `&done="true"`
         }
         else {
-          Wized.data.setVariable("done", "false");
+          warmup.href += `&done="false"`
+          start.href += `&done="false"`
         }
       });
     },
