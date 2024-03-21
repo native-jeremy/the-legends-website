@@ -50,7 +50,7 @@ createApp({
     isWorkoutCompleted() {
       const urlParams = new URL(document.location).searchParams;
       const currentWorkout = urlParams.get("workout");
-      const warmup = document.getElementById("warm");
+      const warmup = document.getElementById("warmup");
       const start = document.getElementById("start");
 
       this.Workouts.forEach(workoutItem => {
