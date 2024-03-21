@@ -153,7 +153,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           CompletedWorkouts: completedWorkouts,
           nextWorkout: false,
           nextWorkoutID: null,
-          programPop: null,
+          programPop: false,
           completed: 0,
           startedNone: false,
           recomendedProgram: null,
@@ -183,7 +183,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
       },
       mounted() {
         this.recomendedProgram = program.Recommend_Program_ID
-        if ('Program_Tracker_Percentage' in currentUser) {
+        /*if ('Program_Tracker_Percentage' in currentUser) {
           const programProgress = parseInt(currentUser.Program_Tracker_Percentage)
       
           if(programProgress >= 100)
@@ -193,7 +193,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
       
           //console.log("Program: ", programProgress);
           //console.log("Program Finished Status: ", this.programPop)
-        }
+        }*/
         // console.log('Recoveries', this.Recoveries)
           console.log("interaction loaded");
           window.Webflow && window.Webflow.destroy();
