@@ -139,25 +139,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
 
       let completedWorkouts = checkProgress();
 
-      Wized.request.await("Read Completed Programs", (response) => { 
-        const data = response.data;
-
-        console.log("Read Completed: ", data)
-        console.log("Completed: ", response)
-
-        let finished = false;
-
-        data.forEach((data) => {
-          if(data.Completed_Record_ID === currentUser.Add_Program[0])
-          {
-            finished = true;
-          }
-          else {
-            finished = false;
-          }
-        })
-      });
-
       // Start Vue Intializer
       const { createApp } = Vue
       createApp({
@@ -177,7 +158,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           completed: 0,
           startedNone: false,
           recomendedProgram: null,
-          finishedProgram: finished,
+          finishedProgram: null,
           }
       },
       methods: {
@@ -204,6 +185,25 @@ Wized.request.await("Load Users Program Hub", (response) => {
           }, 5000)
           }
         },
+        async getCompletedPrograms()
+        {
+          Wized.request.await("Read Completed Programs", (response) => { 
+            const data = response.data;
+
+            console.log("Read Completed: ", data)
+            console.log("Completed: ", response)
+
+            data.forEach((data) => {
+              if(data.Completed_Record_ID === currentUser.Add_Program[0])
+              {
+                this.finishedProgram = true;
+              }
+              else {
+                this.finishedProgram = false;
+              }
+            })
+          });
+        }
       },
       created() {
           const programLoader = document.getElementById("programLoading");
@@ -223,6 +223,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
       },
       mounted() {
         this.recomendedProgram = program.Recommend_Program_ID
+        this.getCompletedPrograms()
         /*if ('Program_Tracker_Percentage' in currentUser) {
           const programProgress = parseInt(currentUser.Program_Tracker_Percentage)
       
