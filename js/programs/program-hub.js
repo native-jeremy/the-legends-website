@@ -163,7 +163,16 @@ Wized.request.await("Load Users Program Hub", (response) => {
         popupOff()
         {
           this.programPop = !this.programPop;
-        }
+        },
+        async completeProgram(e)
+        {
+          e.currentTarget.textContent = "Loading..."
+          await Wized.request.execute('Complete Program');
+
+          setTimeout(() => {
+              window.location.href = "/questionnaire-update"
+          }, 5000)
+        },
       },
       created() {
           const programLoader = document.getElementById("programLoading");
