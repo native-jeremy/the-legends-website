@@ -187,7 +187,8 @@ Wized.request.await("Load Users Program Hub", (response) => {
         },
         async getCompletedPrograms()
         {
-          Wized.request.await("Read Completed Programs", (response) => { 
+          await Wized.request.execute('Read Completed Programs'); // Trigger request
+          const response = await Wized.data.get('r.182.d'); 
             const data = response.data;
 
             console.log("Read Completed: ", data)
@@ -202,7 +203,6 @@ Wized.request.await("Load Users Program Hub", (response) => {
                 this.finishedProgram = false;
               }
             })
-          });
         }
       },
       created() {
