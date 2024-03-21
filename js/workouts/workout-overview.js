@@ -63,7 +63,7 @@ createApp({
 
       this.Workouts.forEach(workout => {
           const doneParam = workout.Completed_Record_ID === currentWorkout ? "true" : "false";
-          const set = urlParams.searchParams.set("type", doneParam);
+          const set = urlParams.searchParams.set("done", doneParam);
           this.Done = set.toString();
       });
     },
