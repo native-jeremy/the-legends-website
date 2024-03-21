@@ -47,6 +47,21 @@ createApp({
       });
     },
 
+    isWorkoutCompleted() {
+      let workout = new URL(document.location).searchParams;
+      let currentWorkout = workout.get("workout");
+      this.Workouts.forEach((workout) => {
+        if(workout.Completed_Record_ID === currentWorkout)
+        {
+          workout.set("type", "true");
+        }
+        else {
+          workout.set("type", "false");
+        }
+        console.log("Is workout complete", workout.get("type"))
+      });
+    },
+
     // Webflow Animations Reset
     WebflowAnimations() {
       console.log("interaction loaded");
@@ -89,6 +104,7 @@ createApp({
   mounted() {
     // Webflow Animations Reset Called
     this.WebflowAnimations();
+    this.isWorkoutCompleted();
 
     // Converted Times Called
     setTimeout(() => {
