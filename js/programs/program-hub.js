@@ -176,14 +176,14 @@ Wized.request.await("Load Users Program Hub", (response) => {
           await Wized.request.execute('Complete Program');
           setTimeout(() => {
               window.location.href = "/questionnaire-update"
-          }, 5000)
+          }, 3000)
           }
           else if(option === 'recommended')
           {
             await Wized.request.execute('Complete Program Recommended');
             setTimeout(() => {
               window.location.href = "/program-hub"
-          }, 5000)
+          }, 3000)
           }
         },
         async addProgram(e, option)
@@ -195,14 +195,14 @@ Wized.request.await("Load Users Program Hub", (response) => {
           {
           setTimeout(() => {
               window.location.href = "/questionnaire-update"
-          }, 5000)
+          }, 3000)
           }
           else if(option === 'recommended')
           {
             await Wized.request.execute('Add New Program');
             setTimeout(() => {
               window.location.href = "/program-hub"
-          }, 5000)
+          }, 3000)
           }
         },
         async getCompletedPrograms()
