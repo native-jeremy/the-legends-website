@@ -158,6 +158,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
           completed: 0,
           startedNone: false,
           recomendedProgram: null,
+          finishedProgram: null,
           }
       },
       methods: {
@@ -184,6 +185,22 @@ Wized.request.await("Load Users Program Hub", (response) => {
           }, 5000)
           }
         },
+        async getCompletedPrograms()
+        {
+          Wized.request.await("Read Completed Programs", (response) => { 
+            const {data} = response
+
+            data.forEach((data) => {
+              if(data.ID === currentUser.Add_Program[0])
+              {
+                this.finishedProgram = true;
+              }
+              else {
+                this.finishedProgram = false;
+              }
+            })
+          });
+        }
       },
       created() {
           const programLoader = document.getElementById("programLoading");
@@ -203,6 +220,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
       },
       mounted() {
         this.recomendedProgram = program.Recommend_Program_ID
+        this.getCompletedPrograms()
         /*if ('Program_Tracker_Percentage' in currentUser) {
           const programProgress = parseInt(currentUser.Program_Tracker_Percentage)
       
