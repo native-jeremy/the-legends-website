@@ -189,7 +189,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
         {
           await Wized.request.execute('Read Completed Programs'); // Trigger request
           const response = await Wized.data.get('r.182.d'); 
-            const data = response.data;
+            const data = response;
 
             console.log("Read Completed: ", data)
             console.log("Completed: ", response)
