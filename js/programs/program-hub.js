@@ -168,6 +168,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
         },
         async completeProgram(e, option)
         {
+          document.querySelector('.loading-state-v2').style.display = "flex";
           e.currentTarget.textContent = "Loading..."
 
           if(option === "questionnare")
@@ -187,6 +188,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
         },
         async addProgram(e, option)
         {
+          document.querySelector('.loading-state-v2').style.display = "flex"
           e.currentTarget.textContent = "Loading..."
 
           if(option === "questionnare")
