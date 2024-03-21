@@ -56,9 +56,8 @@ createApp({
           Wized.data.setVariable("done", "true");
         }
         else {
-          workout.set("type", "false");
+          Wized.data.setVariable("done", "false");
         }
-        Wized.data.setVariable("done", "false");
       });
     },
 
