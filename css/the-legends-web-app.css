@@ -1904,7 +1904,7 @@ a {
 }
 
 .app-head.guide-page {
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .app-head.full-green-screen {
