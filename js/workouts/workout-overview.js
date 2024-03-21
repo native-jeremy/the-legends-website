@@ -53,12 +53,12 @@ createApp({
       this.Workouts.forEach((workout) => {
         if(workout.Completed_Record_ID === currentWorkout)
         {
-          workout.set("type", "true");
+          Wized.data.setVariable("done", "true");
         }
         else {
           workout.set("type", "false");
         }
-        console.log("Is workout complete", workout.get("type"))
+        Wized.data.setVariable("done", "false");
       });
     },
 
