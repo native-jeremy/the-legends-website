@@ -14,6 +14,7 @@ createApp({
   data() {
     return {
       Rounds: [],
+      Workouts: [],
     };
   },
   methods: {
@@ -38,6 +39,11 @@ createApp({
       Wized.request.await("Load Round Info", (response) => {
         //console.log("Round Request", response.data);
         this.Rounds = response.data;
+      });
+
+      Wized.request.await("Load Completed Workouts", (response) => {
+        console.log("COmpleted Workouts Request", response.data);
+        this.Workouts = response.data;
       });
     },
 
