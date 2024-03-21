@@ -48,20 +48,15 @@ createApp({
     },
 
     isWorkoutCompleted() {
-      let workout = new URL(document.location).searchParams;
-      let currentWorkout = workout.get("workout");
+      const urlParams = new URL(document.location).searchParams;
+      const currentWorkout = urlParams.get("workout");
       const warmup = document.getElementById("warm");
       const start = document.getElementById("start");
-      this.Workouts.forEach((workout) => {
-        if(workout.Completed_Record_ID === currentWorkout)
-        {
-          warmup.href += `&done="true"`
-          start.href += `&done="true"`
-        }
-        else {
-          warmup.href += `&done="false"`
-          start.href += `&done="false"`
-        }
+
+      this.Workouts.forEach(workoutItem => {
+          const doneParam = workoutItem.Completed_Record_ID === currentWorkout ? "true" : "false";
+          warmup.searchParams.set("type", doneParam);
+          start.searchParams.set("type", doneParam);
       });
     },
 
