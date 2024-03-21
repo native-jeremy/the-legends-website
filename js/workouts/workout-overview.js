@@ -108,7 +108,6 @@ createApp({
     this.intialRequest();
   },
   mounted() {
-    this.isWorkoutCompleted();
     // Webflow Animations Reset Called
     this.WebflowAnimations();
 
@@ -120,6 +119,7 @@ createApp({
       threshold: 0.5,
       once: false,
     });
+    this.isWorkoutCompleted();
   }, 5000)
 
     // Siren & Voice Functionailty Setup
