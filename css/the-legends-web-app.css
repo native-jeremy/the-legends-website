@@ -1843,10 +1843,6 @@ a {
   overflow: auto;
 }
 
-.app-head.guide-page > .app-head {
-  min-height: 100vh !important;
-}
-
 .app-head.home {
   background-color: #000;
   padding: 0;
@@ -1908,7 +1904,7 @@ a {
 }
 
 .app-head.guide-page {
-  min-height: 100vh !important;
+  height: 100vh;
 }
 
 .app-head.full-green-screen {
