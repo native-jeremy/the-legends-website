@@ -164,14 +164,24 @@ Wized.request.await("Load Users Program Hub", (response) => {
         {
           this.programPop = !this.programPop;
         },
-        async completeProgram(e)
+        async completeProgram(e, option)
         {
           e.currentTarget.textContent = "Loading..."
-          await Wized.request.execute('Complete Program');
 
+          if(option === "questionnare")
+          {
+          await Wized.request.execute('Complete Program');
           setTimeout(() => {
               window.location.href = "/questionnaire-update"
           }, 5000)
+          }
+          else if(option === 'recommended')
+          {
+            await Wized.request.execute('Complete Program Recommended');
+            setTimeout(() => {
+              window.location.href = "/program-hub"
+          }, 5000)
+          }
         },
       },
       created() {
