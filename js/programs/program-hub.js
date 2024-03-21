@@ -188,7 +188,10 @@ Wized.request.await("Load Users Program Hub", (response) => {
         async getCompletedPrograms()
         {
           Wized.request.await("Read Completed Programs", (response) => { 
-            const {data} = response
+            const data = response.data;
+
+            console.log("Read Completed: ", data)
+            console.log("Completed: ", response)
 
             data.forEach((data) => {
               if(data.Completed_Record_ID === currentUser.Add_Program[0])
