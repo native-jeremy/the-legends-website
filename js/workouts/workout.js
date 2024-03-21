@@ -47,6 +47,7 @@ createApp({
       voiceMuted: "",
       Rest: false,
       RestPlayed: false,
+      isCompleted: null,
     }
   },
   computed: {
@@ -132,6 +133,7 @@ createApp({
       let workout = new URL(document.location).searchParams;
       this.workout.id = workout.get("workout");
       this.workout.recoveryLink = workout.get("recovery");
+      this.isCompleted = workout.get("done");
 
       Wized.request.await("Load Round Info", (response) => {
         //console.log('Round Request', response)
@@ -1064,7 +1066,7 @@ createApp({
     });
   },
   updated() {
-    if(this.completed == true)
+    if(this.completed == true && this.isCompleted !== "true")
     {
       Wized.data.setVariable("complete", "completed");
     }
