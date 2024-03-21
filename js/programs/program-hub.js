@@ -185,6 +185,24 @@ Wized.request.await("Load Users Program Hub", (response) => {
           }, 5000)
           }
         },
+        async addProgram(e, option)
+        {
+          e.currentTarget.textContent = "Loading..."
+
+          if(option === "questionnare")
+          {
+          setTimeout(() => {
+              window.location.href = "/questionnaire-update"
+          }, 5000)
+          }
+          else if(option === 'recommended')
+          {
+            await Wized.request.execute('Add New Program');
+            setTimeout(() => {
+              window.location.href = "/program-hub"
+          }, 5000)
+          }
+        },
         async getCompletedPrograms()
         {
           await Wized.request.execute('Read Completed Programs'); // Trigger request

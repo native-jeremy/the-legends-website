@@ -470,17 +470,31 @@ overflow-x: hidden;
       </div>
     </div>
     <div id="programModal" v-if="programPop" class="modal-condition on" style="display: flex !important;">
-      <div class="modal-body">
-        <div class="modal-header">
-          <h2 class="modal-heading">You have completed your program?</h2>
+      <div v-if="finishedProgram">
+        <div class="modal-body">
+          <div class="modal-header">
+            <h2 class="modal-heading">You have already completed this program</h2>
+          </div>
+          <div class="modal-content">
+            <p class="modal-body-copy">Please choose a new program by starting a recommend program or retaking the questionnaire</p>
+          </div>
+            <a data-w-id="63716cf2-b607-3d66-f5f9-5dd840fb10cd" href="#" @click="addProgram($event, 'recommended')" class="button-style-1 w-button">recommended program</a>
+            <a data-w-id="856cac69-5a7c-6423-375a-b8f5aa7d2a9c" href="#" @click="addProgram($event, 'questionnare')" class="button-style-1 mt_xsml w-button">questionnaire</a>
+            <a data-w-id="63716cf2-b607-3d66-f5f9-5dd840fb10cf" href="#" class="button-style-5 w-button" @click="popupOff">back</a>
         </div>
-        <div class="modal-content">
-          <p class="modal-body-copy">Congratulations on finishing you can start a recommend program or you can retake the questionnaire</p>
+      </div>
+      <div v-if="!finishedProgram">
+        <div class="modal-body">
+          <div class="modal-header">
+            <h2 class="modal-heading">You have completed your program</h2>
+          </div>
+          <div class="modal-content">
+            <p class="modal-body-copy">Congratulations on finishing you can start a recommend program or you can retake the questionnaire</p>
+          </div>
+            <a data-w-id="63716cf2-b607-3d66-f5f9-5dd840fb10cd" href="#" @click="completeProgram($event, 'recommended')" class="button-style-1 w-button">recommended program</a>
+            <a data-w-id="856cac69-5a7c-6423-375a-b8f5aa7d2a9c" href="#" @click="completeProgram($event, 'questionnare')" class="button-style-1 mt_xsml w-button">questionnaire</a>
+            <a data-w-id="63716cf2-b607-3d66-f5f9-5dd840fb10cf" href="#" class="button-style-5 w-button" @click="popupOff">back</a>
         </div>
-        <div v-if="finishedProgram">Test Button</div>
-        <a v-if="!finishedProgram" w-el="trigger_program_completion" data-w-id="63716cf2-b607-3d66-f5f9-5dd840fb10cd" href="#" @click="completeProgram($event, 'recommended')" class="button-style-1 w-button">recommended program</a>
-        <a v-if="!finishedProgram" w-el="trigger_program_completion" data-w-id="856cac69-5a7c-6423-375a-b8f5aa7d2a9c" href="#" @click="completeProgram($event, 'questionnare')" class="button-style-1 mt_xsml w-button">questionnaire</a>
-        <a data-w-id="63716cf2-b607-3d66-f5f9-5dd840fb10cf" href="#" class="button-style-5 w-button" @click="popupOff">back</a>
       </div>
     </div>
   </div>
