@@ -410,7 +410,7 @@ overflow-x: hidden;
                   </div>
                 </div>
                 <div v-bind:class="{hide_accordion : number !== UserWeek }" class="accordion-body style-1 sessions">
-                  <a v-bind:href="`/workout-overview.html?program=${User.Add_Program[0]}&week=week-${number + 1}&workout=${week.Workouts[index]}&type="empty"`" v-for="(workout, index) in week.Workouts.slice(0, SessionAmount)" v-bind:key="workout" v-bind:class="{disabled: number > UserWeek }" href="#" class="capsule-body style-1 workouts w-inline-block" data-sal="slide-up" data-sal-duration="1000">
+                  <a v-bind:href="`/workout-overview.html?program=${User.Add_Program[0]}&week=week-${number + 1}&workout=${week.Workouts[index]}&type=empty`" v-for="(workout, index) in week.Workouts.slice(0, SessionAmount)" v-bind:key="workout" v-bind:class="{disabled: number > UserWeek }" href="#" class="capsule-body style-1 workouts w-inline-block" data-sal="slide-up" data-sal-duration="1000">
                     <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${week.Image[index].url}`" alt="" class="full_thumbnail"></div>
                     <div class="capsule-header-content">
                       <div class="capsule-header-text">
