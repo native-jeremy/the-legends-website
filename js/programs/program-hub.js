@@ -191,7 +191,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
             const {data} = response
 
             data.forEach((data) => {
-              if(data.ID === currentUser.Add_Program[0])
+              if(data.Completed_Record_ID === currentUser.Add_Program[0])
               {
                 this.finishedProgram = true;
               }
