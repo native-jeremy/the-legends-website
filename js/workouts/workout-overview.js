@@ -54,18 +54,22 @@ createApp({
     },
 
     isWorkoutCompleted() {
-      const urlParams = new URL(document.location).searchParams;
+      const urlParams = new URLSearchParams(window.location.search);
       this.Program = urlParams.get("program");
       this.Week = urlParams.get("week");
       const currentWorkout = urlParams.get("workout");
-
-      this.Workout = currentWorkout
-
+      
+      this.Workout = currentWorkout;
+      let doneParam = "false"; // Default value
+      
       this.Workouts.forEach(workout => {
-          const doneParam = workout.Completed_Record_ID === currentWorkout ? "true" : "false";
-          const set = urlParams.searchParams.set("done", doneParam);
-          this.Done = set.toString();
+          if (workout.Completed_Record_ID === currentWorkout) {
+              doneParam = "true"; // If a match is found, set doneParam to true
+          }
       });
+      
+      urlParams.set("done", doneParam);
+      this.Done = doneParam; // Set Done to the final value of doneParam      
     },
 
     // Webflow Animations Reset
