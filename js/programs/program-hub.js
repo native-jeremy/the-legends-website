@@ -1,309 +1,45 @@
-anime({
-  targets: ".path3",
-  strokeDashoffset: [anime.setDashoffset, 0],
-  easing: "cubicBezier(.5, .05, .1, .3)",
-  duration: 2000,
-  delay: function (el, i) {
-    return i * 250;
-  },
-  direction: "alternate",
-  loop: true,
-});
-Wized.request.await("Load Users Program Hub", (response) => {
-  const currentUser = response.data;
-  let currentWeek;
-  let programDone;
-  if (currentUser.User_Week_Tracker > currentUser.Count_weeks[0]) {
-    //currentWeek = currentUser.Count_weeks[0]
-    currentWeek = currentUser.Program_Week_Tracker;
-  } else {
-    //currentWeek = currentUser.User_Week_Tracker
-    currentWeek = currentUser.Program_Week_Tracker;
-  }
+anime({targets:".path3",strokeDashoffset:[anime.setDashoffset,0],easing:"cubicBezier(.5, .05, .1, .3)",duration:2e3,delay:function(e,o){return 250*o},direction:"alternate",loop:!0}),Wized.request.await("Load Users Program Hub",(e=>{const o=e.data;let r;
+  //currentWeek = currentUser.Count_weeks[0]
+  r=(o.User_Week_Tracker,o.Count_weeks[0],o.Program_Week_Tracker),
   // Console.log Request
   //console.log("User Request:", currentUser);
-  Wized.request.await("Load Program", (response) => {
-    const program = response.data;
-    console.log("Program:", program.ID)
-    // Console.log Request
-    //console.log("Current Program Request:", program);
-    Wized.request.await("Load weeks - HUB", (response) => {
-      const currentProgram = response.data;
-      let programs = [];
-      let workouts = [];
-      let weeks = [];
-      let workoutsCompleted = [];
-      let nonPrograms
-
-      currentProgram.forEach((w, index) => {
-      if('Completed_Workouts_ID_Program' in currentUser)
-      {
-        workoutsCompleted.push(
-          {
-            programs: currentUser.Completed_Workouts_ID_Program[index], 
-            workouts: currentUser.Completed_Workouts[index],
-            weeks: currentUser.Completed_Workout_Week[index]
-        });
-      }
-      else {
-        workoutsCompleted.push(
-          {
-            programs: false, 
-            workouts: false,
-            weeks: false
-        });
-      }
-      });
-
-      //console.log("Current Completed:", workoutsCompleted);
-
-
-      // New Code 12/02/2024 - Fixing the progress on program hub
-      function checkProgress ()
-      {
-        if("Completed_Workout_Week" in currentUser)
-        {
-        let programData = []
-        let completedData = []
-
-        // Program Data loop
-        currentProgram.forEach((w, index) => {
-          programData.push({
-            programName: program.Title,
-            programID: program.ID,
-            programWeek: currentProgram[index].Week,
-            programWorkouts: currentProgram[index].Workouts,
-            completeIndices: Array(currentProgram[index].Workouts.length).fill(false),
-            completedCount: 0
-          });
-        });
-        //console.log("ProgramData:", programData);
-
-        // User Completed Data loop
-        currentUser.Completed_Workouts.forEach((w, index) => {
-          completedData.push({
-            programName: currentUser.Completed_Workouts_Title_Program[index],
-            programID: currentUser.Completed_Workouts_ID_Program[index],
-            programWeek: currentUser.Completed_Workout_Week[index],
-            programWorkout: currentUser.Completed_Workout_ID[index]
-          });
-        });
-        //console.log("CompletedData:", completedData);
-
-        programData.forEach((w, index) => {
-          completedData.forEach((wc, ii) => {
-            if(w.programName == wc.programName)
-            {
-              if(w.programID == wc.programID)
-              {
-                if(w.programWeek == wc.programWeek)
-                {
-                  if(w.programWorkouts.includes(wc.programWorkout))
-                  {
-                    //console.log("It has this workout", "Week:", w.programWeek, "Program Workout:", w.programWorkouts.indexOf(wc.programWorkout), "Completed Workout:", wc.programWorkout);
-                     // Find index of wc.programWorkout in w.completeIndices
-                    const workoutIndex = w.programWorkouts.indexOf(wc.programWorkout);
-                    // Set the value at workoutIndex to true
-                    w.completeIndices[workoutIndex] = true;
-                    w.completedCount += 1;
-                  }
-                }
-              }
-            }
-          });
-        });
-        
-        return programData;
-        }
-        else {
-            this.startedNone = true;
-            return false;
-        }
-      }
-      
-
-      // Console.log Request
-      //console.log("Program Request:", currentProgram);
-      const CompletedAmount = [];
-      let nextWorkoutStatic = false;
-      let nextWorkoutIDStatic = null;
-      currentProgram.forEach((WeekEl, index) => {
-        CompletedAmount.push({
-          Week: WeekEl.Week,
-          WorkoutName: WeekEl.Workout_Names,
-          WorkoutID: WeekEl.Workouts,
-          ProgramID: WeekEl.Program_ID[0],
-          AmountCompleted: 0,
-        });
-      });
-
-      let completedWorkouts = checkProgress();
-
-      // Start Vue Intializer
-      const { createApp } = Vue
-      createApp({
-      data() {
-          return {
-          User: currentUser,
-          Program: currentProgram,
-          ProgramImage: currentUser.Program_Image,
-          SessionAmount: currentUser.Q7[0],
-          UserWeek: currentWeek,
-          CurrentProgram: program,
-          Recoveries: null,
-          CompletedWorkouts: completedWorkouts,
-          nextWorkout: false,
-          nextWorkoutID: null,
-          programPop: false,
-          completed: 0,
-          startedNone: false,
-          recomendedProgram: null,
-          finishedProgram: null,
-          }
-      },
-      methods: {
-        popupOff()
-        {
-          this.programPop = !this.programPop;
-        },
-        async completeProgram(e, option)
-        {
-          document.querySelector('.loading-state-v2').style.display = "flex";
-          e.currentTarget.textContent = "Loading..."
-
-          if(option === "questionnare")
-          {
-          await Wized.request.execute('Complete Program');
-          setTimeout(() => {
-              window.location.href = "/questionnaire-update"
-          }, 3000)
-          }
-          else if(option === 'recommended')
-          {
-            await Wized.request.execute('Complete Program Recommended');
-            setTimeout(() => {
-              window.location.href = "/program-hub"
-          }, 3000)
-          }
-        },
-        async addProgram(e, option)
-        {
-          document.querySelector('.loading-state-v2').style.display = "flex";
-          e.currentTarget.textContent = "Loading..."
-
-          if(option === "questionnare")
-          {
-          setTimeout(() => {
-              window.location.href = "/questionnaire-update"
-          }, 3000)
-          }
-          else if(option === 'recommended')
-          {
-            await Wized.request.execute('Add New Program');
-            setTimeout(() => {
-              window.location.href = "/program-hub"
-          }, 3000)
-          }
-        },
-        async getCompletedPrograms()
-        {
-          await Wized.request.execute('Read Completed Programs'); // Trigger request
-          const response = await Wized.data.get('r.182.d'); 
-            const data = response;
-
-            //console.log("Read Completed: ", data)
-            //console.log("Completed: ", response)
-
-            data.forEach((data) => {
-              if(data.Completed_Record_ID === currentUser.Add_Program[0])
-              {
-                this.finishedProgram = true;
-              }
-              else {
-                this.finishedProgram = false;
-              }
-            })
-        }
-      },
-      created() {
-          const programLoader = document.getElementById("programLoading");
-          programLoader.classList.add("hide_program_loader")
-          //this.CompletedWorkouts = CompletedAmount;
-          this.nextWorkout = nextWorkoutStatic;
-          this.nextWorkoutID = nextWorkoutIDStatic;
-          const getData = async () => {
-              let data = await Wized.data.get("v.response");
-              this.Recoveries = data;
-              return data;
-          }
-          getData().then(data => console.log('Loaded'));
-          /*Wized.request.await("Load Recoveries", (response) => {    
-              this.Recoveries = response.data
-          });*/
-      },
-      mounted() {
-        this.recomendedProgram = program.Recommend_Program_ID
-        this.getCompletedPrograms()
-        /*if ('Program_Tracker_Percentage' in currentUser) {
-          const programProgress = parseInt(currentUser.Program_Tracker_Percentage)
-      
-          if(programProgress >= 100)
-          {
-            this.programPop = true;
-          }
-      
-          //console.log("Program: ", programProgress);
-          //console.log("Program Finished Status: ", this.programPop)
-        }*/
-        // console.log('Recoveries', this.Recoveries)
-          console.log("interaction loaded");
-          window.Webflow && window.Webflow.destroy();
-          window.Webflow && window.Webflow.ready();
-          window.Webflow && window.Webflow.require("ix2").init();
-          document.dispatchEvent(new Event("readystatechange"));
-          //console.log("Completed Array", this.CompletedWorkouts)
-          //console.log("Next Workout", this.nextWorkoutID)
-          //console.log("Progress", this.ProgramCompleted)
-          sal({
-            threshold: 0.5,
-            once: false,
-          });
-          const completedCheck = document.querySelectorAll(".completed-icon");
-          completedCheck.forEach((week, index) => {
-                if(week.classList.contains("completed"))
-                {
-                    this.completed = this.completed + 1;
-                }
-            })
-          document.querySelector('.loading-state-v2').style.display = "none"
-          if("Completed_Workout_Week" in currentUser)
-          {
-          // Progress Wheel
-          const workoutEl = document.querySelectorAll(".workouts");
-          let progressNum = this.completed / workoutEl.length * 100;
-          const circleProgress = new CircleProgress(".circle-latest");
-          circleProgress.attr({
-          max: 100,
-          value: progressNum,
-          textFormat: "percent",
-          indeterminateText: 0,
-          });
-          
-          CompletedAmount.forEach((week, index) => {
-            const weeks = document.querySelectorAll(".weeks");
-            const completedIcon = weeks[index].querySelectorAll(".completed-icon");
-            week.WorkoutID.forEach((workout, id) => {
-                if(completedIcon[id].classList.contains("completed"))
-                {
-                    CompletedAmount[index].AmountCompleted++;
-                }
-            })
-          });
-          //setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
-          }
-      },
-      }).mount('#app')
-      // End Vue Intializer
-    });
-  });
-});
+  Wized.request.await("Load Program",(e=>{const t=e.data;console.log("Program:",t.ID),
+  // Console.log Request
+  //console.log("Current Program Request:", program);
+  Wized.request.await("Load weeks - HUB",(e=>{const a=e.data;let s=[];a.forEach(((e,r)=>{"Completed_Workouts_ID_Program"in o?s.push({programs:o.Completed_Workouts_ID_Program[r],workouts:o.Completed_Workouts[r],weeks:o.Completed_Workout_Week[r]}):s.push({programs:!1,workouts:!1,weeks:!1})}));
+  // Console.log Request
+  //console.log("Program Request:", currentProgram);
+  const n=[];a.forEach(((e,o)=>{n.push({Week:e.Week,WorkoutName:e.Workout_Names,WorkoutID:e.Workouts,ProgramID:e.Program_ID[0],AmountCompleted:0})}));let m=
+  //console.log("Current Completed:", workoutsCompleted);
+  // New Code 12/02/2024 - Fixing the progress on program hub
+  function checkProgress(){if("Completed_Workout_Week"in o){let e=[],r=[];
+  // Program Data loop
+  return a.forEach(((o,r)=>{e.push({programName:t.Title,programID:t.ID,programWeek:a[r].Week,programWorkouts:a[r].Workouts,completeIndices:Array(a[r].Workouts.length).fill(!1),completedCount:0})})),
+  //console.log("ProgramData:", programData);
+  // User Completed Data loop
+  o.Completed_Workouts.forEach(((e,t)=>{r.push({programName:o.Completed_Workouts_Title_Program[t],programID:o.Completed_Workouts_ID_Program[t],programWeek:o.Completed_Workout_Week[t],programWorkout:o.Completed_Workout_ID[t]})})),
+  //console.log("CompletedData:", completedData);
+  e.forEach(((e,o)=>{r.forEach(((o,r)=>{if(e.programName==o.programName&&e.programID==o.programID&&e.programWeek==o.programWeek&&e.programWorkouts.includes(o.programWorkout)){
+  //console.log("It has this workout", "Week:", w.programWeek, "Program Workout:", w.programWorkouts.indexOf(wc.programWorkout), "Completed Workout:", wc.programWorkout);
+  // Find index of wc.programWorkout in w.completeIndices
+  const r=e.programWorkouts.indexOf(o.programWorkout);
+  // Set the value at workoutIndex to true
+  e.completeIndices[r]=!0,e.completedCount+=1}}))})),e}return this.startedNone=!0,!1}();
+  // Start Vue Intializer
+  const{createApp:d}=Vue;d({data:()=>({User:o,Program:a,ProgramImage:o.Program_Image,SessionAmount:o.Q7[0],UserWeek:r,CurrentProgram:t,Recoveries:null,CompletedWorkouts:m,nextWorkout:!1,nextWorkoutID:null,programPop:!1,completed:0,startedNone:!1,recomendedProgram:null,finishedProgram:null}),methods:{popupOff(){this.programPop=!this.programPop},async completeProgram(e,o){document.querySelector(".loading-state-v2").style.display="flex",e.currentTarget.textContent="Loading...","questionnare"===o?(await Wized.request.execute("Complete Program"),setTimeout((()=>{window.location.href="/questionnaire-update"}),3e3)):"recommended"===o&&(await Wized.request.execute("Complete Program Recommended"),setTimeout((()=>{window.location.href="/program-hub"}),3e3))},async addProgram(e,o){document.querySelector(".loading-state-v2").style.display="flex",e.currentTarget.textContent="Loading...","questionnare"===o?setTimeout((()=>{window.location.href="/questionnaire-update"}),3e3):"recommended"===o&&(await Wized.request.execute("Add New Program"),setTimeout((()=>{window.location.href="/program-hub"}),3e3))},async getCompletedPrograms(){await Wized.request.execute("Read Completed Programs");
+  //console.log("Read Completed: ", data)
+  //console.log("Completed: ", response)
+  (await Wized.data.get("r.182.d")).forEach((e=>{e.Completed_Record_ID===o.Add_Program[0]?this.finishedProgram=!0:this.finishedProgram=!1}))}},created(){document.getElementById("programLoading").classList.add("hide_program_loader"),
+  //this.CompletedWorkouts = CompletedAmount;
+  this.nextWorkout=false,this.nextWorkoutID=null;(async()=>{let e=await Wized.data.get("v.response");return this.Recoveries=e,e})().then((e=>console.log("Loaded")))},mounted(){this.recomendedProgram=t.Recommend_Program_ID,this.getCompletedPrograms(),
+  /*if ('Program_Tracker_Percentage' in currentUser) { const programProgress = parseInt(currentUser.Program_Tracker_Percentage) if(programProgress >= 100) { this.programPop = true; } //console.log("Program: ", programProgress); //console.log("Program Finished Status: ", this.programPop) }*/
+  // console.log('Recoveries', this.Recoveries)
+  console.log("interaction loaded"),window.Webflow&&window.Webflow.destroy(),window.Webflow&&window.Webflow.ready(),window.Webflow&&window.Webflow.require("ix2").init(),document.dispatchEvent(new Event("readystatechange")),
+  //console.log("Completed Array", this.CompletedWorkouts)
+  //console.log("Next Workout", this.nextWorkoutID)
+  //console.log("Progress", this.ProgramCompleted)
+  sal({threshold:.5,once:!1});if(document.querySelectorAll(".completed-icon").forEach(((e,o)=>{e.classList.contains("completed")&&(this.completed=this.completed+1)})),document.querySelector(".loading-state-v2").style.display="none","Completed_Workout_Week"in o){
+  // Progress Wheel
+  const e=document.querySelectorAll(".workouts");let o=this.completed/e.length*100;new CircleProgress(".circle-latest").attr({max:100,value:o,textFormat:"percent",indeterminateText:0}),n.forEach(((e,o)=>{const r=document.querySelectorAll(".weeks")[o].querySelectorAll(".completed-icon");e.WorkoutID.forEach(((e,t)=>{r[t].classList.contains("completed")&&n[o].AmountCompleted++}))}))}}}).mount("#app");
+  // End Vue Intializer
+  }))}))}));
