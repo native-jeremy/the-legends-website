@@ -26,10 +26,10 @@ createApp({
     // Intial Request Data Applied To Data Object
     async intialRequest() {
       Wized.request.await("Load Workout - OVERVIEW", (response) => {
-        this.Recovery = snapshot.Recovery_Selection[0]
         const snapshot = response.data;
         let richTextRes = snapshot.Equipment_List;
         const richText = document.getElementById("richText");
+        this.Recovery = snapshot.Recovery_Selection[0]
     
         if (response.status == 200) {
           // Showdown Rich Text Converter
