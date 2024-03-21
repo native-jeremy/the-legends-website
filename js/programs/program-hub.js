@@ -188,7 +188,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
         },
         async addProgram(e, option)
         {
-          document.querySelector('.loading-state-v2').style.display = "flex"
+          document.querySelector('.loading-state-v2').style.display = "flex";
           e.currentTarget.textContent = "Loading..."
 
           if(option === "questionnare")
@@ -211,8 +211,8 @@ Wized.request.await("Load Users Program Hub", (response) => {
           const response = await Wized.data.get('r.182.d'); 
             const data = response;
 
-            console.log("Read Completed: ", data)
-            console.log("Completed: ", response)
+            //console.log("Read Completed: ", data)
+            //console.log("Completed: ", response)
 
             data.forEach((data) => {
               if(data.Completed_Record_ID === currentUser.Add_Program[0])
