@@ -42,7 +42,7 @@ createApp({
       });
 
       Wized.request.await("Load Completed Workouts", (response) => {
-        console.log("COmpleted Workouts Request", response.data);
+        console.log("Completed Workouts Request", response.data);
         this.Workouts = response.data;
       });
     },
