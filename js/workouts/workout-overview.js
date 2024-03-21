@@ -15,12 +15,18 @@ createApp({
     return {
       Rounds: [],
       Workouts: [],
+      Program: null,
+      Week: null,
+      Workout: null,
+      Recovery: null,
+      Done: null,
     };
   },
   methods: {
     // Intial Request Data Applied To Data Object
     async intialRequest() {
       Wized.request.await("Load Workout - OVERVIEW", (response) => {
+        this.Recovery = snapshot.Recovery_Selection[0]
         const snapshot = response.data;
         let richTextRes = snapshot.Equipment_List;
         const richText = document.getElementById("richText");
@@ -49,14 +55,16 @@ createApp({
 
     isWorkoutCompleted() {
       const urlParams = new URL(document.location).searchParams;
+      this.Program = urlParams.get("program");
+      this.Week = urlParams.get("week");
       const currentWorkout = urlParams.get("workout");
-      const warmup = document.getElementById("warmup");
-      const start = document.getElementById("start");
 
-      this.Workouts.forEach(workoutItem => {
-          const doneParam = workoutItem.Completed_Record_ID === currentWorkout ? "true" : "false";
-          warmup.searchParams.set("type", doneParam);
-          start.searchParams.set("type", doneParam);
+      this.Workout = currentWorkout
+
+      this.Workouts.forEach(workout => {
+          const doneParam = workout.Completed_Record_ID === currentWorkout ? "true" : "false";
+          const set = urlParams.searchParams.set("type", doneParam);
+          this.Done = set.toString();
       });
     },
 
@@ -100,6 +108,7 @@ createApp({
     this.intialRequest();
   },
   mounted() {
+    this.isWorkoutCompleted();
     // Webflow Animations Reset Called
     this.WebflowAnimations();
 
@@ -111,7 +120,6 @@ createApp({
       threshold: 0.5,
       once: false,
     });
-    this.isWorkoutCompleted();
   }, 5000)
 
     // Siren & Voice Functionailty Setup
