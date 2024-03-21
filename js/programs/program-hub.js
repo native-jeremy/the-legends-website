@@ -24,7 +24,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
   //console.log("User Request:", currentUser);
   Wized.request.await("Load Program", (response) => {
     const program = response.data;
-    console.log("Program:", program.id)
+    console.log("Program:", program.ID)
     // Console.log Request
     //console.log("Current Program Request:", program);
     Wized.request.await("Load weeks - HUB", (response) => {
