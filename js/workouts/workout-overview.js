@@ -20,6 +20,7 @@ createApp({
       Workout: null,
       Recovery: null,
       Done: null,
+      Name: null,
     };
   },
   methods: {
@@ -30,6 +31,7 @@ createApp({
         let richTextRes = snapshot.Equipment_List;
         const richText = document.getElementById("richText");
         this.Recovery = snapshot.Recovery_Selection[0]
+        this.Name = snapshot.Name
     
         if (response.status == 200) {
           // Showdown Rich Text Converter
