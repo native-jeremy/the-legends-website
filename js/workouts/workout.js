@@ -791,7 +791,7 @@ createApp({
 
       if(input == 0)
       {
-        this.min = isNaN(this.min) ? 0 : this.min - 1;
+        this.min = this.min - 1;
         
         video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
         setTimeout(() => {
@@ -816,7 +816,7 @@ createApp({
       else if(input == 1)
       {
 
-        this.min = isNaN(this.min) ? 0 : this.min + 1;
+        this.min = this.min + 1;
 
         video.src = this.exerciseData[this.workout.round][this.workout.exercises].Video[this.min].url
         setTimeout(() => {
@@ -1065,6 +1065,13 @@ createApp({
         );
       }
     });
+  },
+  watch: {
+    min(newValue) {
+      if (isNaN(newValue)) {
+        this.min = 0;
+      }
+    }
   },
   updated() {
     if(this.completed == true && this.isCompleted !== "true")
