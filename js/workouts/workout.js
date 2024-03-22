@@ -382,7 +382,7 @@ createApp({
         this.workout.exercises = this.exerciseData[this.workout.round].length - 1;
         this.popup = false;
       }
-      
+
       this.min = parseInt(this.defaultDiffs)
 
       if(input !== 3)
@@ -1066,13 +1066,21 @@ createApp({
       }
     });
   },
-  /*watch: {
+  watch: {
     min(newValue) {
-      if (isNaN(newValue)) {
-        this.min = 0;
+      if (isNaN(newValue) || this.workout.exercises === 0) {
+        this.min = parseInt(this.defaultDiffs);
+      }
+    },
+    workout: {
+      deep: true,
+      handler(newValue) {
+        if (newValue.exercises === 0) {
+          this.min = parseInt(this.defaultDiffs);
+        }
       }
     }
-  },*/
+  },
   updated() {
     if(this.completed == true && this.isCompleted !== "true")
     {
