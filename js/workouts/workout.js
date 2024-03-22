@@ -145,7 +145,7 @@ createApp({
         this.roundData = roundRes.data
 
         this.workout.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
-        this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+        this.min = this.defaultDiffs
 
         this.workout.roundAmount = roundRes.data.length
         this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
@@ -1069,10 +1069,7 @@ createApp({
   watch: {
     min(newValue) {
       if (isNaN(newValue)) {
-        this.min = defaultDiffs();
-      }
-      else {
-        this.min = defaultDiffs();
+        this.min = 0;
       }
     }
   },
