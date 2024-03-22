@@ -687,7 +687,7 @@ createApp({
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
-        console.log('Main Condition')
+        //console.log('Main Condition')
       }
       else if(this.amrapActive == "True" && this.workout.round + 1 == this.roundData.length) {
         this.popup = true;
@@ -697,7 +697,7 @@ createApp({
         clearInterval(timer)
         //this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 0)
         this.title(false)
-        console.log('Amrap Finish Condition')
+        //console.log('Amrap Finish Condition')
       }
       else if (this.amrapActive == "True" && this.amrapData.hasRest == true)
       {
@@ -705,7 +705,7 @@ createApp({
         clearInterval(timer)
         //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, -1, this.$refs.siren)
-        console.log('Rest Condition')
+        //console.log('Rest Condition')
         // Calling Custom Animations
         //this.CustomAnimations(1)
         this.title(true)
@@ -721,7 +721,7 @@ createApp({
         //this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
         this.workout.counter = this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]
         this.ChangeExercise(this.$refs.play, this.$refs.video, this.$refs.voice, 1, this.$refs.siren)
-        console.log('Final Condition')
+        //console.log('Final Condition')
         // Calling Custom Animations
         //this.CustomAnimations(1)
         this.title(true)
