@@ -100,8 +100,8 @@ createApp({
       return this.exerciseData[this.workout.round][this.workout.exercises].Video.length
     },
     exerciseMin() {
-      return this.min
-    },
+      return isNaN(this.min) ? 0 : this.min;
+    },    
     exerciseMinData() {
       return parseInt(this.workout.startDifficulty[this.exercise]) - 1
     },
