@@ -124,6 +124,9 @@ createApp({
     exerciseVideo() {
       return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.defaultDiffs].url
     },
+    exerciseIndex() {
+      return this.workout.exercise
+    }
   },
   methods: {
     // Intial Request Data Applied To Data Object
@@ -1067,17 +1070,9 @@ createApp({
     });
   },
   watch: {
-    min(newValue) {
-      if (isNaN(newValue) || this.workout.exercises === 0) {
+    workout(newValue) {
+      if (newValue.exercises === 0) {
         this.min = parseInt(this.defaultDiffs);
-      }
-    },
-    workout: {
-      deep: true,
-      handler(newValue) {
-        if (newValue.exercises === 0) {
-          this.min = parseInt(this.defaultDiffs);
-        }
       }
     }
   },
