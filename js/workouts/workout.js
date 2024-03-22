@@ -1066,13 +1066,13 @@ createApp({
       }
     });
   },
-  watch: {
+  /*watch: {
     min(newValue) {
       if (isNaN(newValue)) {
         this.min = 0;
       }
     }
-  },
+  },*/
   updated() {
     if(this.completed == true && this.isCompleted !== "true")
     {
