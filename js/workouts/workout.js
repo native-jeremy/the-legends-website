@@ -383,7 +383,7 @@ createApp({
         this.popup = false;
       }
 
-      this.min = parseInt(this.workout.startDifficulty[this.workout.exercises]) - 1
+      this.min = parseInt(this.defaultDiffs)
 
       if(input !== 3)
       {
