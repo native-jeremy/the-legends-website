@@ -382,7 +382,7 @@ createApp({
         this.workout.exercises = this.exerciseData[this.workout.round].length - 1;
         this.popup = false;
       }
-
+      
       this.min = parseInt(this.defaultDiffs)
 
       if(input !== 3)
