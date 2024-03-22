@@ -673,6 +673,7 @@ createApp({
         clearInterval(timer)
         this.workout.round = this.workout.round + 1;
         this.workout.exercises = 0
+        this.min = parseInt(this.defaultDiffs);
         this.$refs.play.classList.toggle("pause")
         console.log('First Condition')
         this.title(true)
@@ -1068,13 +1069,6 @@ createApp({
         );
       }
     });
-  },
-  watch: {
-    workout(newValue) {
-      if (newValue.exercises === 0) {
-        this.min = parseInt(this.defaultDiffs);
-      }
-    }
   },
   updated() {
     if(this.completed == true && this.isCompleted !== "true")
