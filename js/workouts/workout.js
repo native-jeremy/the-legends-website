@@ -1069,7 +1069,10 @@ createApp({
   watch: {
     min(newValue) {
       if (isNaN(newValue)) {
-        this.min = 0;
+        this.min = defaultDiffs();
+      }
+      else {
+        this.min = defaultDiffs();
       }
     }
   },
