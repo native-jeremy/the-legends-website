@@ -366,9 +366,9 @@
                         <div class="counter-arrow left"></div>
                       </div>
                       <div class="counter-num">
-                        <div class="num current" ref="min" v-if="StatusCode200 == true">{{min}}</div>
+                        <div class="num current" ref="min" v-if="StatusCode200 == true">{{min + 1}}</div>
                         <div class="num divider">/</div>
-                        <div class="num limit" ref="max" v-if="StatusCode200 == true">{{exerciseMax - 1}}</div>
+                        <div class="num limit" ref="max" v-if="StatusCode200 == true">{{exerciseMax}}</div>
                       </div>
                       <div class="counter-btn" v-on:click="ChangeDifficulty(1, this.$refs.video, this.$refs.min)" v-if="StatusCode200 == true && min + 1 !== exerciseMax && loadedExercise !== true">
                         <div class="counter-arrow right"></div>
