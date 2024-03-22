@@ -7,7 +7,5 @@ module.exports = {
 	ignoreURLParametersMatching: [
 		/^utm_/,
 		/^fbclid$/
-	],
-	clientsClaim: true,
-  	skipWaiting: true
+	]
 };
