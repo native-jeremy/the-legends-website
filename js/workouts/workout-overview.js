@@ -55,7 +55,7 @@ createApp({
       });
     },
 
-    /*isWorkoutCompleted() {
+    isWorkoutCompleted() {
       const urlParams = new URLSearchParams(window.location.search);
       this.Program = urlParams.get("program");
       this.Week = urlParams.get("week");
@@ -72,7 +72,7 @@ createApp({
       
       urlParams.set("done", doneParam);
       this.Done = doneParam; // Set Done to the final value of doneParam      
-    },*/
+    },
 
     // Webflow Animations Reset
     WebflowAnimations() {
