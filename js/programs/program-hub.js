@@ -292,11 +292,11 @@ Wized.request.await("Load Users Program Hub", (response) => {
           CompletedAmount.forEach((week, index) => {
             const weeks = document.querySelectorAll(".weeks");
             const completedIcon = weeks[index].querySelectorAll(".completed-icon");
-            week.WorkoutID.forEach((workout, id) => {
-                if(completedIcon[id].classList.contains("completed"))
-                {
-                    CompletedAmount[index].AmountCompleted++;
-                }
+            completedIcon.forEach((icon) => {
+              if(icon.classList.contains("completed"))
+              {
+                CompletedAmount[index].AmountCompleted++;
+              }
             })
           });
           //setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
