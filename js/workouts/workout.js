@@ -1070,12 +1070,14 @@ createApp({
       }
     });
   },
-  updated() {
-    if(this.completed == true)
-    {
-      Wized.data.setVariable("complete", "completed");
+  watch: {
+    completed(newVal) {
+      if (newVal === true) {
+        // Perform actions when completed status becomes true
+        Wized.data.setVariable("complete", "completed");
+      }
     }
-  },
+  }
 }).mount('#app')
 
 // Wized.data.setVariable("complete", "completed");
