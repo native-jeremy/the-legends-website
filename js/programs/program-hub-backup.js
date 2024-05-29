@@ -24,7 +24,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
   //console.log("User Request:", currentUser);
   Wized.request.await("Load Program", (response) => {
     const program = response.data;
-    console.log("Program:", program.ID)
+    //console.log("Program:", program.ID)
     // Console.log Request
     //console.log("Current Program Request:", program);
     Wized.request.await("Load weeks - HUB", (response) => {
@@ -292,11 +292,11 @@ Wized.request.await("Load Users Program Hub", (response) => {
           CompletedAmount.forEach((week, index) => {
             const weeks = document.querySelectorAll(".weeks");
             const completedIcon = weeks[index].querySelectorAll(".completed-icon");
-            week.WorkoutID.forEach((workout, id) => {
-                if(completedIcon[id].classList.contains("completed"))
-                {
-                    CompletedAmount[index].AmountCompleted++;
-                }
+            completedIcon.forEach((icon) => {
+              if(icon.classList.contains("completed"))
+              {
+                CompletedAmount[index].AmountCompleted++;
+              }
             })
           });
           //setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);

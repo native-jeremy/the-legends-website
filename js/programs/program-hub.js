@@ -28,7 +28,22 @@ Wized.request.await("Load Users Program Hub", (response) => {
     // Console.log Request
     //console.log("Current Program Request:", program);
     Wized.request.await("Load weeks - HUB", (response) => {
-      const currentProgram = response.data;
+      const rawProgram = response.data;
+      const SessionAmount = parseInt(currentUser.Q7);
+
+      // Iterate over each item in rawProgram and slice the Workout_Names array
+      rawProgram.forEach((item, index) => {
+        item.Count_Workouts = SessionAmount;
+        item.Image = item.Image.slice(0, SessionAmount);
+        item.Time = item.Time.slice(0, SessionAmount);
+        item.Type = item.Type.slice(0, SessionAmount);
+        item.Workout_Names = item.Workout_Names.slice(0, SessionAmount);
+        item.Workouts = item.Workouts.slice(0, SessionAmount);
+      });
+
+      console.log(rawProgram);
+
+      const currentProgram = rawProgram;
       let programs = [];
       let workouts = [];
       let weeks = [];
@@ -55,7 +70,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
       }
       });
 
-      //console.log("Current Completed:", workoutsCompleted);
+      console.log("Current Completed:", currentProgram);
 
 
       // New Code 12/02/2024 - Fixing the progress on program hub
@@ -112,7 +127,7 @@ Wized.request.await("Load Users Program Hub", (response) => {
             }
           });
         });
-        
+        console.log("Completed", programData)
         return programData;
         }
         else {
