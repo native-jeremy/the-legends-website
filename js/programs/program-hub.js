@@ -30,27 +30,31 @@ createApp({
       const {Q7, Program_Week_Tracker, Add_Program, Completed_Workouts_ID_Program, Completed_Workout_Week, Completed_Workout_ID, Completed_Recovery_Record_ID} = response;
 
       const sessionAmount = parseInt(Q7)
-
-      let programIDs = [...Completed_Workouts_ID_Program];
-      let weeks = [...Completed_Workout_Week];
-      let workoutIDs = [...Completed_Workout_ID];
-
-      for (let i = programIDs.length - 1; i >= 0; i--) {
-        if (Add_Program.indexOf(programIDs[i]) === -1) {
-          programIDs.splice(i, 1);
-          weeks.splice(i, 1);
-          workoutIDs.splice(i, 1);
-        }
-      }
-
       let completed = [];
-      programIDs.forEach((id, index) => {
-        completed.push({id: id, week: weeks[index], workout: workoutIDs[index]});
-      });
+      let recoveries = []
+
+      if('Completed_Workouts_ID_Program' in response)
+       { 
+        let programIDs = [...Completed_Workouts_ID_Program];
+        let weeks = [...Completed_Workout_Week];
+        let workoutIDs = [...Completed_Workout_ID];
+        recoveries = Completed_Recovery_Record_ID;
+
+        for (let i = programIDs.length - 1; i >= 0; i--) {
+          if (Add_Program.indexOf(programIDs[i]) === -1) {
+            programIDs.splice(i, 1);
+            weeks.splice(i, 1);
+            workoutIDs.splice(i, 1);
+          }
+        }
+        programIDs.forEach((id, index) => {
+          completed.push({id: id, week: weeks[index], workout: workoutIDs[index]});
+        });
+      }
 
       this.User.SessionAmount = parseInt(sessionAmount);
       this.User.Completed = completed
-      this.User.CompletedRecoveries = Completed_Recovery_Record_ID;
+      this.User.CompletedRecoveries = recoveries;
       this.User.CurrentWeek = parseInt(Program_Week_Tracker);
       this.loadProgram();
     },
@@ -120,6 +124,7 @@ createApp({
       let completedTotalAmount = 0;
       let nextWorkoutSet = false;
 
+      if(completedWorkouts.length > 0) {
       // Loop through each week in the program
       programWeeks.forEach((week, weekIndex) => {
         const { Week, Workouts } = week;
@@ -149,12 +154,14 @@ createApp({
       this.User.Program.Weeks = programWeeks;
 
       this.User.CompletedAmount = completedTotalAmount;
+      }
 
-      return this.User.Program.Weeks
+      return this.User;
     },
     checkRecoveries() {
       const completedRecoveries = this.User.CompletedRecoveries;
       const recoveries = this.User.Recoveries;
+      if(completedRecoveries.length > 0) {
       recoveries.forEach(recovery => {
         // Check if there's a matching completed recovery
         const completed = completedRecoveries.find(completedRecovery =>
@@ -167,6 +174,7 @@ createApp({
       });
 
       this.User.Recoveries = recoveries;
+      }
 
       return this.User;
     },
