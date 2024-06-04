@@ -158,6 +158,12 @@ createApp({
 
       this.User.CompletedAmount = completedTotalAmount;
       }
+      else {
+        if (!nextWorkoutSet) {
+          nextWorkoutSet = true;
+          this.User.NextWorkout = programWeeks[0].Workouts[0].ID;
+        }
+      }
 
       return this.User;
     },
