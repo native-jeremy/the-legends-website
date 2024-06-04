@@ -72,12 +72,31 @@
   </script>
   <!--Tapfiliate JavaScript-->
   <script>
-    if('serviceWorker' in navigator)
-    {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register('/sw.js')
-      });
-    }
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then((registration) => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            
+            registration.onupdatefound = () => {
+                const installingWorker = registration.installing;
+                installingWorker.onstatechange = () => {
+                    if (installingWorker.state === 'installed') {
+                        if (navigator.serviceWorker.controller) {
+                            console.log('New or updated content is available.');
+                            if (confirm('New version available. Do you want to refresh?')) {
+                                window.location.reload();
+                            }
+                        } else {
+                            console.log('Content is now available offline!');
+                        }
+                    }
+                };
+            };
+        }).catch((error) => {
+            console.log('ServiceWorker registration failed: ', error);
+        });
+    });
+  } 
   </script>
 <link rel="manifest" href="manifest.json" />
 <script src="js/other/userid.js"></script>
