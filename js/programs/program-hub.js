@@ -1,324 +1,271 @@
-anime({
-  targets: ".path3",
-  strokeDashoffset: [anime.setDashoffset, 0],
-  easing: "cubicBezier(.5, .05, .1, .3)",
-  duration: 2000,
-  delay: function (el, i) {
-    return i * 250;
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      User: {
+        SessionAmount: 0,
+        CompletedAmount: 0,
+        CurrentWeek: 0,
+        NextWorkout: "",
+        Completed: [],
+        CompletedRecoveries: [],
+        Program: {
+          RecomendedProgram: "",
+          ID: 0,
+          Weeks: [],
+          Image: "",
+        },
+        Recoveries: [],
+      },
+      Loaded: false,
+      programPop: false,
+      finishedProgram: null,
+    };
   },
-  direction: "alternate",
-  loop: true,
-});
-Wized.request.await("Load Users Program Hub", (response) => {
-  const currentUser = response.data;
-  let currentWeek;
-  let programDone;
-  if (currentUser.User_Week_Tracker > currentUser.Count_weeks[0]) {
-    //currentWeek = currentUser.Count_weeks[0]
-    currentWeek = currentUser.Program_Week_Tracker;
-  } else {
-    //currentWeek = currentUser.User_Week_Tracker
-    currentWeek = currentUser.Program_Week_Tracker;
-  }
-  // Console.log Request
-  //console.log("User Request:", currentUser);
-  Wized.request.await("Load Program", (response) => {
-    const program = response.data;
-    //console.log("Program:", program.ID)
-    // Console.log Request
-    //console.log("Current Program Request:", program);
-    Wized.request.await("Load weeks - HUB", (response) => {
-      const rawProgram = response.data;
-      const SessionAmount = parseInt(currentUser.Q7);
+  methods: {
+    async loadUser() {
+      await Wized.request.execute('Load Users Program Hub');
+      const response = await Wized.data.get('r.72.d');
+      const {Q7, Program_Week_Tracker, Add_Program, Completed_Workouts_ID_Program, Completed_Workout_Week, Completed_Workout_ID, Completed_Recovery_Record_ID} = response;
 
-      // Iterate over each item in rawProgram and slice the Workout_Names array
-      rawProgram.forEach((item, index) => {
-        item.Count_Workouts = SessionAmount;
-        item.Image = item.Image.slice(0, SessionAmount);
-        item.Time = item.Time.slice(0, SessionAmount);
-        item.Type = item.Type.slice(0, SessionAmount);
-        item.Workout_Names = item.Workout_Names.slice(0, SessionAmount);
-        item.Workouts = item.Workouts.slice(0, SessionAmount);
-      });
+      const sessionAmount = parseInt(Q7)
 
-      console.log(rawProgram);
+      let programIDs = [...Completed_Workouts_ID_Program];
+      let weeks = [...Completed_Workout_Week];
+      let workoutIDs = [...Completed_Workout_ID];
 
-      const currentProgram = rawProgram;
-      let programs = [];
-      let workouts = [];
-      let weeks = [];
-      let workoutsCompleted = [];
-      let nonPrograms
-
-      currentProgram.forEach((w, index) => {
-      if('Completed_Workouts_ID_Program' in currentUser)
-      {
-        workoutsCompleted.push(
-          {
-            programs: currentUser.Completed_Workouts_ID_Program[index], 
-            workouts: currentUser.Completed_Workouts[index],
-            weeks: currentUser.Completed_Workout_Week[index]
-        });
-      }
-      else {
-        workoutsCompleted.push(
-          {
-            programs: false, 
-            workouts: false,
-            weeks: false
-        });
-      }
-      });
-
-      console.log("Current Completed:", currentProgram);
-
-
-      // New Code 12/02/2024 - Fixing the progress on program hub
-      function checkProgress ()
-      {
-        if("Completed_Workout_Week" in currentUser)
-        {
-        let programData = []
-        let completedData = []
-
-        // Program Data loop
-        currentProgram.forEach((w, index) => {
-          programData.push({
-            programName: program.Title,
-            programID: program.ID,
-            programWeek: currentProgram[index].Week,
-            programWorkouts: currentProgram[index].Workouts,
-            completeIndices: Array(currentProgram[index].Workouts.length).fill(false),
-            completedCount: 0
-          });
-        });
-        //console.log("ProgramData:", programData);
-
-        // User Completed Data loop
-        currentUser.Completed_Workouts.forEach((w, index) => {
-          completedData.push({
-            programName: currentUser.Completed_Workouts_Title_Program[index],
-            programID: currentUser.Completed_Workouts_ID_Program[index],
-            programWeek: currentUser.Completed_Workout_Week[index],
-            programWorkout: currentUser.Completed_Workout_ID[index]
-          });
-        });
-        //console.log("CompletedData:", completedData);
-
-        programData.forEach((w, index) => {
-          completedData.forEach((wc, ii) => {
-            if(w.programName == wc.programName)
-            {
-              if(w.programID == wc.programID)
-              {
-                if(w.programWeek == wc.programWeek)
-                {
-                  if(w.programWorkouts.includes(wc.programWorkout))
-                  {
-                    //console.log("It has this workout", "Week:", w.programWeek, "Program Workout:", w.programWorkouts.indexOf(wc.programWorkout), "Completed Workout:", wc.programWorkout);
-                     // Find index of wc.programWorkout in w.completeIndices
-                    const workoutIndex = w.programWorkouts.indexOf(wc.programWorkout);
-                    // Set the value at workoutIndex to true
-                    w.completeIndices[workoutIndex] = true;
-                    w.completedCount += 1;
-                  }
-                }
-              }
-            }
-          });
-        });
-        console.log("Completed", programData)
-        return programData;
-        }
-        else {
-            this.startedNone = true;
-            return false;
+      for (let i = programIDs.length - 1; i >= 0; i--) {
+        if (Add_Program.indexOf(programIDs[i]) === -1) {
+          programIDs.splice(i, 1);
+          weeks.splice(i, 1);
+          workoutIDs.splice(i, 1);
         }
       }
+
+      let completed = [];
+      programIDs.forEach((id, index) => {
+        completed.push({id: id, week: weeks[index], workout: workoutIDs[index]});
+      });
+
+      this.User.SessionAmount = parseInt(sessionAmount);
+      this.User.Completed = completed
+      this.User.CompletedRecoveries = Completed_Recovery_Record_ID;
+      this.User.CurrentWeek = parseInt(Program_Week_Tracker);
+      this.loadProgram();
+    },
+    async loadProgram() {
+      await Wized.request.execute('Load Program');
+      const response = await Wized.data.get('r.1.d');
+      const {Recommend_Program_ID, ID, Image} = response;
+      this.Program = response;
+      this.User.Program.RecomendedProgram = Recommend_Program_ID
+      this.User.Program.ID = ID;
+      this.User.Program.Image = Image[0].url;
+
+      this.loadWeeks();
+    },
+    async loadWeeks() {
+      await Wized.request.execute('Load weeks - HUB');
+      const response = await Wized.data.get('r.16.d');
+      const Weeks = response;
+      let weeksRaw = Weeks.map(week => {
+        const { Week, Workouts, Workout_Names, Image, Time, Type } = week;
+        // Only loop the amount of this.User.SessionAmount
+        const sessionAmount = this.User.SessionAmount;
+        const workouts = Workouts.slice(0, sessionAmount).map((workout, index) => ({
+          ID: workout,
+          Image: Image[index].url,
+          Name: Workout_Names[index],
+          Time: Time[index],
+          Type: Type[index],
+          Completed: false
+        }));
+        return {
+          Week: Week,
+          Workouts: workouts,
+          CompletedAmount: 0,
+        };
+      });
       
+      this.User.Program.Weeks = weeksRaw;
+      this.checkForCompleted()
+      this.loadRecoveries();
+      return this.User;
+      
+    },
+    async loadRecoveries() {
+      await Wized.request.execute('Load Recoveries');
+      const response = await Wized.data.get('r.136.d');
+      const recoveries = response;
+      let recoveriesRaw = recoveries.map(recovery => {
+        const { ID, Name, Image, Time, Type } = recovery;
+        return {
+          ID: ID,
+          Image: Image[0].url, // assuming you want the first image URL
+          Name: Name,
+          Time: Time,
+          Type: Type,
+          Completed: false
+        };
+      });
+      this.User.Recoveries = recoveriesRaw;
+      this.checkRecoveries();
+      return this.User;
+    },    
+    checkForCompleted() {
+      const completedWorkouts = this.User.Completed;
+      const programWeeks = this.User.Program.Weeks;
+      const programID = this.User.Program.ID;
+      let completedTotalAmount = 0;
+      let nextWorkoutSet = false;
 
-      // Console.log Request
-      //console.log("Program Request:", currentProgram);
-      const CompletedAmount = [];
-      let nextWorkoutStatic = false;
-      let nextWorkoutIDStatic = null;
-      currentProgram.forEach((WeekEl, index) => {
-        CompletedAmount.push({
-          Week: WeekEl.Week,
-          WorkoutName: WeekEl.Workout_Names,
-          WorkoutID: WeekEl.Workouts,
-          ProgramID: WeekEl.Program_ID[0],
-          AmountCompleted: 0,
+      // Loop through each week in the program
+      programWeeks.forEach((week, weekIndex) => {
+        const { Week, Workouts } = week;
+
+        // Loop through each workout in the week
+        Workouts.forEach(workout => {
+          const { ID } = workout;
+
+          // Check if there's a matching completed workout
+          const completed = completedWorkouts.find(completedWorkout =>
+            completedWorkout.id === programID && completedWorkout.week === Week && completedWorkout.workout === ID
+          );
+
+          // If a match is found, mark the workout as completed
+          if (completed) {
+            workout.Completed = true;
+            week.CompletedAmount += 1;
+            completedTotalAmount += 1;
+          }
+          else if (!nextWorkoutSet) {
+            nextWorkoutSet = true;
+            this.User.NextWorkout = ID;
+          }
         });
       });
 
-      let completedWorkouts = checkProgress();
+      this.User.Program.Weeks = programWeeks;
 
-      // Start Vue Intializer
-      const { createApp } = Vue
-      createApp({
-      data() {
-          return {
-          User: currentUser,
-          Program: currentProgram,
-          ProgramImage: currentUser.Program_Image,
-          SessionAmount: currentUser.Q7[0],
-          UserWeek: currentWeek,
-          CurrentProgram: program,
-          Recoveries: null,
-          CompletedWorkouts: completedWorkouts,
-          nextWorkout: false,
-          nextWorkoutID: null,
-          programPop: false,
-          completed: 0,
-          startedNone: false,
-          recomendedProgram: null,
-          finishedProgram: null,
-          }
-      },
-      methods: {
-        popupOff()
-        {
-          this.programPop = !this.programPop;
-        },
-        async completeProgram(e, option)
-        {
-          document.querySelector('.loading-state-v2').style.display = "flex";
-          e.currentTarget.textContent = "Loading..."
+      this.User.CompletedAmount = completedTotalAmount;
 
-          if(option === "questionnare")
-          {
-          await Wized.request.execute('Complete Program');
-          setTimeout(() => {
-              window.location.href = "/questionnaire-update"
-          }, 3000)
-          }
-          else if(option === 'recommended')
-          {
-            await Wized.request.execute('Complete Program Recommended');
-            setTimeout(() => {
-              window.location.href = "/program-hub"
-          }, 3000)
-          }
-        },
-        async addProgram(e, option)
-        {
-          document.querySelector('.loading-state-v2').style.display = "flex";
-          e.currentTarget.textContent = "Loading..."
-
-          if(option === "questionnare")
-          {
-          setTimeout(() => {
-              window.location.href = "/questionnaire-update"
-          }, 3000)
-          }
-          else if(option === 'recommended')
-          {
-            await Wized.request.execute('Add New Program');
-            setTimeout(() => {
-              window.location.href = "/program-hub"
-          }, 3000)
-          }
-        },
-        async getCompletedPrograms()
-        {
-          await Wized.request.execute('Read Completed Programs'); // Trigger request
-          const response = await Wized.data.get('r.182.d'); 
-            const data = response;
-
-            //console.log("Read Completed: ", data)
-            //console.log("Completed: ", response)
-
-            data.forEach((data) => {
-              if(data.Completed_Record_ID === currentUser.Add_Program[0])
-              {
-                this.finishedProgram = true;
-              }
-              else {
-                this.finishedProgram = false;
-              }
-            })
+      return this.User.Program.Weeks
+    },
+    checkRecoveries() {
+      const completedRecoveries = this.User.CompletedRecoveries;
+      const recoveries = this.User.Recoveries;
+      recoveries.forEach(recovery => {
+        // Check if there's a matching completed recovery
+        const completed = completedRecoveries.find(completedRecovery =>
+          completedRecovery === recovery.ID
+        );
+        // If a match is found, mark the workout as completed
+        if (completed) {
+          recovery.Completed = true;
         }
-      },
-      created() {
-          const programLoader = document.getElementById("programLoading");
-          programLoader.classList.add("hide_program_loader")
-          //this.CompletedWorkouts = CompletedAmount;
-          this.nextWorkout = nextWorkoutStatic;
-          this.nextWorkoutID = nextWorkoutIDStatic;
-          const getData = async () => {
-              let data = await Wized.data.get("v.response");
-              this.Recoveries = data;
-              return data;
-          }
-          getData().then(data => console.log('Loaded'));
-          /*Wized.request.await("Load Recoveries", (response) => {    
-              this.Recoveries = response.data
-          });*/
-      },
-      mounted() {
-        this.recomendedProgram = program.Recommend_Program_ID
-        this.getCompletedPrograms()
-        /*if ('Program_Tracker_Percentage' in currentUser) {
-          const programProgress = parseInt(currentUser.Program_Tracker_Percentage)
-      
-          if(programProgress >= 100)
-          {
-            this.programPop = true;
-          }
-      
-          //console.log("Program: ", programProgress);
-          //console.log("Program Finished Status: ", this.programPop)
-        }*/
-        // console.log('Recoveries', this.Recoveries)
-          console.log("interaction loaded");
-          window.Webflow && window.Webflow.destroy();
-          window.Webflow && window.Webflow.ready();
-          window.Webflow && window.Webflow.require("ix2").init();
-          document.dispatchEvent(new Event("readystatechange"));
-          //console.log("Completed Array", this.CompletedWorkouts)
-          //console.log("Next Workout", this.nextWorkoutID)
-          //console.log("Progress", this.ProgramCompleted)
-          sal({
-            threshold: 0.5,
-            once: false,
-          });
-          const completedCheck = document.querySelectorAll(".completed-icon");
-          completedCheck.forEach((week, index) => {
-                if(week.classList.contains("completed"))
-                {
-                    this.completed = this.completed + 1;
-                }
-            })
-          document.querySelector('.loading-state-v2').style.display = "none"
-          if("Completed_Workout_Week" in currentUser)
-          {
-          // Progress Wheel
-          const workoutEl = document.querySelectorAll(".workouts");
-          let progressNum = this.completed / workoutEl.length * 100;
+      });
+
+      this.User.Recoveries = recoveries;
+
+      return this.User;
+    },
+    ProgressWheel() {
+      const workoutEl = document.querySelectorAll(".workouts");
+      let progressNum = this.User.CompletedAmount / workoutEl.length * 100;
           const circleProgress = new CircleProgress(".circle-latest");
           circleProgress.attr({
           max: 100,
           value: progressNum,
           textFormat: "percent",
           indeterminateText: 0,
-          });
-          
-          CompletedAmount.forEach((week, index) => {
-            const weeks = document.querySelectorAll(".weeks");
-            const completedIcon = weeks[index].querySelectorAll(".completed-icon");
-            completedIcon.forEach((icon) => {
-              if(icon.classList.contains("completed"))
-              {
-                CompletedAmount[index].AmountCompleted++;
-              }
-            })
-          });
-          //setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 3000);
-          }
-      },
-      }).mount('#app')
-      // End Vue Intializer
-    });
-  });
-});
+      });
+    },
+    popupOff() {
+      this.programPop = !this.programPop;
+    },
+    async completeProgram(e, option) {
+      this.Loaded = false;
+      e.currentTarget.textContent = "Loading...";
+
+      if (option === "questionnare") {
+        await Wized.request.execute('Complete Program');
+        setTimeout(() => {
+          window.location.href = "/questionnaire-update";
+        }, 3000);
+      } else if (option === 'recommended') {
+        await Wized.request.execute('Complete Program Recommended');
+        setTimeout(() => {
+          window.location.href = "/program-hub";
+        }, 3000);
+      }
+    },
+    async addProgram(e, option) {
+      this.Loaded = false;
+      e.currentTarget.textContent = "Loading...";
+
+      if (option === "questionnare") {
+        setTimeout(() => {
+          window.location.href = "/questionnaire-update";
+        }, 3000);
+      } else if (option === 'recommended') {
+        await Wized.request.execute('Add New Program');
+        setTimeout(() => {
+          window.location.href = "/program-hub";
+        }, 3000);
+      }
+    },
+    async getCompletedPrograms() {
+      await Wized.request.execute('Read Completed Programs');
+      const response = await Wized.data.get('r.182.d');
+      const data = response;
+
+      data.forEach((data) => {
+        this.finishedProgram = data.Completed_Record_ID === this.User.Program.ID;
+      });
+    },
+    animeSetup() {
+      anime({
+        targets: ".path3",
+        strokeDashoffset: [anime.setDashoffset, 0],
+        easing: "cubicBezier(.5, .05, .1, .3)",
+        duration: 2000,
+        delay: function (el, i) {
+          return i * 250;
+        },
+        direction: "alternate",
+        loop: true,
+      });
+    },
+    appSetup() {
+      this.animeSetup();
+      setTimeout(() => {
+        this.ProgressWheel();
+        console.log("interaction loaded");
+        window.Webflow && window.Webflow.destroy();
+        window.Webflow && window.Webflow.ready();
+        window.Webflow && window.Webflow.require("ix2").init();
+        document.dispatchEvent(new Event("readystatechange"));
+        this.Loaded = true;
+        if(this.Loaded) {
+          document.body.style.overflow = "visible";
+        }
+        sal({
+          threshold: 0.5,
+          once: false,
+        });
+      }, 10000)
+    }
+  },
+  created() {
+    this.loadUser();
+  },
+  mounted() {
+    if(!this.Loaded)
+    {
+      document.body.style.overflow = "hidden";
+    }
+    this.appSetup();
+  },
+}).mount('#app');
+
