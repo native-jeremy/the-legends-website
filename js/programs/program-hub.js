@@ -38,7 +38,6 @@ createApp({
         let programIDs = [...Completed_Workouts_ID_Program];
         let weeks = [...Completed_Workout_Week];
         let workoutIDs = [...Completed_Workout_ID];
-        recoveries = Completed_Recovery_Record_ID;
 
         for (let i = programIDs.length - 1; i >= 0; i--) {
           if (Add_Program.indexOf(programIDs[i]) === -1) {
@@ -50,6 +49,10 @@ createApp({
         programIDs.forEach((id, index) => {
           completed.push({id: id, week: weeks[index], workout: workoutIDs[index]});
         });
+      }
+
+      if('Completed_Recovery_Record_ID' in response) {
+        recoveries = Completed_Recovery_Record_ID;
       }
 
       this.User.SessionAmount = parseInt(sessionAmount);
