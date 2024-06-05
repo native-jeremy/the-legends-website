@@ -189,15 +189,27 @@ createApp({
     },
     ProgressWheel() {
       const workoutEl = document.querySelectorAll(".workouts");
-      let progressNum = this.User.CompletedAmount / workoutEl.length * 100;
-          const circleProgress = new CircleProgress(".circle-latest");
-          circleProgress.attr({
+      let progressNum;
+  
+      if (workoutEl.length > 0) {
+          progressNum = (this.User.CompletedAmount / workoutEl.length) * 100;
+      } else {
+          progressNum = 0; // Or set to some default value
+      }
+  
+      if (!isFinite(progressNum)) {
+          console.error('Invalid progress value:', progressNum);
+          progressNum = 0; // Fallback to a safe default value
+      }
+  
+      const circleProgress = new CircleProgress(".circle-latest");
+      circleProgress.attr({
           max: 100,
           value: progressNum,
           textFormat: "percent",
           indeterminateText: 0,
       });
-    },
+    },  
     popupOff() {
       this.programPop = !this.programPop;
     },
