@@ -173,11 +173,11 @@ createApp({
       const freshData = await Wized.data.get('r.184.d'); // Get request response
       console.log("Test Data: ", freshData); // Console log received request data
 
-      const workoutsList =  freshData
+      console.log("WORKOUTS: ", freshData)
+      console.log("ID: ", this.workout.id)
+      const newList = freshData.filter(workout => workout.ID.includes(this.workout.id));
+      console.log("New Workouts List: ", newList)
 
-      const workoutsFiltered = this.filterWorkoutsList(freshData); 
-
-      console.log("New Workouts Data: ", workoutsFiltered)
       Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
         //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
@@ -202,20 +202,6 @@ createApp({
         this.title(true)
         this.intialisation
       })
-    },
-
-    filterWorkoutsList(workouts) {
-      console.log("WORKOUTS: ", workouts)
-      const newList = workouts.filter(workout => workout.ID.includes(this.workout.id));
-      return newList;
-    },
-
-    async runTestData() {
-      await Wized.request.execute('Load Exercise Data'); // Trigger request
-      const response = await Wized.data.get('r.184.d'); // Get request response
-      console.log("Test Data: ", response); // Console log received request data
-
-      return response
     },
 
     // Data Intialised in Exercise
