@@ -163,36 +163,83 @@ createApp({
         //console.log('Round Request', this.roundData)
         //console.log('Round Length', this.workout.roundAmount)
       });
-      
+
+      // Load the audio first
       Wized.request.await("Load Finished Audio", (response) => {    
         this.workout.finishAudio = response.data[0].Audio[0].url
-        //console.log("Audio Response", response);
+        console.log("Audio Response", response);
       })
+      
+      // Load workouts from both pages
+      let rawWorkouts = [];
 
-      Wized.request.await("Load Exercise Diff V2", (response) => {
-        //console.log("Exercise DATA", response);
-        //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
-        this.roundData.forEach((r, ri) => {
-
-          // Added This To Intialise Exercise Data
-          this.exerciseData.push([])
-          
-          r.Diff_ID_Linked_Exercises.forEach((id, index) => {
-            response.data.forEach((e, ei) => {
-              if(e.ID.includes(id))
-              {
-                this.exerciseData[ri].push(e);
-              }
+      // Load workouts from both pages
+      Wized.request.await("Load Diffculties Page 1", (response1) => {    
+        let page1Workouts = response1.data.filter(workout => 
+          Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id));
+        
+        console.log("After Page 1");
+      
+        // Nested request for Page 2
+        Wized.request.await("Load Diffculties Page 2", (response2) => {    
+          let page2Workouts = response2.data.filter(workout => 
+            Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id));
+        
+          console.log("After Page 2");
+      
+          // Combine workouts after both responses
+          rawWorkouts = [...page1Workouts, ...page2Workouts];
+        
+          console.log("Complete Workouts: ", rawWorkouts);
+      
+          // Ensure exerciseData array is initialized
+          if (!Array.isArray(this.exerciseData)) {
+            this.exerciseData = [];
+          }
+      
+          // Map roundData to exerciseData
+          this.roundData.forEach((r, ri) => {
+            // Initialize exerciseData for each round
+            if (!Array.isArray(this.exerciseData[ri])) {
+              this.exerciseData[ri] = [];
+            }
+      
+            // Loop through linked exercises and map them from rawWorkouts
+            r.Diff_ID_Linked_Exercises.forEach((id) => {
+              rawWorkouts.forEach((e) => {
+                if (e.ID.includes(id)) {
+                  this.exerciseData[ri].push(e);
+                }
+              });
             });
           });
+      
+          console.log("Exercise Data: ", this.exerciseData);
         });
+      });
+      
+
+      // Filter the workouts by checking if the Workout_ID array includes the workout.id
+     /* const newList = freshData.filter(workout => 
+          Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id)
+      );*/
+
+      // Log the new list of filtered workouts
+      //console.log("New Workouts List: ", newList);
+
+     // await Wized.request.execute('Load Exercise Diff V2');
+
+     // Wized.request.await("Load Exercise Diff V2", (response) => {
+        //console.log("Exercise DATA", response);
+        //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
+  
 
         //console.log("Exercise Data END!", this.exerciseData)
         this.StatusCode200 = true;
         this.loadedExercise = false;
         this.title(true)
         this.intialisation
-      })
+      //})
     },
 
     // Data Intialised in Exercise
@@ -1022,11 +1069,14 @@ createApp({
   created()
   {
     // Intial Data Request Called
-    this.intialRequest()
+    //this.intialRequest()
   },
   mounted() {
     let params = new URL(document.location).searchParams;
     let round = parseInt(params.get("round"));
+    setTimeout(() => {
+      this.intialRequest()
+    }, 2000);
   
     if(window.location.href.includes("round"))
     {
