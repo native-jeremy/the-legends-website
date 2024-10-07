@@ -168,7 +168,7 @@ createApp({
         this.workout.finishAudio = response.data[0].Audio[0].url
         //console.log("Audio Response", response);
       })
-
+     
       await Wized.request.execute('Load Exercise Data'); // Trigger request
       const freshData = await Wized.data.get('r.184.d'); // Get request response
       console.log("Test Data: ", freshData); // Console log received request data
@@ -177,11 +177,12 @@ createApp({
       console.log("ID: ", this.workout.id)
       let newList = []
       freshData.forEach(workout =>  {
-        if(workout.ID === this.workout.id) {
+        if(workout.Workout_ID === this.workout.id) {
           newList.push(workout)
         }
       });
       console.log("New Workouts List: ", newList)
+      await Wized.request.execute('Load Exercise Diff V2');
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
