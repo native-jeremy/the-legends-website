@@ -164,8 +164,6 @@ createApp({
         //console.log('Round Length', this.workout.roundAmount)
       });
 
-      let rawWorkouts = []
-
       // Load the audio first
       Wized.request.await("Load Finished Audio", (response) => {    
         this.workout.finishAudio = response.data[0].Audio[0].url
@@ -173,25 +171,53 @@ createApp({
       })
       
       // Load workouts from both pages
+      let rawWorkouts = [];
+
+      // Load workouts from both pages
       Wized.request.await("Load Diffculties Page 1", (response1) => {    
         let page1Workouts = response1.data.filter(workout => 
-          Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id))
-      
+          Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id));
+        
         console.log("After Page 1");
       
         // Nested request for Page 2
         Wized.request.await("Load Diffculties Page 2", (response2) => {    
           let page2Workouts = response2.data.filter(workout => 
-            Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id))
-      
+            Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id));
+        
           console.log("After Page 2");
       
           // Combine workouts after both responses
-          rawWorkouts = [...page1Workouts, ...page2Workouts]
-      
+          rawWorkouts = [...page1Workouts, ...page2Workouts];
+        
           console.log("Complete Workouts: ", rawWorkouts);
-        })      
-      })
+      
+          // Ensure exerciseData array is initialized
+          if (!Array.isArray(this.exerciseData)) {
+            this.exerciseData = [];
+          }
+      
+          // Map roundData to exerciseData
+          this.roundData.forEach((r, ri) => {
+            // Initialize exerciseData for each round
+            if (!Array.isArray(this.exerciseData[ri])) {
+              this.exerciseData[ri] = [];
+            }
+      
+            // Loop through linked exercises and map them from rawWorkouts
+            r.Diff_ID_Linked_Exercises.forEach((id) => {
+              rawWorkouts.forEach((e) => {
+                if (e.ID.includes(id)) {
+                  this.exerciseData[ri].push(e);
+                }
+              });
+            });
+          });
+      
+          console.log("Exercise Data: ", this.exerciseData);
+        });
+      });
+      
 
       // Filter the workouts by checking if the Workout_ID array includes the workout.id
      /* const newList = freshData.filter(workout => 
@@ -206,21 +232,7 @@ createApp({
      // Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
         //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
-        const response = rawWorkouts;
-        this.roundData.forEach((r, ri) => {
-
-          // Added This To Intialise Exercise Data
-          this.exerciseData.push([])
-          
-          r.Diff_ID_Linked_Exercises.forEach((id, index) => {
-            response.forEach((e, ei) => {
-              if(e.ID.includes(id))
-              {
-                this.exerciseData[ri].push(e);
-              }
-            });
-          });
-        });
+  
 
         //console.log("Exercise Data END!", this.exerciseData)
         this.StatusCode200 = true;
