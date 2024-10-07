@@ -139,37 +139,6 @@ createApp({
       this.workout.recoveryLink = workout.get("recovery");
       //this.isCompleted = workout.get("done");
 
-      Wized.request.await("Load Round Info", (response) => {
-        //console.log('Round Request', response)
-        roundRes = response;
-        roundInfo = roundRes.data[this.workout.round];
-        
-    
-        roundSelected = roundRes.data[this.workout.round].Round_Selection; 
-        this.roundData = roundRes.data
-
-        this.workout.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
-        this.min = this.defaultDiffs
-
-        this.workout.roundAmount = roundRes.data.length
-        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-        this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
-
-        //console.log("Workout Data: ", this.workout)
-
-        //console.log('Intial Exercise Data', this.exerciseData)
-
-        //console.log('startDifficulty', this.workout.startDifficulty)
-        //console.log('Current Round', roundSelected)
-        //console.log('Round Request', this.roundData)
-        //console.log('Round Length', this.workout.roundAmount)
-      });
-      
-      Wized.request.await("Load Finished Audio", (response) => {    
-        this.workout.finishAudio = response.data[0].Audio[0].url
-        //console.log("Audio Response", response);
-      })
-     
       await Wized.request.execute('Load Exercise Data'); // Trigger request
       const freshData = await Wized.data.get('r.184.d'); // Get request response
       console.log("Test Data: ", freshData); // Console log received request data
@@ -206,11 +175,38 @@ createApp({
         });
       });
 
-      //console.log("Exercise Data END!", this.exerciseData)
-      this.StatusCode200 = true;
-      this.loadedExercise = false;
-      this.title(true)
-      this.intialisation
+      Wized.request.await("Load Round Info", (response) => {
+        //console.log('Round Request', response)
+        roundRes = response;
+        roundInfo = roundRes.data[this.workout.round];
+        
+    
+        roundSelected = roundRes.data[this.workout.round].Round_Selection; 
+        this.roundData = roundRes.data
+
+        this.workout.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+        this.min = this.defaultDiffs
+
+        this.workout.roundAmount = roundRes.data.length
+        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+        this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
+
+        //console.log("Workout Data: ", this.workout)
+
+        //console.log('Intial Exercise Data', this.exerciseData)
+
+        //console.log('startDifficulty', this.workout.startDifficulty)
+        //console.log('Current Round', roundSelected)
+        //console.log('Round Request', this.roundData)
+        //console.log('Round Length', this.workout.roundAmount)
+      });
+      
+      Wized.request.await("Load Finished Audio", (response) => {    
+        this.workout.finishAudio = response.data[0].Audio[0].url
+        //console.log("Audio Response", response);
+      })
+     
+
 
       await Wized.request.execute('Load Exercise Diff V2');
 
