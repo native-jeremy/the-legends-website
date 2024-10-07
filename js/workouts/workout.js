@@ -170,6 +170,12 @@ createApp({
       })
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
+        console.log("Test Data: ", response)
+      });
+
+      console.log("Test Data: ", this.workout)
+
+      Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
         //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
         this.roundData.forEach((r, ri) => {
