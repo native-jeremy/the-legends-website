@@ -48,6 +48,7 @@ createApp({
       Rest: false,
       RestPlayed: false,
       isCompleted: null,
+      testWorkouts: [],
     }
   },
   computed: {
@@ -173,6 +174,7 @@ createApp({
       const freshData = await Wized.data.get('r.184.d'); // Get request response
       console.log("Test Data: ", freshData); // Console log received request data
 
+      this.testWorkouts = freshData;
       console.log("WORKOUTS: ", freshData)
       console.log("ID: ", this.workout.id)
       let newList = []
