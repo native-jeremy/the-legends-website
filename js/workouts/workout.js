@@ -169,11 +169,9 @@ createApp({
         //console.log("Audio Response", response);
       })
 
-      Wized.request.await("Load Exercise Diff V2", (response) => {
-        console.log("Test Data: ", response)
-      });
-
-      console.log("Test Data: ", this.workout)
+        await Wized.request.execute('Load Exercise Data'); // Trigger request
+        const response = await Wized.data.get('r.184.d'); // Get request response
+        console.log("Test Data: ", response); // Console log received request data
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
