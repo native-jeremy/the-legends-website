@@ -1142,6 +1142,29 @@ createApp({
         // Perform actions when completed status becomes true
         Wized.data.setVariable("complete", "completed");
       }
+    },
+     // Watch roundData for changes, especially after it's fully populated
+     roundData(newVal) {
+      if (newVal && newVal.length > 0 && this.exerciseData.length > 0) {
+        this.fullyLoaded = true;
+        console.log("Round Data and Exercise Data are loaded.");
+      }
+    },
+
+    // Watch exerciseData for changes and mark fullyLoaded when populated
+    exerciseData(newVal) {
+      if (newVal.length > 0 && this.roundData.length > 0) {
+        this.fullyLoaded = true;
+        console.log("Exercise Data and Round Data are fully loaded.");
+      }
+    },
+
+    // Optionally watch `fullyLoaded` to do additional actions when all data is ready
+    fullyLoaded(newVal) {
+      if (newVal) {
+        // Data is fully loaded, you can now safely compute the properties
+        console.log("Data is fully loaded, computations are safe.");
+      }
     }
   }
 }).mount('#app')
