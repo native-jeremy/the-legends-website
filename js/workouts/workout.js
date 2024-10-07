@@ -169,10 +169,6 @@ createApp({
         //console.log("Audio Response", response);
       })
 
-        await Wized.request.execute('Load Exercise Data'); // Trigger request
-        const response = await Wized.data.get('r.184.d'); // Get request response
-        console.log("Test Data: ", response); // Console log received request data
-
       Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
         //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
@@ -197,6 +193,12 @@ createApp({
         this.title(true)
         this.intialisation
       })
+    },
+
+    async runTestData() {
+      await Wized.request.execute('Load Exercise Data'); // Trigger request
+      const response = await Wized.data.get('r.184.d'); // Get request response
+      console.log("Test Data: ", response); // Console log received request data
     },
 
     // Data Intialised in Exercise
@@ -1073,6 +1075,9 @@ createApp({
         );
       }
     });
+    setTimeout(() => {
+      this.runTestData();
+    }, 3000);
   },
   watch: {
     completed(newVal) {
