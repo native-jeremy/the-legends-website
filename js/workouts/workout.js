@@ -165,24 +165,32 @@ createApp({
       });
 
       let rawWorkouts = []
-      
+
+      // Load the audio first
       Wized.request.await("Load Finished Audio", (response) => {    
         this.workout.finishAudio = response.data[0].Audio[0].url
-        //console.log("Audio Response", response);
+        console.log("Audio Response", response);
       })
-
-      Wized.request.await("Load Diffculties Page 1", (response) => {    
-         response.data.forEach(workout => {
-          rawWorkouts.push(workout);
-        });
-        console.log("After Page 1: ", rawWorkouts);
-
-        Wized.request.await("Load Diffculties Page 2", (response) => {    
-          response.data.forEach(workout => {
-           rawWorkouts.push(workout);
-         });
-         console.log("After Page 2: ", rawWorkouts);
-       })
+      
+      // Load workouts from both pages
+      Wized.request.await("Load Diffculties Page 1", (response1) => {    
+        let page1Workouts = response1.data.filter(workout => 
+          Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id))
+      
+        console.log("After Page 1");
+      
+        // Nested request for Page 2
+        Wized.request.await("Load Diffculties Page 2", (response2) => {    
+          let page2Workouts = response2.data.filter(workout => 
+            Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id))
+      
+          console.log("After Page 2");
+      
+          // Combine workouts after both responses
+          rawWorkouts = [...page1Workouts, ...page2Workouts]
+      
+          console.log("Complete Workouts: ", rawWorkouts);
+        })      
       })
 
       // Filter the workouts by checking if the Workout_ID array includes the workout.id
