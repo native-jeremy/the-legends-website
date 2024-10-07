@@ -156,7 +156,7 @@ createApp({
 
         //console.log("Workout Data: ", this.workout)
 
-        console.log('Intial Exercise Data', roundRes)
+        //console.log('Intial Exercise Data', this.exerciseData)
 
         //console.log('startDifficulty', this.workout.startDifficulty)
         //console.log('Current Round', roundSelected)
@@ -169,7 +169,7 @@ createApp({
         //console.log("Audio Response", response);
       })
 
-      Wized.request.await("Load Exercise Diff V2", (response) => {
+      Wized.request.await("Load Exercise Data", (response) => {
         //console.log("Exercise DATA", response);
         //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
         this.roundData.forEach((r, ri) => {
