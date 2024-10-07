@@ -144,7 +144,15 @@ createApp({
         roundInfo = roundRes.data[this.workout.round];
         
     
+        roundSelected = roundRes.data[this.workout.round].Round_Selection; 
+        this.roundData = roundRes.data
 
+        this.workout.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+        this.min = this.defaultDiffs
+
+        this.workout.roundAmount = roundRes.data.length
+        this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
+        this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
 
         //console.log("Workout Data: ", this.workout)
 
@@ -207,21 +215,6 @@ createApp({
           });
       
           console.log("Exercise Data: ", this.exerciseData);
-
-          roundSelected = roundRes.data[this.workout.round].Round_Selection; 
-          this.roundData = roundRes.data
-  
-          this.workout.startDifficulty = this.roundData[this.workout.round].Default_Diff_Level.split(", ");
-          this.min = this.defaultDiffs
-  
-          this.workout.roundAmount = roundRes.data.length
-          this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-          this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
-
-          this.StatusCode200 = true;
-          this.loadedExercise = false;
-          this.title(true)
-          this.intialisation
         });
       });
       
@@ -242,7 +235,10 @@ createApp({
   
 
         //console.log("Exercise Data END!", this.exerciseData)
-
+        this.StatusCode200 = true;
+        this.loadedExercise = false;
+        this.title(true)
+        this.intialisation
       //})
     },
 
@@ -1078,8 +1074,9 @@ createApp({
   mounted() {
     let params = new URL(document.location).searchParams;
     let round = parseInt(params.get("round"));
-
-    this.intialRequest()
+    setTimeout(() => {
+      this.intialRequest()
+    }, 2000);
   
     if(window.location.href.includes("round"))
     {
