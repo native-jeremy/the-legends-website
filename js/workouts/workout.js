@@ -212,10 +212,9 @@ createApp({
       this.title(true)
       this.intialisation
 
-
       await Wized.request.execute('Load Exercise Diff V2');
 
-     /* Wized.request.await("Load Exercise Diff V2", (response) => {
+      /*Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
         //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
         this.roundData.forEach((r, ri) => {
@@ -240,8 +239,8 @@ createApp({
         this.loadedExercise = false;
         this.title(true)
         this.intialisation
-      })
-    },*/
+      })*/
+    },
 
     // Data Intialised in Exercise
     intialisation()
