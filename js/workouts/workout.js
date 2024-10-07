@@ -189,9 +189,33 @@ createApp({
       // Log the new list of filtered workouts
       console.log("New Workouts List: ", newList);
 
+      this.roundData.forEach((r, ri) => {
+
+        // Added This To Intialise Exercise Data
+        this.exerciseData.push([])
+        
+        r.Diff_ID_Linked_Exercises.forEach((id, index) => {
+          // response - original
+          // newList - new list
+          newList.forEach((e, ei) => {
+            if(e.ID.includes(id))
+            {
+              this.exerciseData[ri].push(e);
+            }
+          });
+        });
+      });
+
+      //console.log("Exercise Data END!", this.exerciseData)
+      this.StatusCode200 = true;
+      this.loadedExercise = false;
+      this.title(true)
+      this.intialisation
+
+
       await Wized.request.execute('Load Exercise Diff V2');
 
-      Wized.request.await("Load Exercise Diff V2", (response) => {
+     /* Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
         //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
         this.roundData.forEach((r, ri) => {
@@ -217,7 +241,7 @@ createApp({
         this.title(true)
         this.intialisation
       })
-    },
+    },*/
 
     // Data Intialised in Exercise
     intialisation()
