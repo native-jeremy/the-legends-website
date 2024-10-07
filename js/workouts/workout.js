@@ -169,9 +169,13 @@ createApp({
         //console.log("Audio Response", response);
       })
 
-      const workoutsList =  this.runTestData()
+      await Wized.request.execute('Load Exercise Data'); // Trigger request
+      const freshData = await Wized.data.get('r.184.d'); // Get request response
+      console.log("Test Data: ", freshData); // Console log received request data
 
-      const workoutsFiltered = this.filterWorkoutsList(workoutsList); 
+      const workoutsList =  freshData
+
+      const workoutsFiltered = this.filterWorkoutsList(freshData); 
 
       console.log("New Workouts Data: ", workoutsFiltered)
       Wized.request.await("Load Exercise Diff V2", (response) => {
@@ -201,7 +205,7 @@ createApp({
     },
 
     filterWorkoutsList(workouts) {
-      console.log("WORKOUTS: ", workouts.value)
+      console.log("WORKOUTS: ", workouts)
       const newList = workouts.filter(workout => workout.ID.includes(this.workout.id));
       return newList;
     },
