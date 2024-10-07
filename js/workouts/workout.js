@@ -154,9 +154,9 @@ createApp({
         this.type = this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
         this.isAmrap = this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
 
-        //console.log("Workout Data: ", this.workout)
+        console.log("Workout Data: ", this.workout)
 
-        //console.log('Intial Exercise Data', this.exerciseData)
+        console.log('Intial Exercise Data', this.exerciseData)
 
         //console.log('startDifficulty', this.workout.startDifficulty)
         //console.log('Current Round', roundSelected)
