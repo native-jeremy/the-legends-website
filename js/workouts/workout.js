@@ -201,7 +201,7 @@ createApp({
     },
 
     filterWorkoutsList(workouts) {
-      console.log("WORKOUTS: ", workouts)
+      console.log("WORKOUTS: ", workouts.value)
       const newList = workouts.filter(workout => workout.ID.includes(this.workout.id));
       return newList;
     },
