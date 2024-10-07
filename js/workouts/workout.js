@@ -189,7 +189,7 @@ createApp({
       // Log the new list of filtered workouts
       console.log("New Workouts List: ", newList);
 
-      await Wized.request.execute('Load Exercise Diff V2');
+     // await Wized.request.execute('Load Exercise Diff V2');
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
