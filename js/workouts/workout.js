@@ -48,7 +48,6 @@ createApp({
       Rest: false,
       RestPlayed: false,
       isCompleted: null,
-      testWorkouts: [],
     }
   },
   computed: {
@@ -164,34 +163,39 @@ createApp({
         //console.log('Round Request', this.roundData)
         //console.log('Round Length', this.workout.roundAmount)
       });
+
+      let rawWorkouts = []
       
       Wized.request.await("Load Finished Audio", (response) => {    
         this.workout.finishAudio = response.data[0].Audio[0].url
         //console.log("Audio Response", response);
       })
-     
-      await Wized.request.execute('Load Exercise Data'); // Trigger request
-      const freshData = await Wized.data.get('r.184.d'); // Get request response
-      console.log("Test Data: ", freshData); // Console log received request data
 
-      // Assign fresh data to a local variable for testing purposes
-      this.testWorkouts = freshData;
+      Wized.request.await("Load Diffculties Page 1", (response) => {    
+         response.data.forEach(workout => {
+          rawWorkouts.push(workout);
+        });
+        console.log("After Page 1: ", rawWorkouts);
 
-      // Log the fresh data and the workout ID for debugging
-      console.log("WORKOUTS: ", freshData);
-      console.log("ID: ", this.workout.id);
+        Wized.request.await("Load Diffculties Page 2", (response) => {    
+          response.data.forEach(workout => {
+           rawWorkouts.push(workout);
+         });
+         console.log("After Page 2: ", rawWorkouts);
+       })
+      })
 
       // Filter the workouts by checking if the Workout_ID array includes the workout.id
-      const newList = freshData.filter(workout => 
+     /* const newList = freshData.filter(workout => 
           Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id)
-      );
+      );*/
 
       // Log the new list of filtered workouts
-      console.log("New Workouts List: ", newList);
+      //console.log("New Workouts List: ", newList);
 
      // await Wized.request.execute('Load Exercise Diff V2');
 
-      Wized.request.await("Load Exercise Diff V2", (response) => {
+      /*Wized.request.await("Load Exercise Diff V2", (response) => {
         //console.log("Exercise DATA", response);
         //this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
         this.roundData.forEach((r, ri) => {
@@ -214,7 +218,7 @@ createApp({
         this.loadedExercise = false;
         this.title(true)
         this.intialisation
-      })
+      })*/
     },
 
     // Data Intialised in Exercise
