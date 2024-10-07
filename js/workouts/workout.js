@@ -174,16 +174,21 @@ createApp({
       const freshData = await Wized.data.get('r.184.d'); // Get request response
       console.log("Test Data: ", freshData); // Console log received request data
 
+      // Assign fresh data to a local variable for testing purposes
       this.testWorkouts = freshData;
-      console.log("WORKOUTS: ", freshData)
-      console.log("ID: ", this.workout.id)
-      let newList = []
-      freshData.forEach(workout =>  {
-        if(workout.Workout_ID.includes(this.workout.id)) {
-          newList.push(workout)
-        }
-      });
-      console.log("New Workouts List: ", newList)
+
+      // Log the fresh data and the workout ID for debugging
+      console.log("WORKOUTS: ", freshData);
+      console.log("ID: ", this.workout.id);
+
+      // Filter the workouts by checking if the Workout_ID array includes the workout.id
+      const newList = freshData.filter(workout => 
+          Array.isArray(workout.Workout_ID) && workout.Workout_ID.includes(this.workout.id)
+      );
+
+      // Log the new list of filtered workouts
+      console.log("New Workouts List: ", newList);
+
       await Wized.request.execute('Load Exercise Diff V2');
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
