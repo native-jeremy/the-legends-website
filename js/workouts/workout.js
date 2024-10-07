@@ -175,7 +175,12 @@ createApp({
 
       console.log("WORKOUTS: ", freshData)
       console.log("ID: ", this.workout.id)
-      const newList = freshData.filter(workout => workout.ID.includes(this.workout.id));
+      let newList = []
+      freshData.forEach(workout =>  {
+        if(workout.ID === this.workout.id) {
+          newList.push(workout)
+        }
+      });
       console.log("New Workouts List: ", newList)
 
       Wized.request.await("Load Exercise Diff V2", (response) => {
