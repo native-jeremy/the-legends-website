@@ -200,7 +200,9 @@ createApp({
           this.exerciseData.push([])
           
           r.Diff_ID_Linked_Exercises.forEach((id, index) => {
-            response.data.forEach((e, ei) => {
+            // response - original
+            // newList - new list
+            newList.forEach((e, ei) => {
               if(e.ID.includes(id))
               {
                 this.exerciseData[ri].push(e);
