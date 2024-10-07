@@ -51,83 +51,102 @@ createApp({
     }
   },
   computed: {
-    // a computed getter
+    // Gets the current exercise
     exercise() {
-      return this.workout.exercises
+      return this.workout.exercises;
     },
-    /*recoveryLink()
-    {
-      this.workout.recoveryLink = this.roundData[this.workout.round].ID_Recovery
-    },*/
+  
+    // Gets the exercise type, differentiating between Rest and active
     exerciseType() {
-      if(!this.Rest)
-      {
-      return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[this.workout.exercises]
-      }
-      else {
-        return this.roundData[this.workout.round].Rep_Type_Linked_Exercises[1]
+      if (!this.Rest) {
+        return this.roundData[this.workout.round]?.Rep_Type_Linked_Exercises[this.workout.exercises];
+      } else {
+        return this.roundData[this.workout.round]?.Rep_Type_Linked_Exercises[1];
       }
     },
+  
+    // Computes the amount for the exercise
     exerciseAmount() {
-    if(!this.Rest)
-      if(this.exerciseType == "Time")
-      {
-        return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises]) + 1
+      if (!this.Rest) {
+        if (this.exerciseType === "Time") {
+          return parseInt(this.roundData[this.workout.round]?.Amounts_Name_Linked_Exercises[this.workout.exercises]) + 1;
+        } else {
+          return parseInt(this.roundData[this.workout.round]?.Amounts_Name_Linked_Exercises[this.workout.exercises]);
+        }
+      } else {
+        return parseInt(this.roundData[this.workout.round]?.Amounts_Name_Linked_Exercises[1]) + 1;
       }
-      else {
-        return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[this.workout.exercises])
-      }
-    else {
-      return this.workout.counter = parseInt(this.roundData[this.workout.round].Amounts_Name_Linked_Exercises[1]) + 1
-    }
     },
+  
+    // Checks if AMRAP is active for the current exercise
     amrapActive() {
-      return this.roundData[this.workout.round].Amrap_Linked_Exercises[this.workout.exercises]
+      return this.roundData[this.workout.round]?.Amrap_Linked_Exercises[this.workout.exercises];
     },
+  
+    // Retrieves AMRAP amounts
     amrapAmounts() {
-      return this.roundData[this.workout.round].Amrap_Exercise_Amount_Linked_Exercises
+      return this.roundData[this.workout.round]?.Amrap_Exercise_Amount_Linked_Exercises;
     },
+  
+    // Retrieves the voice instruction for the exercise
     exerciseVoice() {
-      if(!this.Rest)
-      {
-      return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[this.workout.exercises].url
-      }
-      else {
-        return this.roundData[this.workout.round].Audio_Source_Linked_Exercises[1].url
+      if (!this.Rest) {
+        return this.roundData[this.workout.round]?.Audio_Source_Linked_Exercises[this.workout.exercises]?.url;
+      } else {
+        return this.roundData[this.workout.round]?.Audio_Source_Linked_Exercises[1]?.url;
       }
     },
+  
+    // Retrieves the max video count for the current exercise
     exerciseMax() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Video.length
+      return this.exerciseData[this.workout.round]?.[this.workout.exercises]?.Video.length || 0;
     },
+  
+    // Computes the minimum value, defaulting to 0 if NaN
     exerciseMin() {
       return isNaN(this.min) ? 0 : this.min;
-    },    
+    },
+  
+    // Retrieves the minimum exercise data or defaults to 0
     exerciseMinData() {
       return isNaN(parseInt(this.workout.startDifficulty[this.exercise]) - 1) ? 0 : this.min;
     },
+  
+    // Retrieves the current AMRAP diffs
     exerciseDiffs() {
-      return this.amrapData.currentIndices
+      return this.amrapData?.currentIndices || [];
     },
-    defaultDiffList()
-    {
-      return this.roundData[this.workout.round].Default_Diff_Level.split(", ");
+  
+    // Parses the default difficulty levels
+    defaultDiffList() {
+      return this.roundData[this.workout.round]?.Default_Diff_Level?.split(", ") || [];
     },
+  
+    // Retrieves the default difficulty for the current exercise
     defaultDiffs() {
-      return parseInt(this.defaultDiffList[this.exercise]) - 1
+      return parseInt(this.defaultDiffList[this.exercise]) - 1;
     },
+  
+    // Retrieves the next exercise index
     exerciseNext() {
-      return this.amrapData.nextExercise
+      return this.amrapData?.nextExercise || 0;
     },
+  
+    // Retrieves the title for the current exercise
     exerciseTitle() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Exercise_Category[0]
+      return this.exerciseData[this.workout.round]?.[this.workout.exercises]?.Exercise_Category[0] || "Unknown Exercise";
     },
+  
+    // Retrieves the video URL for the current exercise and difficulty level
     exerciseVideo() {
-      return this.exerciseData[this.workout.round][this.workout.exercises].Video[this.defaultDiffs].url
+      return this.exerciseData[this.workout.round]?.[this.workout.exercises]?.Video[this.defaultDiffs]?.url || "";
     },
+  
+    // Gets the index of the current exercise
     exerciseIndex() {
-      return this.workout.exercise
+      return this.workout.exercise;
     }
-  },
+  },  
   methods: {
     // Intial Request Data Applied To Data Object
     async intialRequest()
