@@ -177,7 +177,7 @@ createApp({
       console.log("ID: ", this.workout.id)
       let newList = []
       freshData.forEach(workout =>  {
-        if(workout.Workout_ID === this.workout.id) {
+        if(workout.Workout_ID.includes(this.workout.id)) {
           newList.push(workout)
         }
       });
