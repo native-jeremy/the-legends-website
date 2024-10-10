@@ -77,7 +77,7 @@
   </script>
   <!--Tapfiliate JavaScript-->
   <link rel="manifest" href="manifest.json" />
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
   <div class="global-app-css w-embed">
@@ -395,8 +395,7 @@ overflow-x: hidden;
                   </div>
                 </div>
                 <div class="accordion-body style-1">
-                  <div class="dynamic_show">
-                    <!--Day 1 -->
+                 <!-- <div class="dynamic_show">
                     <a v-bind:href="`/recipe.html?recipe=${RenderRecipes[0][0].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
                       <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${RenderRecipes[0][0].Images[0].url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-image-block image_src"v-if="stored === 'test'"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images.url}`" alt="" class="full_thumbnail"></div>
@@ -407,94 +406,9 @@ overflow-x: hidden;
                           <div class="generic-text-style-1 filter">{{RenderRecipes[0][0].Dietary_Require}}</div>
                         </div>
                         <div v-show="typeActive">{{RenderRecipes[0][0].type}}</div>
-                        <!--<div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>-->
                       </div>
                     </a>
-                    <!--Day 2 -->
-                    <a v-bind:href="`/recipe.html?recipe=${RenderRecipes[0][1].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{RenderRecipes[0][1].Name}}</h2>
-                          <div class="generic-text-style-1">{{RenderRecipes[0][1].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{RenderRecipes[0][1].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{RenderRecipes[0][1].type}}</div>
-                        <!--<div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>-->
-                      </div>
-                    </a>
-                    <!--Day 3 -->
-                    <a v-bind:href="`/recipe.html?recipe=${RenderRecipes[0][2].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{RenderRecipes[0][2].Name}}</h2>
-                          <div class="generic-text-style-1">{{RenderRecipes[0][2].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{RenderRecipes[0][2].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{RenderRecipes[0][2].type}}</div>
-                        <!--<div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>-->
-                      </div>
-                    </a>
-                    <!--Day 4 -->
-                    <a v-bind:href="`/recipe.html?recipe=${RenderRecipes[0][3].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{RenderRecipes[0][3].Name}}</h2>
-                          <div class="generic-text-style-1">{{RenderRecipes[0][3].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{RenderRecipes[0][3].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{RenderRecipes[0][3].type}}</div>
-                        <!--<div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>-->
-                      </div>
-                    </a>
-                    <!--Day 5 -->
-                    <a v-bind:href="`/recipe.html?recipe=${RenderRecipes[0][4].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{RenderRecipes[0][4].Name}}</h2>
-                          <div class="generic-text-style-1">{{RenderRecipes[0][4].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{RenderRecipes[0][4].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{RenderRecipes[0][4].type}}</div>
-                        <!--<div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>-->
-                      </div>
-                    </a>
-                    <!--Day 6 -->
-                    <a v-bind:href="`/recipe.html?recipe=${RenderRecipes[0][5].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{RenderRecipes[0][5].Name}}</h2>
-                          <div class="generic-text-style-1">{{RenderRecipes[0][5].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{RenderRecipes[0][5].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{RenderRecipes[0][5].type}}</div>
-                        <!--<div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>-->
-                      </div>
-                    </a>
-                    <!--Day 7 -->
-                    <a v-bind:href="`/recipe.html?recipe=${RenderRecipes[0][6].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${recipe.Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{RenderRecipes[0][6].Name}}</h2>
-                          <div class="generic-text-style-1">{{RenderRecipes[0][6].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{RenderRecipes[0][6].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{RenderRecipes[0][6].type}}</div>
-                        <!--<div v-bind:class="User.Cooked_Recipes_Record_ID !== undefined &amp;&amp; User.Cooked_Recipes_Record_ID.includes(recipe.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>-->
-                      </div>
-                    </a>
-                  </div>
+                  </div>-->
                 </div>
               </div>
               <!--Recipes-->
