@@ -104,6 +104,7 @@ createApp({
         this.Favourites = response.data.Favourite_Recipes;
         this.FavouritesActive = true;
       }
+      console.log("Does this user have recipes? ", this.User.Stored_Recipes)
     if (this.User.Stored_Recipes == "False") {
       Wized.request.await("Load Recipes - Breakfast", (response) => {
         let newArr = response.data.map((item) => {
