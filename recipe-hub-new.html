@@ -396,7 +396,7 @@ overflow-x: hidden;
                 </div>
                 <div class="accordion-body style-1">
                   <p>{{Breakfast[0]}}</p>
-                 <!--<div class="dynamic_show">
+                 <div class="dynamic_show">
                     <a v-bind:href="`/recipe.html?recipe=${Breakfast[0].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
                       <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[0].Images[0].url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-image-block image_src"v-if="stored === 'test'"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[0].Images.url}`" alt="" class="full_thumbnail"></div>
@@ -409,79 +409,7 @@ overflow-x: hidden;
                         <div v-show="typeActive">{{Breakfast[0].type}}</div>
                       </div>
                     </a>
-                    <a v-bind:href="`/recipe.html?recipe=${Breakfast[1].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[1].Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored === 'test'"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[1].Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{Breakfast[1].Name}}</h2>
-                          <div class="generic-text-style-1">{{Breakfast[1].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{Breakfast[1].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{Breakfast[1].type}}</div>
-                      </div>
-                    </a>
-                    <a v-bind:href="`/recipe.html?recipe=${Breakfast[2].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[2].Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored === 'test'"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[2].Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{Breakfast[2].Name}}</h2>
-                          <div class="generic-text-style-1">{{Breakfast[2].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{Breakfast[2].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{Breakfast[2].type}}</div>
-                      </div>
-                    </a>
-                    <a v-bind:href="`/recipe.html?recipe=${Breakfast[3].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[3].Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored === 'test'"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[3].Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{Breakfast[3].Name}}</h2>
-                          <div class="generic-text-style-1">{{Breakfast[3].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{Breakfast[3].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{Breakfast[3].type}}</div>
-                      </div>
-                    </a>
-                    <a v-bind:href="`/recipe.html?recipe=${Breakfast[4].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[4].Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored === 'test'"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[4].Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{Breakfast[4].Name}}</h2>
-                          <div class="generic-text-style-1">{{Breakfast[4].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{Breakfast[4].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{Breakfast[4].type}}</div>
-                      </div>
-                    </a>
-                    <a v-bind:href="`/recipe.html?recipe=${Breakfast[5].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[5].Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored === 'test'"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[5].Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{Breakfast[5].Name}}</h2>
-                          <div class="generic-text-style-1">{{Breakfast[5].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{Breakfast[5].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{Breakfast[5].type}}</div>
-                      </div>
-                    </a>
-                    <a v-bind:href="`/recipe.html?recipe=${Breakfast[6].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
-                      <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[6].Images[0].url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-image-block image_src"v-if="stored === 'test'"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[6].Images.url}`" alt="" class="full_thumbnail"></div>
-                      <div class="capsule-header-content">
-                        <div class="capsule-header-text">
-                          <h2 class="main-heading-style-1">{{Breakfast[6].Name}}</h2>
-                          <div class="generic-text-style-1">{{Breakfast[6].Time}}</div>
-                          <div class="generic-text-style-1 filter">{{Breakfast[6].Dietary_Require}}</div>
-                        </div>
-                        <div v-show="typeActive">{{Breakfast[6].type}}</div>
-                      </div>
-                    </a>
-                  </div>-->
+                  </div>
                 </div>
               </div>
               <!--Recipes-->
