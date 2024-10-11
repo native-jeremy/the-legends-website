@@ -397,7 +397,7 @@ overflow-x: hidden;
                 <div class="accordion-body style-1">
                   <p>{{Breakfast[0]}}</p>
                  <div class="dynamic_show">
-                    <a v-bind:href="`/recipe.html?recipe=${Breakfast[0].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
+                    <a v-bind:href="`/recipe.html?recipe=`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
                       <div class="capsule-image-block image_src" v-if="!stored"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[0].Images[0].url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-image-block image_src"v-if="stored === 'test'"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[0].Images.url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-header-content">
