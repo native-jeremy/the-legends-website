@@ -395,7 +395,7 @@ overflow-x: hidden;
                   </div>
                 </div>
                 <div class="accordion-body style-1">
-                 <div class="dynamic_show">
+                 <div class="dynamic_show" v-if="Breakfast.length > 0">
                     <a v-bind:href="`/recipe.html?recipe=${Breakfast[0].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
                       <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Breakfast[0]?.Images[0]?.url || Breakfast[0]?.Images?.url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-header-content">
@@ -496,7 +496,7 @@ overflow-x: hidden;
                   </div>
                 </div>
                 <div class="accordion-body style-1">
-                 <div class="dynamic_show">
+                 <div class="dynamic_show" v-if="Lunch.length > 0">
                     <a v-bind:href="`/recipe.html?recipe=${Lunch[0].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
                       <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Lunch[0]?.Images[0]?.url || Lunch[0]?.Images?.url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-header-content">
@@ -597,7 +597,7 @@ overflow-x: hidden;
                   </div>
                 </div>
                 <div class="accordion-body style-1">
-                 <div class="dynamic_show">
+                 <div class="dynamic_show" v-if="Dinner.length > 0">
                     <a v-bind:href="`/recipe.html?recipe=${Dinner[0].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
                       <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Dinner[0]?.Images[0]?.url || Dinner[0]?.Images?.url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-header-content">
@@ -698,7 +698,7 @@ overflow-x: hidden;
                   </div>
                 </div>
                 <div class="accordion-body style-1">
-                 <div class="dynamic_show">
+                 <div class="dynamic_show" v-if="Snacks.length > 0">
                     <a v-bind:href="`/recipe.html?recipe=${Snacks[0].ID}`" href="#" class="capsule-body style-1 recipes breakfast w-inline-block">
                       <div class="capsule-image-block image_src"><img src="https://d3e54v103j8qbb.cloudfront.net/plugins/Basic/assets/placeholder.60f9b1840c.svg" loading="eager" v-bind:srcset="`${Snacks[0]?.Images[0]?.url || Snacks[0]?.Images?.url}`" alt="" class="full_thumbnail"></div>
                       <div class="capsule-header-content">
