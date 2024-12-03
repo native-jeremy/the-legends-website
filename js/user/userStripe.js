@@ -1,7 +1,6 @@
 window.onload = async () => {
   Wized.request.await("Load Users", (response) => {
     const snapshot = response.data;
-    console.log("Snapshot", snapshot)
     const stripeID = snapshot.Stripe_ID || null;
 
     // Stripe Subscription Status Check
@@ -87,8 +86,12 @@ function checkStripeSubscription(customerId) {
         return response.json();
       })
       .then((data) => {
-        console.log("Stripe Status Data:", data);
-        console.log("Subscription Status:", data.hasActiveSubscription);
+        if(data.hasActiveSubscription) {
+          console.log("Active subscription");
+        }
+        else {
+          window.location.href = "../login";
+        }
       })
       .catch((error) => {
         console.error("Fetch operation failed:", error.message);
@@ -98,5 +101,4 @@ function checkStripeSubscription(customerId) {
     window.location.href = "../login";
   }
 }
-
 };
