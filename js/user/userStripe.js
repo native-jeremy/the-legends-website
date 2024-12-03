@@ -48,7 +48,7 @@ window.onload = async () => {
       }
     }
   });
-  Wized.request.await("Load Users Program", (response) => {
+  /*Wized.request.await("Load Users Program", (response) => {
     const snapshot = response.data;
     if (snapshot.Stripe == "Not Verified") {
       checkPage(window.location.pathname);
@@ -69,7 +69,7 @@ window.onload = async () => {
         messageButtonBurger.remove();
       }
     }
-  });
+  });*/
 
 function checkStripeSubscription(customerId) {
   if (customerId) {
