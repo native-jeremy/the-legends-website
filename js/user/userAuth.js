@@ -1,7 +1,7 @@
 window.onload = async () => {
   Wized.request.await("Load Users", (response) => {
     const snapshot = response.data;
-
+    console.log("Snapshot", snapshot)
     // Stripe Subscription status check
     checkStripeSubscription(snapshot.Stripe_ID);
     
