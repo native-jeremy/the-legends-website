@@ -1,6 +1,10 @@
 window.onload = async () => {
   Wized.request.await("Load Users", (response) => {
     const snapshot = response.data;
+
+    // Stripe Subscription status check
+    checkStripeSubscription(snapshot.Stripe_ID);
+    
     if (snapshot.Stripe == "Not Verified") {
       window.location.href = "/program-selection";
     } else {
@@ -65,4 +69,27 @@ window.onload = async () => {
       }
     }
   });
+
+  function checkStripeSubscription(customerId) {
+    fetch(`/api/checkSubscription?customerId=${encodeURIComponent(customerId)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        console.log("Stripe Status Data", data)
+        console.log("Subscription Status:", data.hasActiveSubscription);
+      })
+      .catch(function (error) {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+    
+  }
 };
