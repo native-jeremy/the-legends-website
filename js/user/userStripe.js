@@ -1,6 +1,11 @@
 window.onload = async () => {
   Wized.request.await("Load Users", (response) => {
     const snapshot = response.data;
+    const stripeID = snapshot.Stripe_ID || null;
+
+    // Stripe Subscription Status Check
+    checkStripeSubscription(stripeID);
+    
     if (snapshot.Stripe == "Not Verified") {
       checkPage(window.location.pathname);
     } else {
@@ -66,11 +71,42 @@ window.onload = async () => {
     }
   });
 
-  function checkPage(page) {
-    // Check if the current page URL does not include "/program-selection"
-    if (!page.includes("/program-selection")) {
-      // Redirect to "/program-selection" if the condition is met
-      window.location.href = "/program-selection";
-    }
-  }  
+function checkStripeSubscription(customerId) {
+  if (customerId) {
+    fetch(`/api/checkSubscription?customerId=${encodeURIComponent(customerId)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if(data.hasActiveSubscription) {
+          console.log("Active subscription");
+        }
+        else {
+          window.location.href = "../login";
+        }
+      })
+      .catch((error) => {
+        console.error("Fetch operation failed:", error.message);
+      });
+  } else {
+    console.warn("No Stripe ID found, redirecting to login.");
+    window.location.href = "../login";
+  }
+}
+
+function checkPage(page) {
+  // Check if the current page URL does not include "/program-selection"
+  if (!page.includes("/program-selection")) {
+    // Redirect to "/program-selection" if the condition is met
+    window.location.href = "/program-selection";
+  }
+}  
 };
