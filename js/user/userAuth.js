@@ -2,8 +2,10 @@ window.onload = async () => {
   Wized.request.await("Load Users", (response) => {
     const snapshot = response.data;
     console.log("Snapshot", snapshot)
-    // Stripe Subscription status check
-    checkStripeSubscription(snapshot.Stripe_ID);
+    const stripeID = snapshot.Stripe_ID || null;
+
+    // Stripe Subscription Status Check
+    checkStripeSubscription(stripeID);
     
     if (snapshot.Stripe == "Not Verified") {
       window.location.href = "/program-selection";
@@ -70,26 +72,31 @@ window.onload = async () => {
     }
   });
 
-  function checkStripeSubscription(customerId) {
+function checkStripeSubscription(customerId) {
+  if (customerId) {
     fetch(`/api/checkSubscription?customerId=${encodeURIComponent(customerId)}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then(function (response) {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error(`Network response was not ok: ${response.statusText}`);
         }
         return response.json();
       })
-      .then(function (data) {
-        console.log("Stripe Status Data", data)
+      .then((data) => {
+        console.log("Stripe Status Data:", data);
         console.log("Subscription Status:", data.hasActiveSubscription);
       })
-      .catch(function (error) {
-        console.error("There was a problem with the fetch operation:", error);
+      .catch((error) => {
+        console.error("Fetch operation failed:", error.message);
       });
-    
+  } else {
+    console.warn("No Stripe ID found, redirecting to login.");
+    window.location.href = "../login";
   }
+}
+
 };
