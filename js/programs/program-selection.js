@@ -46,7 +46,6 @@ window.onload = async () => {
     // Program Selection Request
     Wized.request.await("Load Users Program", (response) => {
       user = response.data;
-      console.log(user);
       if (user.Questionnaire == "Not Completed")
       {
           errorModal.style.display = "flex";
@@ -113,7 +112,6 @@ window.onload = async () => {
 
       Wized.request.await("Load Program Selection", (response) => {
         programData = response.data;
-        console.log(programData);
         const dateButton = document.getElementById("dateButton");
         dateButton.addEventListener("click", () => {
           // Get current date
