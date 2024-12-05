@@ -1,5 +1,6 @@
 require('dotenv').config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
+
 exports.handler = async (event) => {
     try {
         const customerId = event.queryStringParameters.customerId;
@@ -11,12 +12,15 @@ exports.handler = async (event) => {
             };
         }
 
+        // Fetch all subscriptions for the customer
         const subscriptions = await stripe.subscriptions.list({
             customer: customerId,
-            status: 'active',
         });
 
-        const hasActiveSubscription = subscriptions.data.length > 0;
+        // Check if any subscription is active or trialing
+        const hasActiveSubscription = subscriptions.data.some(
+            (sub) => sub.status === 'active' || sub.status === 'trialing'
+        );
 
         return {
             statusCode: 200,

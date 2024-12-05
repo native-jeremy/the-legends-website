@@ -87,7 +87,7 @@ function checkStripeSubscription(customerId) {
       })
       .then((data) => {
         if(data.hasActiveSubscription) {
-          console.log("Active subscription");
+          //console.log("Active subscription");
         }
         else {
           window.location.href = "../login";
@@ -97,7 +97,7 @@ function checkStripeSubscription(customerId) {
         console.error("Fetch operation failed:", error.message);
       });
   } else {
-    console.warn("No Stripe ID found, redirecting to login.");
+    //console.warn("No Stripe ID found, redirecting to login.");
     window.location.href = "../login";
   }
 }
