@@ -30,7 +30,7 @@ window.onload = async () => {
     const snapshot = response.data;
     if (snapshot.Stripe == "Not Verified") {
       checkPage(window.location.pathname);
-    } else {
+    } /*else {
       const messageButton = document.querySelector(".icon_1");
       const messageButtonBurger = document.querySelector(".icon_2");
       let messagesRecieved = snapshot.General_Messages;
@@ -46,7 +46,7 @@ window.onload = async () => {
         messageButton.remove();
         messageButtonBurger.remove();
       }
-    }
+    }*/
   });
   /*Wized.request.await("Load Users Program", (response) => {
     const snapshot = response.data;
