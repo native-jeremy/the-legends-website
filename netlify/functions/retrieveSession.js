@@ -30,7 +30,7 @@ exports.handler = async (event) => {
 
     // Send POST request to Airtable to create the new user
     const airtableResponse = await fetch(
-      `https://api.airtable.com/v0/appFAv10or1mV1K9i/Users/${recordId}`,
+      `https://api.airtable.com/v0/appFAv10or1mV1K9i/Users`,
       {
         method: 'PATCH',
         headers: {
