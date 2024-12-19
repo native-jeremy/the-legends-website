@@ -19,8 +19,9 @@ exports.handler = async (event) => {
     const userID = {
       records: [
         {
+          id: recordId,
           fields: {
-            Stripe_ID: customerId,
+            Stripe_ID: `${customerId}`,
             Stripe: "Verified",
           },
         },
