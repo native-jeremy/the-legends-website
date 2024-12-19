@@ -21,6 +21,7 @@ exports.handler = async (event) => {
         {
           fields: {
             Stripe_ID: customerId,
+            Stripe: "Verified",
           },
         },
       ],
