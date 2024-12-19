@@ -13,14 +13,14 @@ anime({
 
     applyStripeID();
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       const text = document.querySelector('p')
       text.textContent = "Redirecting to home page...";
     }, 5000);
 
     setTimeout(() => {
       window.location.href = "/program-hub-welcome.html";
-    }, 10000);
+    }, 10000);*/
  
 // Loader turn off
 setTimeout(() => {

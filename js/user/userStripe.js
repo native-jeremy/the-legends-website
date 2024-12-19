@@ -104,7 +104,7 @@ function checkStripeSubscription(customerId) {
 
 function checkPage(page) {
   // Check if the current page URL does not include "/program-selection"
-  if (!page.includes("/program-selection")) {
+  if (!page.includes("/program-selection") || !page.includes("/thank-you")) {
     // Redirect to "/program-selection" if the condition is met
     window.location.href = "/program-selection";
   }
