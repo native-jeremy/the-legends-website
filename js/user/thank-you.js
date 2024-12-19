@@ -21,28 +21,6 @@ setTimeout(() => {
 const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get('session_id');
 
-if (sessionId) {
-  // Send the session ID to the Netlify function
-  fetch('/.netlify/functions/retrieve-session', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ sessionId }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      (function(t,a,p){t.TapfiliateObject=a;t[a]=t[a]||function(){
-        (t[a].q=t[a].q||[]).push(arguments)}})(window,'tap');
-    
-        tap('create', '47544-528ca5', { integration: "stripe" });
-        tap('trial', `${data.customerId}`);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-}
-
 function applyStripeID() {
   // Extract the session ID from the URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -73,6 +51,7 @@ function applyStripeID() {
 
   // Get the value of the "wized_userid" cookie
   const recordId = getCookieValue('wized_userid');
+  console.log(recordId);
 
   if (sessionId) {
     // Send the session ID to the Netlify function
