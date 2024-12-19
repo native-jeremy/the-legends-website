@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 exports.handler = async (event) => {
   try {
     // Parse the session ID from the request
-    const { sessionId } = JSON.parse(event.body);
+    const { sessionId, recordId } = JSON.parse(event.body);
 
     // Retrieve the session details from Stripe
     const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -29,9 +29,9 @@ exports.handler = async (event) => {
 
     // Send POST request to Airtable to create the new user
     const airtableResponse = await fetch(
-      `https://api.airtable.com/v0/appFAv10or1mV1K9i/Users`,
+      `https://api.airtable.com/v0/appFAv10or1mV1K9i/Users/${recordId}`,
       {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
           'Content-Type': 'application/json',

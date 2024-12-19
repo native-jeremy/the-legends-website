@@ -9,18 +9,7 @@ anime({
     loop: true
   });
 
-  let success = false;
-
-    applyStripeID();
-
-    /*setTimeout(() => {
-      const text = document.querySelector('p')
-      text.textContent = "Redirecting to home page...";
-    }, 5000);
-
-    setTimeout(() => {
-      window.location.href = "/program-hub-welcome.html";
-    }, 10000);*/
+  applyStripeID();
  
 // Loader turn off
 setTimeout(() => {
@@ -59,6 +48,32 @@ function applyStripeID() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionId = urlParams.get('session_id');
 
+  // Helper function to get the value of a specific cookie
+  function getCookieValue(name) {
+    const cookies = document.cookie.split('; ');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].split('=');
+      if (cookie[0] === name) {
+        return cookie[1];
+      }
+    }
+    return null;
+  }
+
+  function applyRedirect() {
+    setTimeout(() => {
+      const text = document.querySelector('p')
+      text.textContent = "Redirecting to home page...";
+    }, 5000);
+
+    setTimeout(() => {
+      window.location.href = "/program-hub-welcome.html";
+    }, 10000);
+  }
+
+  // Get the value of the "wized_userid" cookie
+  const recordId = getCookieValue('wized_userid');
+
   if (sessionId) {
     // Send the session ID to the Netlify function
     fetch('/api/retrieveSession', {
@@ -66,7 +81,7 @@ function applyStripeID() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ sessionId }),
+      body: JSON.stringify({ sessionId, recordId }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -75,7 +90,9 @@ function applyStripeID() {
       
           tap('create', '47544-528ca5', { integration: "stripe" });
           tap('trial', `${data.customerId}`);
-          success = true;
+
+          // setTimeout Redirect
+          applyRedirect();
       })
       .catch((error) => {
         console.error('Error:', error);
