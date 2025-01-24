@@ -15,11 +15,7 @@ window.onload = async () => {
   // Retrieve the value of the 'recipe' parameter
   const recipeParam = searchParams.get('recipe'); 
 
-  await Wized.data.setVariable('recipeid', `${recipeParam}`); // Set value of "v.username"
-  const value = await Wized.data.get('v.recipeid'); // Get updated value => "Maria"
-  console.log('Value of v.recipeid changed from "" => to: ', value); 
-
-  await Wized.request.execute('Load Recipe'); // Trigger request
+ /* await Wized.request.execute('Load Recipe'); // Trigger request
   const response = await Wized.data.get('r.49.d'); // Get request response
   console.log("Executed Res:", response); // Console log received request data
 
@@ -60,7 +56,7 @@ window.onload = async () => {
       favouriteBtn2.style.display = "none";
       favouriteBtn3.style.display = "none";
     }
-  });
+  });*/
 
   Wized.request.await("Load Recipe", (response) => {
     const snapshot = response.data;
