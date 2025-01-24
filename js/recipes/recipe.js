@@ -9,10 +9,20 @@ anime({
 });
 
 window.onload = async () => {
-  await Wized.request.execute('Load Recipe'); // Trigger request
-  const response = await Wized.data.get('r.49.d'); // Get request response
-  console.log("Executed Res:", response); // Console log received request data
-  
+  // Get the current URL's query string
+  const searchParams = new URLSearchParams(window.location.search);
+
+  // Retrieve the value of the 'recipe' parameter
+  const recipeParam = searchParams.get('recipe'); 
+
+  await Wized.data.setVariable('recipeid', `${recipeParam}`); // Set value of "v.username"
+  const value = await Wized.data.get('v.recipeid'); // Get updated value => "Maria"
+  console.log('Value of v.recipeid changed from "" => to: ', value); 
+
+  //await Wized.request.execute('Load Recipe'); // Trigger request
+  //const response = await Wized.data.get('r.49.d'); // Get request response
+  //console.log("Executed Res:", response); // Console log received request data
+
   const favouriteBtn1 = document.getElementById("favourite-button1");
   const favouriteBtn2 = document.getElementById("favourite-button2");
   const favouriteBtn3 = document.getElementById("favourite-button3");
