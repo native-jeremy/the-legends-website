@@ -9,6 +9,10 @@ anime({
 });
 
 window.onload = async () => {
+  await Wized.request.execute('Load Recipe'); // Trigger request
+  const response = await Wized.data.get('r.49.d'); // Get request response
+  console.log("Executed Res:", response); // Console log received request data
+  
   const favouriteBtn1 = document.getElementById("favourite-button1");
   const favouriteBtn2 = document.getElementById("favourite-button2");
   const favouriteBtn3 = document.getElementById("favourite-button3");
@@ -47,10 +51,6 @@ window.onload = async () => {
       favouriteBtn3.style.display = "none";
     }
   });
-
-  await Wized.request.execute('Load Recipe'); // Trigger request
-  const response = await Wized.data.get('r.49.d'); // Get request response
-  console.log("Executed Res:", response); // Console log received request data
 
   Wized.request.await("Load Recipe", (response) => {
     const snapshot = response.data;
