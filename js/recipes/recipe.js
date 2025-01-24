@@ -16,6 +16,7 @@ window.onload = async () => {
   Wized.request.await("Load Users Recipe", (response) => {
     const user = response.data.Favourites_ID;
     const snapshot = response.data;
+    console.log("Snapshot1:", snapshot);
     if (snapshot.Stripe == "Not Verified") {
       window.location.href = "/program-selection";
     }
@@ -49,7 +50,7 @@ window.onload = async () => {
   });
   Wized.request.await("Load Recipe", (response) => {
     const snapshot = response.data;
-    console.log("Snapshot:", snapshot);
+    console.log("Snapshot2:", snapshot);
     let method = snapshot.Method;
     let Ingredients = snapshot.Ingredients;
     const methodText = document.getElementById("method");
