@@ -47,6 +47,11 @@ window.onload = async () => {
       favouriteBtn3.style.display = "none";
     }
   });
+
+  await Wized.request.execute('Load Recipe'); // Trigger request
+  const response = await Wized.data.get('r.49.d'); // Get request response
+  console.log("Executed Res:", response); // Console log received request data
+
   Wized.request.await("Load Recipe", (response) => {
     const snapshot = response.data;
     let method = snapshot.Method;
