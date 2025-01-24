@@ -68,7 +68,7 @@ window.onload = async () => {
     const foodInfo = snapshot.Food_Info;
     let foodInfoCol = foodInfo.split("," + "\n");
     //setTimeout(RecipeInfo, 500);
-    if (response.status == 200) {
+    //if (response.status == 200) {
       let stop = setTimeout(RecipeInfo, 1000);
       document.title = snapshot.Name;
       var converter = new showdown.Converter(),
@@ -79,7 +79,7 @@ window.onload = async () => {
         text = method,
         html = converter.makeHtml(text);
       methodText.innerHTML = html;
-    }
+    //}
     function RecipeInfo() {
       let time = document.querySelectorAll(".recipe-info");
       let heroTime = document.getElementById("recipe_time");
