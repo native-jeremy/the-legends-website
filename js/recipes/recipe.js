@@ -10,14 +10,6 @@ anime({
 
 window.onload = async () => {
   // Get the current URL's query string
-  const searchParams = new URLSearchParams(window.location.search);
-
-  // Retrieve the value of the 'recipe' parameter
-  const recipeParam = searchParams.get('recipe'); 
-
- /* await Wized.request.execute('Load Recipe'); // Trigger request
-  const response = await Wized.data.get('r.49.d'); // Get request response
-  console.log("Executed Res:", response); // Console log received request data
 
   const favouriteBtn1 = document.getElementById("favourite-button1");
   const favouriteBtn2 = document.getElementById("favourite-button2");
@@ -56,11 +48,10 @@ window.onload = async () => {
       favouriteBtn2.style.display = "none";
       favouriteBtn3.style.display = "none";
     }
-  });*/
+  });
 
   Wized.request.await("Load Recipe", (response) => {
     const snapshot = response.data;
-    console.log("Snapshot:", snapshot);
     let method = snapshot.Method;
     let Ingredients = snapshot.Ingredients;
     const methodText = document.getElementById("method");
@@ -68,7 +59,7 @@ window.onload = async () => {
     const foodInfo = snapshot.Food_Info;
     let foodInfoCol = foodInfo.split("," + "\n");
     //setTimeout(RecipeInfo, 500);
-    //if (response.status == 200) {
+    if (response.status == 200) {
       let stop = setTimeout(RecipeInfo, 1000);
       document.title = snapshot.Name;
       var converter = new showdown.Converter(),
@@ -79,7 +70,7 @@ window.onload = async () => {
         text = method,
         html = converter.makeHtml(text);
       methodText.innerHTML = html;
-    //}
+    }
     function RecipeInfo() {
       let time = document.querySelectorAll(".recipe-info");
       let heroTime = document.getElementById("recipe_time");
