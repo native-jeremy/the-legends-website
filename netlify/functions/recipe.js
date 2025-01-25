@@ -63,7 +63,7 @@ exports.handler = async (event) => {
     // Combine user and recipe data
     const combinedData = {
       user: userResult.fields,
-      recipe: recipeResult.fields,
+      recipes: recipeResult.fields,
     };
 
     // Respond with combined data
