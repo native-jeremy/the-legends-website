@@ -18,9 +18,9 @@ window.onload = async () => {
   Wized.request.await("Load Users Recipe", (response) => {
     const user = response.data.Favourites_ID;
     const snapshot = response.data;
-    if (snapshot.Stripe == "Not Verified") {
+    /*if (snapshot.Stripe == "Not Verified") {
       window.location.href = "/program-selection";
-    }
+    }*/
     let params = window.location.href;
     let url = new URL(params);
     let checkurl = url.searchParams;
