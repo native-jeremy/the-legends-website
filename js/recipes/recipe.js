@@ -9,9 +9,12 @@ anime({
 });
 
 window.onload = async () => {
-  await Wized.request.execute('User Recipe Data'); // Trigger request
-  const response = await Wized.data.get('r.188.d'); // Get request response
-  console.log(" Hello Response:", response);
+  console.log("Window loaded");
+  if (typeof Wized === "undefined") {
+    console.error("Wized is not loaded");
+  }
+  
+  
   // Get the current URL's query string
 
   const favouriteBtn1 = document.getElementById("favourite-button1");
@@ -19,6 +22,13 @@ window.onload = async () => {
   const favouriteBtn3 = document.getElementById("favourite-button3");
   const addedRecipe = document.getElementById("addedRecipe");
   Wized.request.await("Load Users Recipe", (response) => {
+    if (!response || response.status !== 200) {
+      console.error("Error fetching user recipe data:", response);
+      return;
+    }
+    else {
+
+    
     const user = response.data.Favourites_ID;
     const snapshot = response.data;
     if (snapshot.Stripe == "Not Verified") {
@@ -51,6 +61,7 @@ window.onload = async () => {
       favouriteBtn2.style.display = "none";
       favouriteBtn3.style.display = "none";
     }
+  }
   });
 
   Wized.request.await("Load Recipe", (response) => {
