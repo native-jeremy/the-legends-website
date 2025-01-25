@@ -91,5 +91,16 @@ function checkUser(recordId, userId) {
       .catch((error) => {
         console.error("Fetch operation failed:", error.message);
       });
+}
+
+function getCookie(name) {
+    const cookies = document.cookie.split("; ");
+    for (let i = 0; i < cookies.length; i++) {
+      const [key, value] = cookies[i].split("=");
+      if (key === name) {
+        return decodeURIComponent(value);
+      }
+    }
+    return null; // Return null if the cookie is not found
   }
   
