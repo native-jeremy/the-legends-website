@@ -52,8 +52,6 @@ function checkUser(recordId, userId) {
       .then((data) => {
         const user = data.user;  // Accessing user data from the response
         const recipes = data.recipes;  // Accessing recipes data from the response
-        console.log("User Data:", user);
-        console.log("Recipes Data:", recipes);
   
         const methodText = document.getElementById("method");
         const ingredientsText = document.getElementById("ingredients");
@@ -77,6 +75,25 @@ function checkUser(recordId, userId) {
           favouriteBtn2.style.display = "none";
           favouriteBtn3.style.display = "none";
         }
+
+        favouriteBtn1.addEventListener("click", () => {
+            favouriteBtn1.style.display = "none";
+            favouriteBtn2.style.display = "none";
+            favouriteBtn3.style.display = "none";
+            addedRecipe.click();
+        });
+        favouriteBtn2.addEventListener("click", () => {
+            favouriteBtn1.style.display = "none";
+            favouriteBtn2.style.display = "none";
+            favouriteBtn3.style.display = "none";
+            addedRecipe.click();
+        });
+        favouriteBtn3.addEventListener("click", () => {
+            favouriteBtn1.style.display = "none";
+            favouriteBtn2.style.display = "none";
+            favouriteBtn3.style.display = "none";
+            addedRecipe.click();
+        });
   
         // Populate recipe info
         let stop = setTimeout(RecipeInfo, 1000);
@@ -96,6 +113,9 @@ function checkUser(recordId, userId) {
       .catch((error) => {
         console.error("Fetch operation failed:", error.message);
       });
+
+    setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 4000);
+
 }
 
 function getCookie(name) {
