@@ -18,7 +18,6 @@ window.onload = async () => {
   Wized.request.await("Load Users Recipe", (response) => {
     const user = response.data.Favourites_ID;
     const snapshot = response.data;
-    console.log("User Snapshot:", snapshot);
     if (snapshot.Stripe == "Not Verified") {
       window.location.href = "/program-selection";
     }
@@ -49,52 +48,49 @@ window.onload = async () => {
       favouriteBtn2.style.display = "none";
       favouriteBtn3.style.display = "none";
     }
-
-    // Load Recipe request
-    Wized.request.await("Load Recipe", (response) => {
-      const snapshot = response.data;
-      console.log("Snapshot:", snapshot);
-      let method = snapshot.Method;
-      let Ingredients = snapshot.Ingredients;
-      const methodText = document.getElementById("method");
-      const ingredientsText = document.getElementById("ingredients");
-      const foodInfo = snapshot.Food_Info;
-      let foodInfoCol = foodInfo.split("," + "\n");
-      //setTimeout(RecipeInfo, 500);
-      if (response.status == 200) {
-        let stop = setTimeout(RecipeInfo, 1000);
-        document.title = snapshot.Name;
-        var converter = new showdown.Converter(),
-          text = Ingredients,
-          html = converter.makeHtml(text);
-        ingredientsText.innerHTML = html;
-        var converter = new showdown.Converter(),
-          text = method,
-          html = converter.makeHtml(text);
-        methodText.innerHTML = html;
-      }
-      function RecipeInfo() {
-        let time = document.querySelectorAll(".recipe-info");
-        let heroTime = document.getElementById("recipe_time");
-        heroTime.innerHTML = foodInfoCol[0];
-        //let time = document.getElementById("time");
-        //let serves = document.getElementById("serves");
-        //let calories = document.getElementById("calories");
-        //let carbohydrate = document.getElementById("carbohydrate");
-        //let fatTotal = document.getElementById("fatTotal");
-        //let protein = document.getElementById("protein");
-        for (let i = 0; i < time.length; i++) {
-          time[i].innerHTML = foodInfoCol[i];
-          //serves.innerHTML = foodInfoCol[i]
-          //calories.innerHTML = foodInfoCol[i]
-          //carbohydrate.innerHTML = foodInfoCol[i]
-          //fatTotal.innerHTML = foodInfoCol[i]
-          //protein.innerHTML = foodInfoCol[i]
-        }
-        clearTimeout(stop);
-      }
-    });
   });
 
+  Wized.request.await("Load Recipe", (response) => {
+    const snapshot = response.data;
+    let method = snapshot.Method;
+    let Ingredients = snapshot.Ingredients;
+    const methodText = document.getElementById("method");
+    const ingredientsText = document.getElementById("ingredients");
+    const foodInfo = snapshot.Food_Info;
+    let foodInfoCol = foodInfo.split("," + "\n");
+    //setTimeout(RecipeInfo, 500);
+    if (response.status == 200) {
+      let stop = setTimeout(RecipeInfo, 1000);
+      document.title = snapshot.Name;
+      var converter = new showdown.Converter(),
+        text = Ingredients,
+        html = converter.makeHtml(text);
+      ingredientsText.innerHTML = html;
+      var converter = new showdown.Converter(),
+        text = method,
+        html = converter.makeHtml(text);
+      methodText.innerHTML = html;
+    }
+    function RecipeInfo() {
+      let time = document.querySelectorAll(".recipe-info");
+      let heroTime = document.getElementById("recipe_time");
+      heroTime.innerHTML = foodInfoCol[0];
+      //let time = document.getElementById("time");
+      //let serves = document.getElementById("serves");
+      //let calories = document.getElementById("calories");
+      //let carbohydrate = document.getElementById("carbohydrate");
+      //let fatTotal = document.getElementById("fatTotal");
+      //let protein = document.getElementById("protein");
+      for (let i = 0; i < time.length; i++) {
+        time[i].innerHTML = foodInfoCol[i];
+        //serves.innerHTML = foodInfoCol[i]
+        //calories.innerHTML = foodInfoCol[i]
+        //carbohydrate.innerHTML = foodInfoCol[i]
+        //fatTotal.innerHTML = foodInfoCol[i]
+        //protein.innerHTML = foodInfoCol[i]
+      }
+      clearTimeout(stop);
+    }
+  });
   setTimeout(() => {document.querySelector('.loading-state-v2').style.display = "none"}, 4000);
 };
