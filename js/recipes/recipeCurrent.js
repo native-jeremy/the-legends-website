@@ -14,6 +14,11 @@ console.log("Wized User ID:", userId);
 
 let res = null;
 
+const favouriteBtn1 = document.getElementById("favourite-button1");
+const favouriteBtn2 = document.getElementById("favourite-button2");
+const favouriteBtn3 = document.getElementById("favourite-button3");
+const addedRecipe = document.getElementById("addedRecipe");
+
 // Get the query string from the URL
 const queryString = window.location.search;
 
