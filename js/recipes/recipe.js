@@ -8,6 +8,8 @@ anime({
   loop: true
 });
 
+console.log("Hello Worlds!");
+
 window.onload = async () => {
   // Get the current URL's query string
 
