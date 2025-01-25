@@ -52,6 +52,7 @@ window.onload = async () => {
 
   Wized.request.await("Load Recipe", (response) => {
     const snapshot = response.data;
+    console.log("Snapshot:", snapshot);
     let method = snapshot.Method;
     let Ingredients = snapshot.Ingredients;
     const methodText = document.getElementById("method");
