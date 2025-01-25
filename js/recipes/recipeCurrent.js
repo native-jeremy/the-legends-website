@@ -1,0 +1,95 @@
+anime({
+    targets: '.path3',
+    strokeDashoffset: [anime.setDashoffset, 0],
+    easing: 'cubicBezier(.5, .05, .1, .3)',
+    duration: 2000,
+    delay: function(el, i) { return i * 250 },
+    direction: 'alternate',
+    loop: true
+  });
+
+
+const userId = getCookie("wized_userid"); // Get the user ID from the cookie
+console.log("Wized User ID:", userId);
+
+let res = null;
+
+// Get the query string from the URL
+const queryString = window.location.search;
+
+// Parse the query string
+const urlParams = new URLSearchParams(queryString);
+
+// Get the 'recipe' parameter
+const recipeId = urlParams.get("recipe");
+console.log("Recipe ID:", recipeId);
+
+if (recipeId && userId) {
+  checkUser(recipeId, userId);
+} else {
+  console.error("Recipe ID or User ID is missing.");
+  window.location.href = "../login"; // Redirect if either value is missing
+}
+
+function checkUser(recordId, userId) {
+    fetch(`/api/recipe?recordId=${encodeURIComponent(recordId)}&userId=${encodeURIComponent(userId)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const user = data.user;  // Accessing user data from the response
+        const recipes = data.recipes;  // Accessing recipes data from the response
+        console.log("User Data:", user);
+        console.log("Recipes Data:", recipes);
+  
+        const methodText = document.getElementById("method");
+        const ingredientsText = document.getElementById("ingredients");
+        const foodInfo = recipes.Food_Info;  // Assuming this structure
+        let foodInfoCol = foodInfo.split("," + "\n");
+  
+        document.title = recipes.Name;
+  
+        // Convert ingredients and method to HTML
+        const converter = new showdown.Converter();
+        ingredientsText.innerHTML = converter.makeHtml(recipes.Ingredients);
+        methodText.innerHTML = converter.makeHtml(recipes.Method);
+  
+        // Get the current URL's query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentRecipe = urlParams.get("recipe");
+  
+        // Check if the user has already added the current recipe to their favourites
+        if (user.Favourites_ID && user.Favourites_ID.includes(currentRecipe)) {
+          favouriteBtn1.style.display = "none";
+          favouriteBtn2.style.display = "none";
+          favouriteBtn3.style.display = "none";
+        }
+  
+        // Populate recipe info
+        let stop = setTimeout(RecipeInfo, 1000);
+  
+        function RecipeInfo() {
+          let time = document.querySelectorAll(".recipe-info");
+          let heroTime = document.getElementById("recipe_time");
+          heroTime.innerHTML = foodInfoCol[0];
+  
+          for (let i = 0; i < time.length; i++) {
+            time[i].innerHTML = foodInfoCol[i];
+          }
+  
+          clearTimeout(stop);
+        }
+      })
+      .catch((error) => {
+        console.error("Fetch operation failed:", error.message);
+      });
+  }
+  
