@@ -9,8 +9,9 @@ anime({
 });
 
 window.onload = async () => {
-  const value = await Wized.data.get('r.154.d');
-  console.log(" Hello Value:", value);
+  await Wized.request.execute('User Recipe Data'); // Trigger request
+  const response = await Wized.data.get('r.188.d'); // Get request response
+  console.log(" Hello Response:", response);
   // Get the current URL's query string
 
   const favouriteBtn1 = document.getElementById("favourite-button1");
