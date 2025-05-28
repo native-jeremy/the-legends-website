@@ -10,6 +10,7 @@ window.onload = async () => {
   });
 
   Wized.request.await("Load Guide", (response) => {
+    console.log("Data: ", response)
     setTimeout(SlideInfo, 2000);
     function SlideInfo() {
       const snapshot = response.data;
