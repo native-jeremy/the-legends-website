@@ -18,6 +18,7 @@
   <link href="images/webclip.png" rel="apple-touch-icon">
   <script src="https://embed.wized.com/ISnIcZEHtJQbNBpztLDV.js"></script>
   <script data-wized-id="ISnIcZEHtJQbNBpztLDV" src="https://embed.wized.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <!--  Custom  -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/native-jeremy/the-legends-config/css/styles-u17.css">
   <!--  Scroll Speed CSS -->
@@ -106,7 +107,7 @@ align-items: center;
 </style>
   </div>
   <div w-el="load_app" class="app">
-    <div  class="app-main">
+    <div  class="app-main" w-el="guide_page">
       <div class="header">
         <a href="#" class="header-nav-button back-button-on top-level w-inline-block">
           <div class="nav-back-icon"></div>
@@ -298,22 +299,22 @@ align-items: center;
           <link rel="prerender" href="/messages">
         </div>
       </div>
-      <div class="app-head guide-page" style="min-height: 100vh !important; height: auto !important;">
+      <div class="app-head guide-page" style="min-height: 100vh !important; height: auto !important;" id="app">
         <div class="app-head-content guide">
           <div class="content slider-content">
             <div class="guide-slider">
               <div class="swiper-wrapper">
-                <div  class="swiper-slide">
+                <div  class="swiper-slide" v-for="slide in slides">
                   <div class="slide-content">
-                    <div class="guide-slider-image"></div>
+                    <div class="guide-slider-image" :style="{ backgroundImage: `url(${slide.image})` }"></div>
                     <div class="guide-slider-body flex">
                       <div class="guide-content">
                         <div class="content-headings">
                           <h1 class="generic-text-style-1">Topic</h1>
-                          <h2  class="main-heading-style-1 slide-heading">Guide Title</h2>
+                          <h2  class="main-heading-style-1 slide-heading">{{slide.title}}</h2>
                         </div>
                         <div class="content-body">
-                          <p class="body-copy-text-style-1 slide-body-copy">A. When signals are on you will hear siren count downs and a half way warnings throughout the workout. This can be changed at any point during the exercise.</p>
+                          <p class="body-copy-text-style-1 slide-body-copy">{{slide.description}}</p>
                         </div>
                       </div>
                     </div>
@@ -331,10 +332,10 @@ align-items: center;
                 <div class="generic-text-style-2 guide">Guides</div>
               </div>
               <div class="button_box">
-                <div id="slider-right-button" class="app-slider-arrow right-slide-arrow-button">
+                <div id="slider-right-button" class="app-slider-arrow right-slide-arrow-button" v-if="!completed">
                   <div class="app-slider-arrow-icon right-arrow-icon black"></div>
                 </div>
-                <a id="complete_button" w-el="guide_complete_button" data-w-id="81103ad9-9d4c-ac58-5d38-968aeea8e4b2" href="#" class="complete_guide w-inline-block"></a>
+                <a href="#" class="complete_guide w-inline-block" v-if="!completed" @click="readGuide"></a>
               </div>
             </div>
           </div>
