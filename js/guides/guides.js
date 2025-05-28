@@ -23,12 +23,10 @@ createApp({
         return response.json();
       })
       .then((data) => {
-        console.log(data)
         this.response = data;
         document.title = data.Name;
         this.generateSlides();
-        //setTimeout(this.SlideSetup(data), 2000);
-      document.querySelector('.loading-state-v2').style.display = "none"
+        document.querySelector('.loading-state-v2').style.display = "none"
       });
   },
   async updateCollectionItem(collectionName, ID) {
@@ -37,7 +35,7 @@ createApp({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username: "example" }),
+      body: JSON.stringify(this.generateCompletedGuide()),
     })
       .then((response) => {
         if (!response.ok) {
@@ -47,19 +45,50 @@ createApp({
       })
       .then((data) => {
         console.log(data)
-        this.response = data;
-        document.title = data.Name;
-        this.generateSlides();
-        //setTimeout(this.SlideSetup(data), 2000);
-      document.querySelector('.loading-state-v2').style.display = "none"
       });
   },
-  generateCompletedGuide() {
-    const guide = {
-      id: this.response.ID,
-      name: this.response.Name,
-      user: null
+  async createCollectionItem(collectionName, ID) {
+      fetch(`/api/collection-single?collection=${encodeURIComponent(collectionName)}&recordId=${encodeURIComponent(ID)}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(this.generateCompletedGuide()),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setTimeout(() => {
+          history.back();
+        }, 3000);
+      });
+  },
+  checkRoute() {
+    if(this.completed) {
+        const currentUrl = window.location.href;
+        const referrer = document.referrer;
+        if (!referrer || referrer === currentUrl) {
+        // No previous page or same as current
+         window.location.href = "/learning-hub";
+        } else {
+         history.back();
+        }
+    }  else {
+      this.createCollectionItem('Guides Read');
     }
+  },
+  generateCompletedGuide() {
+    const userid = this.getCookie("wized_userid");
+    console.log("userid: ", userid)
+    const newGuide = {
+      Guide_Referenced: this.response.ID,
+      User: userid
+    }
+    return newGuide;
   },
   generateSlides() {
     const titles = this.formatStringToArray(',', this.response.Slides_Titles);
@@ -97,26 +126,9 @@ createApp({
             prevEl: ".left-slide-arrow-button",
           },
         });
-        swiper.on("reachEnd", function () {
-          this.completed = true;
+        swiper.on("reachEnd", () => {
+            document.querySelector(".complete_guide").style.display = "block";
         });
-        swiper.on("slideChange", function (e) {
-          if (swiper.activeIndex == swiper.slides.length - 1) {
-            this.completed = true;
-          } else {
-            this.completed = false;
-          }
-        });
-  },
-  async readGuide() {
-    console.log("Data", response)
-    await Wized.request.execute('Read Guide');
-    const response = await Wized.data.get('r.128.d'); // Get request response
-    if(response) {
-      setTimeout(() => {
-        history.back();
-      }, 3000);
-    }
   },
   getCookie(name) {
     const cookies = document.cookie.split("; ");
@@ -127,24 +139,28 @@ createApp({
       }
     }
     return null; // Return null if the cookie is not found
+  },
+  setCompleted() {
+    // Get the query string from the URL
+    const queryString = window.location.search;
+    // Parse the query string
+    const urlParams = new URLSearchParams(queryString);
+    // Get the 'recipe' parameter
+    this.completed = true ? urlParams.get("completed") : false;
+    console.log("Completed: ", this.completed)
   }
   },
   mounted() {
-
     // Get the query string from the URL
     const queryString = window.location.search;
-
     // Parse the query string
     const params = new URLSearchParams(queryString);
-
     // Get the 'guide' parameter
     const ID = params.get("guide");
-    console.log("ID:", ID);
     this.fetchCollectionItem("Guides", ID);
-    this.getCookie("wized_userid");
+    this.setCompleted();
 
     setTimeout(() => {
-      console.log("Slides: ", this.slides)
     console.log("interaction loaded");
     window.Webflow && window.Webflow.destroy();
     window.Webflow && window.Webflow.ready();

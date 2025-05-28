@@ -398,7 +398,7 @@ overflow-x: hidden;
         <div class="app-view-scroll">
           <div class="app-body">
             <div class="content">
-              <div id="richText" class="content richtext"></div>
+              <div id="richText" class="content richtext" w-el="timer"></div>
               <div class="info-block margin-top">
                 <a href="#" class="button-style-3 top-level w-button">Back</a>
               </div>
@@ -434,6 +434,7 @@ overflow-x: hidden;
   <script src="js/other/misc.js" type="text/javascript"></script>
   <script>
 window.onload = async () => {  
+  document.querySelector('.loading-state-v2').style.display = "none"
     Wized.request.await("Load Blog", (response) => {  
     	const snapshot = response.data;
       let richTextRes = snapshot.Rich_Text;

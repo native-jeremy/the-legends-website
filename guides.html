@@ -332,10 +332,10 @@ align-items: center;
                 <div class="generic-text-style-2 guide">Guides</div>
               </div>
               <div class="button_box">
-                <div id="slider-right-button" class="app-slider-arrow right-slide-arrow-button" v-if="!completed">
+                <div id="slider-right-button" class="app-slider-arrow right-slide-arrow-button">
                   <div class="app-slider-arrow-icon right-arrow-icon black"></div>
                 </div>
-                <a href="#" class="complete_guide w-inline-block" v-if="!completed" @click="readGuide"></a>
+                <a href="#" class="complete_guide w-inline-block" @click="checkRoute"></a>
               </div>
             </div>
           </div>
