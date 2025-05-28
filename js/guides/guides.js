@@ -141,7 +141,7 @@ createApp({
     const ID = params.get("guide");
     console.log("ID:", ID);
     this.fetchCollectionItem("Guides", ID);
-    this.getCookie("userid");
+    this.getCookie("wized_userid");
 
     setTimeout(() => {
       console.log("Slides: ", this.slides)
