@@ -433,8 +433,9 @@ overflow-x: hidden;
   <script src="https://unpkg.com/showdown/dist/showdown.min.js" type="text/javascript"></script>
   <script src="js/other/misc.js" type="text/javascript"></script>
   <script>
+      document.querySelector('.loading-state-v2').remove
 window.onload = async () => {  
-  document.querySelector('.loading-state-v2').style.display = "none"
+
     Wized.request.await("Load Blog", (response) => {  
     	const snapshot = response.data;
       let richTextRes = snapshot.Rich_Text;
