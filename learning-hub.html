@@ -365,7 +365,7 @@ overflow-x: hidden;
                     <div class="capsule-header-text">
                       <h2 class="main-heading-style-1 capsule-title">{{Guide.Name}}</h2>
                     </div>
-                    <div v-bind:class="User.Read_Guide_ID !== undefined && User.Read_Guide_ID.includes(Guides[index].ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>
+                    <div v-bind:class="User.Read_Guide_ID !== undefined && User.Read_Guide_ID.includes(Guide.ID) ? &#x27;completed&#x27; : &#x27;not_completed&#x27;" class="completed-indicator"></div>
                   </div>
                 </a>
               </div>
