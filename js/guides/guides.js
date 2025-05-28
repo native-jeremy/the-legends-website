@@ -9,8 +9,9 @@ window.onload = async () => {
     loop: true
   });
 
-  await Wized.request.execute('Load Guide');
+    await Wized.request.execute('Load Guide');
     const response = await Wized.data.get('r.40.d');
+    console.log("Data: ", response)
     setTimeout(SlideInfo, 2000);
     function SlideInfo() {
       const snapshot = response.data;
