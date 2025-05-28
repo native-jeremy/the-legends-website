@@ -30,7 +30,6 @@ exports.handler = async (event) => {
     const resultJson = await response.json();
     console.log("Result:", resultJson);
 
-    // Combine user and recipe data
     const result = resultJson.fields
 
     // Respond with combined data

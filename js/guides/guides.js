@@ -10,7 +10,7 @@ createApp({
   },
   methods: {
   async fetchCollectionItem(collectionName, ID) {
-        fetch(`/api/collectionItem?collection=${encodeURIComponent(collectionName)}&recordId=${encodeURIComponent(ID)}`, {
+      fetch(`/api/collection-single?collection=${encodeURIComponent(collectionName)}&recordId=${encodeURIComponent(ID)}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -30,6 +30,36 @@ createApp({
         //setTimeout(this.SlideSetup(data), 2000);
       document.querySelector('.loading-state-v2').style.display = "none"
       });
+  },
+  async updateCollectionItem(collectionName, ID) {
+      fetch(`/api/collection-single?collection=${encodeURIComponent(collectionName)}&recordId=${encodeURIComponent(ID)}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username: "example" }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data)
+        this.response = data;
+        document.title = data.Name;
+        this.generateSlides();
+        //setTimeout(this.SlideSetup(data), 2000);
+      document.querySelector('.loading-state-v2').style.display = "none"
+      });
+  },
+  generateCompletedGuide() {
+    const guide = {
+      id: this.response.ID,
+      name: this.response.Name,
+      user: null
+    }
   },
   generateSlides() {
     const titles = this.formatStringToArray(',', this.response.Slides_Titles);
@@ -79,7 +109,7 @@ createApp({
         });
   },
   async readGuide() {
-    console.log("Data")
+    console.log("Data", response)
     await Wized.request.execute('Read Guide');
     const response = await Wized.data.get('r.128.d'); // Get request response
     if(response) {
@@ -87,6 +117,16 @@ createApp({
         history.back();
       }, 3000);
     }
+  },
+  getCookie(name) {
+    const cookies = document.cookie.split("; ");
+    for (let i = 0; i < cookies.length; i++) {
+      const [key, value] = cookies[i].split("=");
+      if (key === name) {
+        return decodeURIComponent(value);
+      }
+    }
+    return null; // Return null if the cookie is not found
   }
   },
   mounted() {
@@ -101,6 +141,7 @@ createApp({
     const ID = params.get("guide");
     console.log("ID:", ID);
     this.fetchCollectionItem("Guides", ID);
+    this.getCookie("userid");
 
     setTimeout(() => {
       console.log("Slides: ", this.slides)
