@@ -9,7 +9,8 @@ window.onload = async () => {
     loop: true
   });
 
-  Wized.request.await("Load Guide", (response) => {
+  await Wized.request.execute('Load Guide');
+    const response = await Wized.data.get('r.40.d');
     setTimeout(SlideInfo, 2000);
     function SlideInfo() {
       const snapshot = response.data;
@@ -58,5 +59,4 @@ window.onload = async () => {
       }
     }
     document.querySelector('.loading-state-v2').style.display = "none"
-  });
 };
